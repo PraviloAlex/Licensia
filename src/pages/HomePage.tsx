@@ -12,7 +12,7 @@ import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
 
 const DAILY_GOAL = 25;
-const APP_VERSION = "v0.08";
+const APP_VERSION = "v0.1";
 const REMINDER_DISMISS_KEY = "licencia_ar_reminder_dismissed";
 
 function getDaysSinceLastPractice(): number | null {
