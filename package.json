@@ -1,0 +1,35 @@
+{
+  "name": "licencia-ar-data-first",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npx vite",
+    "build": "npx tsc --noEmit && npx vite build",
+    "preview": "npx vite preview",
+    "qa": "npm run typecheck",
+    "typecheck": "tsc --noEmit",
+    "validate:questions": "tsx tools/import/validate-questions.ts",
+    "validate:images": "tsx tools/import/validate-images.ts",
+    "import:category-b": "tsx tools/import/import-category-b.ts",
+    "import:category-b-translations": "tsx tools/import/import-category-b-translations.ts",
+    "learning:encoding-check": "tsx tools/learning/check-learning-encoding.ts",
+    "learning:export-approved": "tsx tools/learning/export-approved-learning.ts",
+    "learning:audit": "tsx tools/learning/audit-learning-status.ts"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "tsx": "^4.22.3",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.14",
+    "vite-plugin-pwa": "^1.3.0"
+  }
+}

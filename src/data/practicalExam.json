@@ -1,0 +1,32 @@
+﻿[
+  {
+    "id": "practice-001",
+    "stage": "pre_check",
+    "title_es": "Uso del cinturón de seguridad",
+    "title_ru": "Использование ремня безопасности",
+    "whatExaminerChecks_ru": "Экзаменатор проверяет, что водитель пристегнулся до начала движения.",
+    "commonMistake_ru": "Начало движения без ремня или с неправильно застегнутым ремнем.",
+    "correctAction_ru": "Отрегулировать сиденье, пристегнуться и убедиться, что ремень не перекручен.",
+    "source": "Protocolo examen practico CABA 2023"
+  },
+  {
+    "id": "practice-002",
+    "stage": "driving",
+    "title_es": "Control de velocidad y distancia",
+    "title_ru": "Контроль скорости и дистанции",
+    "whatExaminerChecks_ru": "Проверяется плавное движение, соблюдение скорости и безопасной дистанции.",
+    "commonMistake_ru": "Резкие ускорения, слишком маленькая дистанция до впереди идущего авто.",
+    "correctAction_ru": "Держать стабильную скорость, смотреть в зеркала и сохранять запас дистанции.",
+    "source": "Protocolo examen practico CABA 2023"
+  },
+  {
+    "id": "practice-003",
+    "stage": "parking",
+    "title_es": "Estacionamiento",
+    "title_ru": "Парковка",
+    "whatExaminerChecks_ru": "Проверяется точность маневра, контроль зеркал и безопасность вокруг.",
+    "commonMistake_ru": "Маневр без проверки слепых зон и наезд на бордюр.",
+    "correctAction_ru": "Заранее оценить место, включить поворотник и выполнять маневр медленно.",
+    "source": "Protocolo examen practico CABA 2023"
+  }
+]

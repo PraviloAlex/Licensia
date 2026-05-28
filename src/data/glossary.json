@@ -1,0 +1,477 @@
+[
+  {
+    "id": "adelantamiento",
+    "term_es": "adelantamiento",
+    "translation_ru": "обгон",
+    "simpleExplanation_ru": "Маневр опережения другого транспортного средства.",
+    "officialMeaning_es": "Maniobra que consiste en sobrepasar a otro vehiculo en circulacion.",
+    "example_es": "El adelantamiento debe hacerse solo cuando haya condiciones seguras.",
+    "example_ru": "Обгон выполняют только при безопасных условиях.",
+    "category": "maniobra",
+    "level": "medium",
+    "relatedQuestionTopics": [
+      "maniobras",
+      "seguridad"
+    ],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 6,
+      "verified": true
+    }
+  },
+  {
+    "id": "alcoholemia",
+    "term_es": "alcoholemia",
+    "translation_ru": "алкотест",
+    "simpleExplanation_ru": "Termino oficial del glosario CABA 2023: alcoholemia.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: alcoholemia.",
+    "example_ru": "Проверка содержания алкоголя у водителя.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "baliza",
+    "term_es": "baliza",
+    "translation_ru": "аварийные огни",
+    "simpleExplanation_ru": "Сигнал для предупреждения об опасной или аварийной ситуации.",
+    "officialMeaning_es": "Dispositivo de advertencia con luz para situaciones de riesgo.",
+    "example_es": "En una detencion de emergencia, encienda las balizas.",
+    "example_ru": "При аварийной остановке включите аварийные огни.",
+    "category": "seguridad",
+    "level": "medium",
+    "relatedQuestionTopics": [
+      "luces",
+      "emergencias"
+    ],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 6,
+      "verified": true
+    }
+  },
+  {
+    "id": "balizas",
+    "term_es": "balizas",
+    "translation_ru": "аварийные огни",
+    "simpleExplanation_ru": "Мигающие огни для предупреждения об опасности.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: balizas.",
+    "example_ru": "Мигающие огни для предупреждения об опасности.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "banquina",
+    "term_es": "banquina",
+    "translation_ru": "обочина",
+    "simpleExplanation_ru": "Полоса рядом с проезжей частью для безопасности и вынужденной остановки.",
+    "officialMeaning_es": "Zona adyacente y paralela a la calzada de rutas, autopistas, semiautopistas o caminos.",
+    "example_es": "En caso de emergencia, detenga el vehiculo en la banquina.",
+    "example_ru": "В экстренной ситуации остановите автомобиль на обочине.",
+    "category": "infraestructura",
+    "level": "basic",
+    "relatedQuestionTopics": [
+      "via",
+      "seguridad"
+    ],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 6,
+      "verified": true
+    }
+  },
+  {
+    "id": "bocacalle",
+    "term_es": "bocacalle",
+    "translation_ru": "зона перекрестка",
+    "simpleExplanation_ru": "Общая зона, где пересекаются две или более улиц.",
+    "officialMeaning_es": "Superficie comun a dos o mas arterias que concurren a una interseccion.",
+    "example_es": "En la bocacalle sin semaforo, revise ambos lados antes de cruzar.",
+    "example_ru": "На перекрестке без светофора проверьте обе стороны перед проездом.",
+    "category": "via",
+    "level": "basic",
+    "relatedQuestionTopics": [
+      "intersecciones",
+      "prioridades"
+    ],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 7,
+      "verified": true
+    }
+  },
+  {
+    "id": "calzada",
+    "term_es": "calzada",
+    "translation_ru": "проезжая часть",
+    "simpleExplanation_ru": "Часть дороги, где движутся транспортные средства.",
+    "officialMeaning_es": "Sector de la via publica destinado principalmente a la circulacion vehicular.",
+    "example_es": "No se debe detener el vehiculo en medio de la calzada.",
+    "example_ru": "Нельзя останавливаться посреди проезжей части.",
+    "category": "via",
+    "level": "basic",
+    "relatedQuestionTopics": [
+      "infraestructura",
+      "seguridad"
+    ],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 7,
+      "verified": true
+    }
+  },
+  {
+    "id": "carril",
+    "term_es": "carril",
+    "translation_ru": "полоса движения",
+    "simpleExplanation_ru": "Часть проезжей части для движения в потоке.",
+    "officialMeaning_es": "Franja de circulacion dentro de la calzada.",
+    "example_es": "Mantengase en su carril y senalice antes de cambiarlo.",
+    "example_ru": "Держитесь своей полосы и сигнализируйте перед перестроением.",
+    "category": "via",
+    "level": "basic",
+    "relatedQuestionTopics": [
+      "carriles",
+      "maniobras"
+    ],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 7,
+      "verified": true
+    }
+  },
+  {
+    "id": "ceder_el_paso",
+    "term_es": "ceder el paso",
+    "translation_ru": "уступить дорогу",
+    "simpleExplanation_ru": "Нужно пропустить тех, у кого приоритет, и только потом продолжать движение.",
+    "officialMeaning_es": "Obliga a ceder prioridad de paso antes de ingresar al cruce cuando exista riesgo.",
+    "example_es": "Ante la senal de Ceda el Paso, reduzca y ceda prioridad.",
+    "example_ru": "Перед знаком \"Уступи дорогу\" снизьте скорость и уступите приоритет.",
+    "category": "prioridad",
+    "level": "basic",
+    "relatedQuestionTopics": [
+      "prioridades",
+      "senales"
+    ],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 65,
+      "verified": true
+    }
+  },
+  {
+    "id": "ciclista",
+    "term_es": "ciclista",
+    "translation_ru": "велосипедист",
+    "simpleExplanation_ru": "Termino oficial del glosario CABA 2023: ciclista.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: ciclista.",
+    "example_ru": "Участник движения на велосипеде.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "factor_ambiental",
+    "term_es": "factor ambiental",
+    "translation_ru": "фактор среды",
+    "simpleExplanation_ru": "Влияние погоды и состояния дороги на риск ДТП.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: factor ambiental.",
+    "example_ru": "Влияние погоды и состояния дороги на риск ДТП.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "giro",
+    "term_es": "giro",
+    "translation_ru": "поворот",
+    "simpleExplanation_ru": "Маневр изменения направления движения.",
+    "officialMeaning_es": "Maniobra por la cual el vehiculo modifica su direccion para cambiar de arteria.",
+    "example_es": "Antes del giro, reduzca velocidad y use la luz de giro.",
+    "example_ru": "Перед поворотом снизьте скорость и включите поворотник.",
+    "category": "maniobra",
+    "level": "basic",
+    "relatedQuestionTopics": [
+      "giros",
+      "senalizacion"
+    ],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 9,
+      "verified": true
+    }
+  },
+  {
+    "id": "incidente_de_transito",
+    "term_es": "incidente de transito",
+    "translation_ru": "дорожный инцидент",
+    "simpleExplanation_ru": "Опасная ситуация или происшествие в движении.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: incidente de transito.",
+    "example_ru": "Опасная ситуация или происшествие в движении.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "licencia",
+    "term_es": "licencia",
+    "translation_ru": "водительские права",
+    "simpleExplanation_ru": "Документ, дающий право управлять транспортом.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: licencia.",
+    "example_ru": "Документ, дающий право управлять транспортом.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "luces_bajas",
+    "term_es": "luces bajas",
+    "translation_ru": "ближний свет",
+    "simpleExplanation_ru": "Termino oficial del glosario CABA 2023: luces bajas.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: luces bajas.",
+    "example_ru": "Режим фар для повседневной езды.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "organizacion_mundial_de_la_salud",
+    "term_es": "organizacion mundial de la salud",
+    "translation_ru": "Всемирная организация здравоохранения",
+    "simpleExplanation_ru": "Международная организация, дающая данные по безопасности дорожного движения.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: organizacion mundial de la salud.",
+    "example_ru": "Международная организация, дающая данные по безопасности дорожного движения.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "pandemia_vial",
+    "term_es": "pandemia vial",
+    "translation_ru": "дорожная аварийность масштаба",
+    "simpleExplanation_ru": "Масштабная социальная проблема смертей и травм на дорогах.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: pandemia vial.",
+    "example_ru": "Масштабная социальная проблема смертей и травм на дорогах.",
+    "category": "seguridad",
+    "level": "medium",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "peaton",
+    "term_es": "peaton",
+    "translation_ru": "пешеход",
+    "simpleExplanation_ru": "Участник дорожного движения, передвигающийся пешком.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: peaton.",
+    "example_ru": "Участник дорожного движения, передвигающийся пешком.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "prioridad",
+    "term_es": "prioridad",
+    "translation_ru": "приоритет",
+    "simpleExplanation_ru": "Кто имеет право проехать первым в дорожной ситуации.",
+    "officialMeaning_es": "En cruces de igual jerarquia, tiene prioridad el vehiculo que llega por la derecha, salvo senalizacion en contrario.",
+    "example_es": "En una bocacalle sin semaforo, tiene prioridad el vehiculo de la derecha.",
+    "example_ru": "На перекрестке без светофора приоритет у автомобиля справа.",
+    "category": "prioridad",
+    "level": "basic",
+    "relatedQuestionTopics": [
+      "prioridades",
+      "intersecciones"
+    ],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 65,
+      "verified": true
+    }
+  },
+  {
+    "id": "rotonda",
+    "term_es": "rotonda",
+    "translation_ru": "круговое движение",
+    "simpleExplanation_ru": "Круговой узел на пересечении дорог.",
+    "officialMeaning_es": "Emplazamiento vial circular para distribuir el transito en una encrucijada.",
+    "example_es": "En la rotonda, respete la senalizacion y la prioridad establecida.",
+    "example_ru": "На кольце соблюдайте знаки и установленный приоритет.",
+    "category": "infraestructura",
+    "level": "medium",
+    "relatedQuestionTopics": [
+      "intersecciones",
+      "prioridades"
+    ],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 11,
+      "verified": true
+    }
+  },
+  {
+    "id": "scoring",
+    "term_es": "scoring",
+    "translation_ru": "система баллов",
+    "simpleExplanation_ru": "Termino oficial del glosario CABA 2023: scoring.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: scoring.",
+    "example_ru": "Система учета нарушений водителя.",
+    "category": "seguridad",
+    "level": "medium",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "senda_peatonal",
+    "term_es": "senda peatonal",
+    "translation_ru": "пешеходный переход",
+    "simpleExplanation_ru": "Зона для безопасного перехода пешеходов.",
+    "officialMeaning_es": "Demarcacion destinada al cruce de peatones.",
+    "example_es": "Debe reducir la velocidad antes de la senda peatonal.",
+    "example_ru": "Перед пешеходным переходом нужно снизить скорость.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [
+      "peatones",
+      "prioridades"
+    ],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 11,
+      "verified": true
+    }
+  },
+  {
+    "id": "siniestro",
+    "term_es": "siniestro",
+    "translation_ru": "дорожное происшествие",
+    "simpleExplanation_ru": "Событие на дороге с риском для людей и имущества.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: siniestro.",
+    "example_ru": "Событие на дороге с риском для людей и имущества.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "siniestro_vial",
+    "term_es": "siniestro vial",
+    "translation_ru": "дорожное происшествие",
+    "simpleExplanation_ru": "Termino oficial del glosario CABA 2023: siniestro vial.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: siniestro vial.",
+    "example_ru": "Дорожное событие с травмами или ущербом.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "victima_fatal",
+    "term_es": "victima fatal",
+    "translation_ru": "смертельная жертва",
+    "simpleExplanation_ru": "Человек, погибший в результате дорожного происшествия.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: victima fatal.",
+    "example_ru": "Человек, погибший в результате дорожного происшествия.",
+    "category": "seguridad",
+    "level": "basic",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  },
+  {
+    "id": "vtv",
+    "term_es": "VTV",
+    "translation_ru": "техосмотр VTV",
+    "simpleExplanation_ru": "Termino oficial del glosario CABA 2023: VTV.",
+    "officialMeaning_es": "",
+    "example_es": "Termino vial: VTV.",
+    "example_ru": "Обязательная проверка технического состояния ТС.",
+    "category": "seguridad",
+    "level": "medium",
+    "relatedQuestionTopics": [],
+    "source": {
+      "name": "Manual de Conducci?n Vehicular Te?rica CABA 2023",
+      "page": 0,
+      "verified": true
+    }
+  }
+]
