@@ -106,7 +106,7 @@ function MissionCard({ icon, title, progress, done, to, disabled }: {
   }
   return (
     <Link to={to} className={`mission-card${done ? " mission-card--done" : ""}`}>
-      <span className="mission-card-icon">{done ? "✅" : icon}</span>
+      <span className="mission-card-icon">{done ? "✓" : icon}</span>
       <span className="mission-card-title">{title}</span>
       {progress && !done && <span className="mission-card-progress">{progress}</span>}
     </Link>
@@ -254,6 +254,7 @@ export function HomePage() {
   }
 
   const dailyDone        = todayAnswered >= DAILY_GOAL;
+  const dailyPercent     = Math.round((Math.min(todayAnswered, DAILY_GOAL) / DAILY_GOAL) * 100);
   const toExamRecommend  = Math.max(0, EXAM_RECOMMEND_THRESHOLD - seenCount);
   const seenPercent      = total > 0 ? Math.round((seenCount / total) * 100) : 0;
 
@@ -289,8 +290,8 @@ export function HomePage() {
                 ? "Вчера не занимались — пора повторить!"
                 : `Не занимались ${daysSince} дня — пора повторить!`
               : daysSince === 1
-                ? "Ayer no practicaste — és hora de repasar!"
-                : `Hace ${daysSince} días que no practicás — és hora de repasar!`}
+                ? "Ayer no practicaste — es hora de repasar!"
+                : `Hace ${daysSince} días que no practicas — es hora de repasar!`}
           </span>
           <button
             type="button"
@@ -315,8 +316,8 @@ export function HomePage() {
 
           <p className="home-launch-title">{t("home.launch.title", lang)}</p>
           <div className="home-action-grid">
-            {/* Row 1 — always */}
-            <Link to="/practice" className="home-action-btn">
+            {/* Row 1 - always */}
+            <Link to="/practice" className="home-action-btn main-action-card main-action-card--practice">
               <span className="home-action-ico-wrap home-action-ico-wrap--blue">
                 <i className="ti ti-books" />
               </span>
@@ -324,9 +325,9 @@ export function HomePage() {
                 <span className="home-action-title">{t("home.action.p20", lang)}</span>
                 <span className="home-action-sub">{t("home.action.p20.sub", lang)}</span>
               </span>
-              <i className="ti ti-chevron-right home-action-chev" />
+              <span className="home-action-right">20 <i className="ti ti-chevron-right" /></span>
             </Link>
-            <Link to="/practice?quick=1" className="home-action-btn">
+            <Link to="/practice?quick=1" className="home-action-btn main-action-card main-action-card--quick">
               <span className="home-action-ico-wrap home-action-ico-wrap--orange">
                 <i className="ti ti-bolt" />
               </span>
@@ -334,22 +335,20 @@ export function HomePage() {
                 <span className="home-action-title">{t("home.action.q5", lang)}</span>
                 <span className="home-action-sub">{t("home.action.q5.sub", lang)}</span>
               </span>
-              <i className="ti ti-chevron-right home-action-chev" />
+              <span className="home-action-right">5 <i className="ti ti-chevron-right" /></span>
             </Link>
-            {/* Row 2 — always */}
-            <Link to="/vocabulary?tab=review" className={`home-action-btn${dueWordsCount > 0 ? " home-action-btn--words" : ""}`}>
+            {/* Row 2 - always */}
+            <Link to="/vocabulary?tab=review" className={`home-action-btn main-action-card main-action-card--words${dueWordsCount > 0 ? " home-action-btn--words" : ""}`}>
               <span className="home-action-ico-wrap home-action-ico-wrap--violet">
                 <i className="ti ti-language" />
               </span>
               <span className="home-action-body">
                 <span className="home-action-title">{t("home.action.words", lang)}</span>
-                <span className="home-action-sub">{dueWordsCount > 0 ? `${dueWordsCount} ${lang === "ru" ? "слов ждут" : "palabras"}` : t("home.action.words.sub", lang)}</span>
+                <span className="home-action-sub">{dueWordsCount > 0 ? `${dueWordsCount} ${lang === "ru" ? "слов ждут" : "palabras pendientes"}` : t("home.action.words.sub", lang)}</span>
               </span>
-              {dueWordsCount > 0
-                ? <span className="home-action-count">{dueWordsCount}</span>
-                : <i className="ti ti-chevron-right home-action-chev" />}
+              <span className="home-action-right">{dueWordsCount > 0 ? dueWordsCount : 12} <i className="ti ti-chevron-right" /></span>
             </Link>
-            <Link to="/practice?exam=1" className="home-action-btn home-action-btn--exam">
+            <Link to="/practice?exam=1" className="home-action-btn main-action-card main-action-card--exam home-action-btn--exam">
               <span className="home-action-ico-wrap home-action-ico-wrap--amber">
                 <i className="ti ti-clipboard-check" />
               </span>
@@ -357,9 +356,9 @@ export function HomePage() {
                 <span className="home-action-title">{t("home.action.exam", lang)}</span>
                 <span className="home-action-sub">{t("home.action.exam.sub", lang)}</span>
               </span>
-              <i className="ti ti-chevron-right home-action-chev" />
+              <span className="home-action-right">40 <i className="ti ti-chevron-right" /></span>
             </Link>
-            {/* Row 3 — two half-cards, conditional */}
+            {/* Row 3 - two half-cards, conditional */}
             {(mistakeQuestionCount > 0 || weakTopic || freshTopic) && (
               <div className="home-row3">
                 {mistakeQuestionCount > 0 && (
@@ -531,8 +530,9 @@ export function HomePage() {
           </div>
           </div>{/* /home-control-dock */}
           <div className="home-goal-card">
-            <span className="home-goal-label">{lang === "ru" ? "Цель на сегодня" : "Meta diaria"}</span>
+            <span className="home-goal-label">{lang === "ru" ? "Сегодня" : lang === "es" ? "Hoy" : "Today"}</span>
             <DailyRing completed={todayAnswered} goal={DAILY_GOAL} lang={lang} theme={theme} />
+            <span className="home-goal-percent">{dailyPercent}%</span>
             <span className="home-goal-remaining">
               {todayAnswered >= DAILY_GOAL
                 ? (lang === "ru" ? "Цель выполнена ✓" : "Meta cumplida ✓")
@@ -546,16 +546,16 @@ export function HomePage() {
         <p className="home-section-label">{t("home.today", lang)}</p>
         <div className="mission-cards-grid">
           <MissionCard icon={"📝"} title={t("home.m.p20", lang)} progress={`${todayAnswered}/${DAILY_GOAL}`} done={dailyDone} to="/practice" />
-          <MissionCard icon={"⚡"} title={t("home.m.q5", lang)} done={false} to="/practice?quick=1" />
+          <MissionCard icon={<i className="ti ti-bolt" style={{ color: "#F5B41E" }} />} title={t("home.m.q5", lang)} done={false} to="/practice?quick=1" />
           <MissionCard icon={"🗣️"} title={t("home.m.words", lang)} progress={missionWordsProgress} done={reviewedTodayCount >= 5} to="/vocabulary?tab=review" />
           <MissionCard icon={<i className="ti ti-clipboard-check" style={{color:"#f5b41e"}} />} title={examDoneToday ? t("home.m.exam.done", lang) : t("home.m.exam", lang)} done={false} to="/practice?exam=1" disabled={examDoneToday} />
         </div>
       </section>
 
       {visibleWords.length > 0 ? (
-        <section className="home-section glass">
+        <section className="home-section glass home-words-panel">
           <h3 className="home-section-title">{t("home.words.title", lang)}</h3>
-          <div className="home-word-cards">
+          <div className={`home-word-cards${visibleWords.length === 1 ? " home-word-cards--single" : ""}`}>
             {visibleWords.map((w) => (
               <div key={w.id} className="home-word-card">
                 <div className="home-word-card-body">
@@ -630,3 +630,6 @@ export function HomePage() {
     </PageShell>
   );
 }
+
+
+
