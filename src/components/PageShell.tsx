@@ -1,17 +1,19 @@
-import type { PropsWithChildren } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
 import { Navigation } from "./Navigation";
 
 type PageShellProps = PropsWithChildren<{
   title: string;
   backToHome?: boolean;
+  headerRight?: ReactNode;
 }>;
 
-export function PageShell({ title, children }: PageShellProps) {
+export function PageShell({ title, children, headerRight }: PageShellProps) {
   return (
     <main className="page-wrap">
       <section className="page">
-        <header className="page-header">
+        <header className={headerRight ? "page-header page-header--with-controls" : "page-header"}>
           <h1>{title}</h1>
+          {headerRight && <div className="page-header-controls">{headerRight}</div>}
         </header>
         {children}
       </section>

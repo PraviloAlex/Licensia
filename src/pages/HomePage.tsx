@@ -344,7 +344,84 @@ export function HomePage() {
   const remainingDue = dueWordsCount - visibleWords.length;
 
   return (
-    <PageShell title="Licencia AR" backToHome={false}>
+    <PageShell title="Licencia AR" backToHome={false} headerRight={
+      <div className="home-header-controls">
+        <div className="home-lang-toggle">
+          <button type="button" className={lang === "ru" ? "home-lang-btn home-lang-btn--active" : "home-lang-btn"} onClick={() => pickLang("ru")}>RU</button>
+          <button type="button" className={lang === "es" ? "home-lang-btn home-lang-btn--active" : "home-lang-btn"} onClick={() => pickLang("es")}>ES</button>
+        </div>
+        <div className="home-theme-toggle">
+          <button type="button" className={theme === "dark" ? "home-theme-btn home-theme-btn--active" : "home-theme-btn"} onClick={toggleTheme} aria-label="Тёмная тема"><i className="ti ti-moon" /></button>
+          <button type="button" className={theme === "light" ? "home-theme-btn home-theme-btn--active" : "home-theme-btn"} onClick={toggleTheme} aria-label="Светлая тема"><i className="ti ti-sun" /></button>
+        </div>
+        <div className="home-gear-wrap" ref={gearRef}>
+          <button type="button" ref={gearButtonRef} data-settings-gear
+            className={gearOpen ? "home-gear-btn home-gear-btn--open" : "home-gear-btn"}
+            onClick={toggleGearMenu} aria-label={t("pv2.settings", lang)}
+            aria-expanded={gearOpen} aria-controls="home-settings-menu">
+            <i className="ti ti-settings" aria-hidden="true" />
+          </button>
+          {gearOpen && createPortal(
+            <>
+              <button type="button" className="home-settings-backdrop"
+                aria-label={lang === "ru" ? "Закрыть меню настроек" : "Cerrar menú de ajustes"}
+                onClick={() => setGearOpen(false)} />
+              <div id="home-settings-menu" ref={gearMenuRef}
+                className="pv2-gear-menu home-gear-menu" role="dialog" aria-modal="true" style={gearMenuStyle}>
+                <div className="pv2-gear-section-label">{t("pv2.gear.answers", lang)}</div>
+                <button type="button" className="pv2-gear-item" onClick={toggleConfirmMode}>
+                  <span className="pv2-gear-ico pv2-gear-ico--blue"><i className="ti ti-hand-finger" /></span>
+                  <span className="pv2-gear-text">
+                    <span className="pv2-gear-label">{confirmMode ? t("pv2.gear.standardLabel", lang) : t("pv2.gear.quickLabel", lang)}</span>
+                    <span className="pv2-gear-sub">{confirmMode ? t("pv2.gear.confirmOn", lang) : t("pv2.gear.confirmOff", lang)}</span>
+                  </span>
+                  <span className={confirmMode ? "pv2-toggle" : "pv2-toggle pv2-toggle--on"} aria-hidden="true"><span className="pv2-toggle-thumb" /></span>
+                </button>
+                <div className="pv2-gear-section-label">{t("pv2.gear.uiLang", lang)}</div>
+                <div className="pv2-gear-lang-row">
+                  <button type="button" className={lang === "ru" ? "pv2-gear-lang-btn pv2-gear-lang-btn--active" : "pv2-gear-lang-btn"} onClick={() => { pickLang("ru"); setGearOpen(false); }}>RU {t("pv2.gear.uiRu", lang)}</button>
+                  <button type="button" className={lang === "es" ? "pv2-gear-lang-btn pv2-gear-lang-btn--active" : "pv2-gear-lang-btn"} onClick={() => { pickLang("es"); setGearOpen(false); }}>ES {t("pv2.gear.uiEs", lang)}</button>
+                </div>
+                <div className="pv2-gear-section-label" style={{padding:"4px 12px 2px"}}>{t("pv2.gear.fontSize", lang)}</div>
+                <div className="pv2-gear-font-row">
+                  {(["normal","large","huge"] as FontSizePref[]).map((p, i) => (
+                    <button key={p} type="button"
+                      className={fontSizePref === p ? "pv2-font-pill pv2-font-pill--active" : "pv2-font-pill"}
+                      onClick={() => { setFontSizePref(p); setFontSizePref_(p); }}
+                      style={{ fontSize: ["0.72rem","1.0rem","1.38rem"][i] }}>A</button>
+                  ))}
+                </div>
+                <div className="pv2-gear-divider" />
+                <div className="pv2-gear-section-label">{lang === "ru" ? "Правовая информация" : "Legal"}</div>
+                <Link to="/legal" className="pv2-gear-item home-gear-item-link" onClick={() => setGearOpen(false)}>
+                  <span className="pv2-gear-ico pv2-gear-ico--teal"><i className="ti ti-info-circle" /></span>
+                  <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Дисклеймер" : "Disclaimer"}</span></span>
+                </Link>
+                <Link to="/sources" className="pv2-gear-item home-gear-item-link" onClick={() => setGearOpen(false)}>
+                  <span className="pv2-gear-ico pv2-gear-ico--blue"><i className="ti ti-list-search" /></span>
+                  <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Источники" : "Fuentes"}</span></span>
+                </Link>
+                <a href={PRIVACY_URL} className="pv2-gear-item home-gear-item-link" onClick={() => setGearOpen(false)}>
+                  <span className="pv2-gear-ico pv2-gear-ico--amber"><i className="ti ti-shield-lock" /></span>
+                  <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Политика конфиденциальности" : "Política de privacidad"}</span></span>
+                </a>
+                <div className="pv2-gear-divider" />
+                <a href="mailto:pravilo.ar@gmail.com?subject=Licencia%20AR%20bug%20report" className="pv2-gear-item home-gear-item-link" onClick={() => setGearOpen(false)}>
+                  <span className="pv2-gear-ico pv2-gear-ico--red"><i className="ti ti-bug" /></span>
+                  <span className="pv2-gear-text"><span className="pv2-gear-label">{t("home.gear.bug", lang)}</span></span>
+                </a>
+                <a href="https://ko-fi.com/alexsun99" target="_blank" rel="noreferrer" className="pv2-gear-item home-gear-item-link" onClick={() => setGearOpen(false)}>
+                  <span className="pv2-gear-ico pv2-gear-ico--amber"><i className="ti ti-coffee" /></span>
+                  <span className="pv2-gear-text"><span className="pv2-gear-label">{t("home.gear.support", lang)}</span></span>
+                </a>
+              </div>
+            </>,
+            document.body
+          )}
+        </div>
+        <span className="home-version">{APP_VERSION}</span>
+      </div>
+    }>
 
       {showReminder && (
         <div className="home-reminder">
@@ -492,153 +569,6 @@ export function HomePage() {
         </div>
 
         <div className="home-hero-right">
-          <div className="home-control-dock">
-            <div className="home-hero-controls">
-            <div className="home-gear-row">
-              <span className="home-version">{APP_VERSION}</span>
-              <div className="home-gear-wrap" ref={gearRef}>
-              <button
-                type="button"
-                ref={gearButtonRef}
-                data-settings-gear
-                className={gearOpen ? "home-gear-btn home-gear-btn--open" : "home-gear-btn"}
-                onClick={toggleGearMenu}
-                aria-label={t("pv2.settings", lang)}
-                aria-expanded={gearOpen}
-                aria-controls="home-settings-menu"
-              >
-                <i className="ti ti-settings" aria-hidden="true" />
-              </button>
-              {gearOpen && createPortal(
-                <>
-                <button
-                  type="button"
-                  className="home-settings-backdrop"
-                  aria-label={lang === "ru" ? "Закрыть меню настроек" : "Cerrar menú de ajustes"}
-                  onClick={() => setGearOpen(false)}
-                />
-                <div
-                  id="home-settings-menu"
-                  ref={gearMenuRef}
-                  className="pv2-gear-menu home-gear-menu"
-                  role="dialog"
-                  aria-modal="true"
-                  style={gearMenuStyle}
-                >
-                  <div className="pv2-gear-section-label">{t("pv2.gear.answers", lang)}</div>
-                  <button type="button" className="pv2-gear-item" onClick={toggleConfirmMode}>
-                    <span className="pv2-gear-ico pv2-gear-ico--blue"><i className="ti ti-hand-finger" /></span>
-                    <span className="pv2-gear-text">
-                      <span className="pv2-gear-label">{confirmMode ? t("pv2.gear.standardLabel", lang) : t("pv2.gear.quickLabel", lang)}</span>
-                      <span className="pv2-gear-sub">{confirmMode ? t("pv2.gear.confirmOn", lang) : t("pv2.gear.confirmOff", lang)}</span>
-                    </span>
-                    <span className={confirmMode ? "pv2-toggle" : "pv2-toggle pv2-toggle--on"} aria-hidden="true"><span className="pv2-toggle-thumb" /></span>
-                  </button>
-                  <div className="pv2-gear-section-label">{t("pv2.gear.uiLang", lang)}</div>
-                  <div className="pv2-gear-lang-row">
-                    <button
-                      type="button"
-                      className={lang === "ru" ? "pv2-gear-lang-btn pv2-gear-lang-btn--active" : "pv2-gear-lang-btn"}
-                      onClick={() => { pickLang("ru"); setGearOpen(false); }}
-                    >
-                      RU {t("pv2.gear.uiRu", lang)}
-                    </button>
-                    <button
-                      type="button"
-                      className={lang === "es" ? "pv2-gear-lang-btn pv2-gear-lang-btn--active" : "pv2-gear-lang-btn"}
-                      onClick={() => { pickLang("es"); setGearOpen(false); }}
-                    >
-                      ES {t("pv2.gear.uiEs", lang)}
-                    </button>
-                  </div>
-                  <div className="pv2-gear-section-label" style={{padding:"4px 12px 2px"}}>{t("pv2.gear.fontSize", lang)}</div>
-                <div className="pv2-gear-font-row">
-                  {(["normal","large","huge"] as FontSizePref[]).map((p, i) => (
-                    <button key={p} type="button"
-                      className={fontSizePref === p ? "pv2-font-pill pv2-font-pill--active" : "pv2-font-pill"}
-                      onClick={() => { setFontSizePref(p); setFontSizePref_(p); }}
-                      style={{ fontSize: ["0.72rem","1.0rem","1.38rem"][i] }}>A</button>
-                  ))}
-                </div>
-                <div className="pv2-gear-divider" />
-                  <div className="pv2-gear-section-label">{lang === "ru" ? "Правовая информация" : "Legal"}</div>
-                  <Link
-                    to="/legal"
-                    className="pv2-gear-item home-gear-item-link"
-                    onClick={() => setGearOpen(false)}
-                  >
-                    <span className="pv2-gear-ico pv2-gear-ico--teal"><i className="ti ti-info-circle" /></span>
-                    <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Дисклеймер" : "Disclaimer"}</span></span>
-                  </Link>
-                  <Link
-                    to="/sources"
-                    className="pv2-gear-item home-gear-item-link"
-                    onClick={() => setGearOpen(false)}
-                  >
-                    <span className="pv2-gear-ico pv2-gear-ico--blue"><i className="ti ti-list-search" /></span>
-                    <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Источники" : "Fuentes"}</span></span>
-                  </Link>
-                  <a
-                    href={PRIVACY_URL}
-                    className="pv2-gear-item home-gear-item-link"
-                    onClick={() => setGearOpen(false)}
-                  >
-                    <span className="pv2-gear-ico pv2-gear-ico--amber"><i className="ti ti-shield-lock" /></span>
-                    <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Политика конфиденциальности" : "Política de privacidad"}</span></span>
-                  </a>
-                <div className="pv2-gear-divider" />
-                  <a
-                    href="mailto:pravilo.ar@gmail.com?subject=Licencia%20AR%20bug%20report"
-                    className="pv2-gear-item"
-                    onClick={() => setGearOpen(false)}
-                  >
-                    <span className="pv2-gear-ico pv2-gear-ico--red"><i className="ti ti-bug" /></span>
-                    <span className="pv2-gear-text"><span className="pv2-gear-label">{t("home.gear.bug", lang)}</span></span>
-                  </a>
-                  <a
-                    href="https://ko-fi.com/alexsun99"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="pv2-gear-item home-gear-item-link"
-                    onClick={() => setGearOpen(false)}
-                  >
-                    <span className="pv2-gear-ico pv2-gear-ico--amber"><i className="ti ti-coffee" /></span>
-                    <span className="pv2-gear-text"><span className="pv2-gear-label">{t("home.gear.support", lang)}</span></span>
-                  </a>
-                </div>
-                </>,
-                document.body
-              )}
-            </div>
-            </div>
-            <div className="home-lang-toggle">
-              <button
-                type="button"
-                className={lang === "ru" ? "home-lang-btn home-lang-btn--active" : "home-lang-btn"}
-                onClick={() => pickLang("ru")}
-              >RU</button>
-              <button
-                type="button"
-                className={lang === "es" ? "home-lang-btn home-lang-btn--active" : "home-lang-btn"}
-                onClick={() => pickLang("es")}
-              >ES</button>
-            </div>
-            <div className="home-theme-toggle">
-              <button
-                type="button"
-                className={theme === "dark" ? "home-theme-btn home-theme-btn--active" : "home-theme-btn"}
-                onClick={toggleTheme}
-                aria-label="Тёмная тема"
-              ><i className="ti ti-moon" /></button>
-              <button
-                type="button"
-                className={theme === "light" ? "home-theme-btn home-theme-btn--active" : "home-theme-btn"}
-                onClick={toggleTheme}
-                aria-label="Светлая тема"
-              ><i className="ti ti-sun" /></button>
-            </div>
-          </div>
-          </div>{/* /home-control-dock */}
           <div className="home-goal-card">
             <span className="home-goal-label">{lang === "ru" ? "Сегодня" : lang === "es" ? "Hoy" : "Today"}</span>
             <DailyRing completed={todayAnswered} goal={DAILY_GOAL} lang={lang} theme={theme} />
@@ -740,6 +670,3 @@ export function HomePage() {
     </PageShell>
   );
 }
-
-
-

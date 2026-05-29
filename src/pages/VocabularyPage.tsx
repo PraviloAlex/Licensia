@@ -314,7 +314,7 @@ export function VocabularyPage() {
             <button type="button" className="vocab-toast-close"
               onClick={() => { setToast(null); if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }}
               aria-label={t("pv2.modal.close", lang)}
-            >\u00D7</button>
+            ><i className="ti ti-x" /></button>
           </div>
         </div>
       )}

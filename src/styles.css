@@ -122,6 +122,23 @@ a { color: inherit; }
   color: var(--text-hi);
 }
 
+/* ─── Page header with controls (homepage) ─────────────────── */
+.page-header--with-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.page-header--with-controls h1 { margin: 0; flex-shrink: 0; }
+
+.page-header-controls { flex-shrink: 0; }
+
+.home-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* ─── Typography ───────────────────────────────────────────── */
 .t-hero    { font-size: 2rem;   font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: var(--text-hi); }
 .t-title   { font-size: 1.2rem; font-weight: 700; line-height: 1.2; color: var(--text-hi); }
@@ -2359,7 +2376,7 @@ a { color: inherit; }
 /* Question text */
 .pv2-question-es {
   padding: 0 20px;
-  font-size: clamp(17px, 1.3vw, 21px);
+  font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
   font-weight: 800;
   color: var(--color-text-primary, #eef4ff);
   line-height: 1.35;
@@ -2367,7 +2384,7 @@ a { color: inherit; }
 }
 .pv2-question-ru {
   padding: 0 20px;
-  font-size: clamp(15px, 1vw, 16px);
+  font-size: clamp(0.9375rem, 1vw, 1rem);
   font-weight: 500;
   color: rgba(180,210,255,0.72);
   margin-bottom: 14px;
@@ -2460,8 +2477,8 @@ a { color: inherit; }
   color: #ff8888;
 }
 .pv2-option-content { display: flex; flex-direction: column; flex: 1; }
-.pv2-option-es { font-size: clamp(15px, 1vw, 16px); font-weight: 700; color: rgba(200,220,255,0.85); line-height: 1.42; }
-.pv2-option-ru { font-size: clamp(13.5px, 0.9vw, 14.5px); color: rgba(160,190,255,0.4); margin-top: 3px; line-height: 1.45; }
+.pv2-option-es { font-size: clamp(0.9375rem, 1vw, 1rem); font-weight: 700; color: rgba(200,220,255,0.85); line-height: 1.42; }
+.pv2-option-ru { font-size: clamp(0.844rem, 0.9vw, 0.906rem); color: rgba(160,190,255,0.4); margin-top: 3px; line-height: 1.45; }
 
 /* Bottom sheet */
 .pv2-sheet {
@@ -5138,14 +5155,14 @@ a { color: inherit; }
 /* ── Question text ────────────────────────────────────────── */
 [data-theme="light"] .pv2-question-es {
   color: var(--pt-text-main);
-  font-size: clamp(17px, 1.3vw, 21px);
+  font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
   font-weight: 800;
   line-height: 1.35;
   letter-spacing: -0.01em;
 }
 [data-theme="light"] .pv2-question-ru {
   color: var(--pt-text-secondary);
-  font-size: clamp(15px, 1vw, 16px);
+  font-size: clamp(0.9375rem, 1vw, 1rem);
   font-weight: 500;
   line-height: 1.5;
   opacity: 1;
@@ -6172,11 +6189,15 @@ a { color: inherit; }
     width: 100%;
     min-width: 0;
     max-width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: stretch;
     padding-left: 0;
-    gap: 12px;
+    gap: 0;
+  }
+
+  .home-goal-card {
+    width: 100%;
+    margin-top: 0;
   }
 
   .home-action-grid {
