@@ -1,4 +1,5 @@
 import type { VerifiedQuestion } from "../types/question";
+import { EXAM_TOTAL_QUESTIONS } from "../constants/exam";
 
 export const QUESTION_PROGRESS_KEY = "licensia_question_progress";
 export const CURRENT_PRACTICE_SESSION_KEY = "licensia_current_practice_session";
@@ -206,7 +207,7 @@ export function buildMistakesPracticeQuestionIds(questions: VerifiedQuestion[]):
 }
 
 export function buildExamQuestionIds(questions: VerifiedQuestion[]): string[] {
-  return shuffle(questions.map((q) => q.id)).slice(0, Math.min(40, questions.length));
+  return shuffle(questions.map((q) => q.id)).slice(0, Math.min(EXAM_TOTAL_QUESTIONS, questions.length));
 }
 
 export function createPracticeSession(questionIds: string[]): PracticeSession {

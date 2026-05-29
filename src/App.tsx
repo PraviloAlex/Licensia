@@ -7,6 +7,8 @@ import { PracticalExamPage } from "./pages/PracticalExamPage";
 import { ProgressPage } from "./pages/ProgressPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { SignsPage } from "./pages/SignsPage";
+import { LegalPage } from "./pages/LegalPage";
+import { SourcesPage } from "./pages/SourcesPage";
 
 const ONBOARDING_KEY = "licencia_ar_onboarding_done";
 
@@ -27,6 +29,8 @@ export default function App() {
       <Route path="/practical-exam" element={<PracticalExamPage />} />
       <Route path="/progress" element={<ProgressPage />} />
       <Route path="/signs" element={<SignsPage />} />
+      <Route path="/legal" element={<LegalPage />} />
+      <Route path="/sources" element={<SourcesPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

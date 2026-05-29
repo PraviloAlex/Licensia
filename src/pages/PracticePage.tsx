@@ -23,6 +23,7 @@ import { markExamCompletedToday } from "../lib/homeStats";
 import type { VerifiedQuestion } from "../types/question";
 import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
+import { EXAM_PASS_CORRECT, EXAM_PASS_PERCENT } from "../constants/exam";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 function imgSrc(src: string): string {
@@ -425,9 +426,9 @@ export function PracticePage() {
                 <div className="pv2-exam-start-history">
                   <div className="pv2-esh-item"><span className="pv2-esh-label">{t("pv2.exam.attempts", uiLang)}</span><span className="pv2-esh-val">{examHistory.attempts}</span></div>
                   <div className="pv2-esh-sep" />
-                  <div className="pv2-esh-item"><span className="pv2-esh-label">{t("pv2.exam.best", uiLang)}</span><span className={examHistory.bestPct >= 70 ? "pv2-esh-val pv2-esh-val--pass" : "pv2-esh-val pv2-esh-val--fail"}>{examHistory.bestPct}%</span></div>
+                  <div className="pv2-esh-item"><span className="pv2-esh-label">{t("pv2.exam.best", uiLang)}</span><span className={examHistory.bestPct >= EXAM_PASS_PERCENT ? "pv2-esh-val pv2-esh-val--pass" : "pv2-esh-val pv2-esh-val--fail"}>{examHistory.bestPct}%</span></div>
                   <div className="pv2-esh-sep" />
-                  <div className="pv2-esh-item"><span className="pv2-esh-label">{t("pv2.exam.last", uiLang)}</span><span className={examHistory.lastPct >= 70 ? "pv2-esh-val pv2-esh-val--pass" : "pv2-esh-val pv2-esh-val--fail"}>{examHistory.lastPct}%</span></div>
+                  <div className="pv2-esh-item"><span className="pv2-esh-label">{t("pv2.exam.last", uiLang)}</span><span className={examHistory.lastPct >= EXAM_PASS_PERCENT ? "pv2-esh-val pv2-esh-val--pass" : "pv2-esh-val pv2-esh-val--fail"}>{examHistory.lastPct}%</span></div>
                 </div>
               )}
               <button type="button" className="pv2-exam-start-btn" onClick={handleStartExam}>
@@ -785,7 +786,7 @@ export function PracticePage() {
           {/* EXAM SUMMARY */}
           {showExamSummary && (() => {
             const pct       = examTotal > 0 ? Math.round((examCorrectCount / examTotal) * 100) : 0;
-            const passed     = pct >= 70;
+            const passed     = examCorrectCount >= EXAM_PASS_CORRECT;
             const scoreColor = passed ? "#62f4b4" : "#ff9c9c";
             const scoreLabel = passed ? t("pv2.exam.sum.passed", uiLang) : t("pv2.exam.sum.failed", uiLang);
             const timeSpent  = `${Math.floor(examElapsed / 60)}:${(examElapsed % 60).toString().padStart(2, "0")}`;

@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import { useMemo, useEffect, useState, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
+import { useMemo, useCallback, useEffect, useState, useRef, type CSSProperties, type ReactNode } from "react";
 import { PageShell } from "../components/PageShell";
 import { glossaryData, questionsData } from "../lib/data";
 import { getQuestionProgressMap, getUniqueSeenCount, getTotalWrongAnswersCount, getMistakeQuestionCount, getCorrectedMistakeCount } from "../lib/questionProgress";
@@ -12,8 +13,10 @@ import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
 
 const DAILY_GOAL = 25;
-const APP_VERSION = "v0.2";
+const APP_VERSION = "v0.3";
 const REMINDER_DISMISS_KEY = "licencia_ar_reminder_dismissed";
+const PRIVACY_URL = `${import.meta.env.BASE_URL}privacy.html`;
+const SETTINGS_MENU_WIDTH = 330;
 
 function getDaysSinceLastPractice(): number | null {
   const map = getQuestionProgressMap();
@@ -184,8 +187,43 @@ export function HomePage() {
   const [dismissedWords, setDismissedWords] = useState<Set<string>>(new Set());
   const [reminderDismissed, setReminderDismissed] = useState(() => getReminderDismissedToday());
   const gearRef = useRef<HTMLDivElement>(null);
+  const gearButtonRef = useRef<HTMLButtonElement>(null);
+  const gearMenuRef = useRef<HTMLDivElement>(null);
+  const [gearMenuStyle, setGearMenuStyle] = useState<CSSProperties>({});
 
   useEffect(() => { setData(readHomeData()); }, [location.key]);
+
+  const recalculateGearMenuPosition = useCallback(() => {
+    if (typeof window === "undefined") return;
+    const gear = gearButtonRef.current ?? document.querySelector<HTMLButtonElement>("[data-settings-gear]");
+    if (!gear) {
+      setGearMenuStyle({
+        "--settings-menu-top": "96px",
+        "--settings-menu-left": `calc(100vw - ${SETTINGS_MENU_WIDTH + 96}px)`,
+      } as CSSProperties);
+      return;
+    }
+
+    const rect = gear.getBoundingClientRect();
+    const menuWidth = Math.min(SETTINGS_MENU_WIDTH, window.innerWidth - 24);
+    const top = Math.max(12, Math.min(rect.bottom + 10, window.innerHeight - 32));
+    const left = Math.max(12, Math.min(rect.right - menuWidth, window.innerWidth - menuWidth - 12));
+    setGearMenuStyle({
+      "--settings-menu-top": `${top}px`,
+      "--settings-menu-left": `${left}px`,
+    } as CSSProperties);
+  }, []);
+
+  const toggleGearMenu = useCallback(() => {
+    if (gearOpen) {
+      setGearOpen(false);
+      return;
+    }
+    requestAnimationFrame(() => {
+      recalculateGearMenuPosition();
+      setGearOpen(true);
+    });
+  }, [gearOpen, recalculateGearMenuPosition]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -195,11 +233,39 @@ export function HomePage() {
   useEffect(() => {
     if (!gearOpen) return;
     const fn = (e: MouseEvent) => {
-      if (gearRef.current && !gearRef.current.contains(e.target as Node)) setGearOpen(false);
+      const target = e.target as Node;
+      const insideButton = gearRef.current?.contains(target);
+      const insideMenu = gearMenuRef.current?.contains(target);
+      if (!insideButton && !insideMenu) setGearOpen(false);
+    };
+    const keyFn = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setGearOpen(false);
     };
     document.addEventListener("mousedown", fn);
-    return () => document.removeEventListener("mousedown", fn);
+    document.addEventListener("keydown", keyFn);
+    return () => {
+      document.removeEventListener("mousedown", fn);
+      document.removeEventListener("keydown", keyFn);
+    };
   }, [gearOpen]);
+
+  useEffect(() => {
+    if (!gearOpen || typeof window === "undefined") return;
+    const updateMenuPosition = () => requestAnimationFrame(recalculateGearMenuPosition);
+    updateMenuPosition();
+    window.addEventListener("resize", updateMenuPosition);
+    window.addEventListener("scroll", updateMenuPosition, true);
+    return () => {
+      window.removeEventListener("resize", updateMenuPosition);
+      window.removeEventListener("scroll", updateMenuPosition, true);
+    };
+  }, [gearOpen, recalculateGearMenuPosition]);
+
+  useEffect(() => {
+    if (!gearOpen) return;
+    const frame = requestAnimationFrame(recalculateGearMenuPosition);
+    return () => cancelAnimationFrame(frame);
+  }, [gearOpen, lang, theme, fontSizePref, location.key, recalculateGearMenuPosition]);
 
   function toggleConfirmMode() {
     const next = !confirmMode;
@@ -211,7 +277,6 @@ export function HomePage() {
     setUILang(l);
     setLang_(l);
     window.dispatchEvent(new Event("ui-lang-changed"));
-    window.location.reload();
   }
 
   function toggleTheme() {
@@ -434,15 +499,32 @@ export function HomePage() {
               <div className="home-gear-wrap" ref={gearRef}>
               <button
                 type="button"
+                ref={gearButtonRef}
+                data-settings-gear
                 className={gearOpen ? "home-gear-btn home-gear-btn--open" : "home-gear-btn"}
-                onClick={() => setGearOpen((v) => !v)}
+                onClick={toggleGearMenu}
                 aria-label={t("pv2.settings", lang)}
                 aria-expanded={gearOpen}
+                aria-controls="home-settings-menu"
               >
                 <i className="ti ti-settings" aria-hidden="true" />
               </button>
-              {gearOpen && (
-                <div className="pv2-gear-menu home-gear-menu" role="dialog">
+              {gearOpen && createPortal(
+                <>
+                <button
+                  type="button"
+                  className="home-settings-backdrop"
+                  aria-label={lang === "ru" ? "Закрыть меню настроек" : "Cerrar menú de ajustes"}
+                  onClick={() => setGearOpen(false)}
+                />
+                <div
+                  id="home-settings-menu"
+                  ref={gearMenuRef}
+                  className="pv2-gear-menu home-gear-menu"
+                  role="dialog"
+                  aria-modal="true"
+                  style={gearMenuStyle}
+                >
                   <div className="pv2-gear-section-label">{t("pv2.gear.answers", lang)}</div>
                   <button type="button" className="pv2-gear-item" onClick={toggleConfirmMode}>
                     <span className="pv2-gear-ico pv2-gear-ico--blue"><i className="ti ti-hand-finger" /></span>
@@ -459,14 +541,14 @@ export function HomePage() {
                       className={lang === "ru" ? "pv2-gear-lang-btn pv2-gear-lang-btn--active" : "pv2-gear-lang-btn"}
                       onClick={() => { pickLang("ru"); setGearOpen(false); }}
                     >
-                      {"🇷🇺"} {t("pv2.gear.uiRu", lang)}
+                      RU {t("pv2.gear.uiRu", lang)}
                     </button>
                     <button
                       type="button"
                       className={lang === "es" ? "pv2-gear-lang-btn pv2-gear-lang-btn--active" : "pv2-gear-lang-btn"}
                       onClick={() => { pickLang("es"); setGearOpen(false); }}
                     >
-                      {"🇦🇷"} {t("pv2.gear.uiEs", lang)}
+                      ES {t("pv2.gear.uiEs", lang)}
                     </button>
                   </div>
                   <div className="pv2-gear-section-label" style={{padding:"4px 12px 2px"}}>{t("pv2.gear.fontSize", lang)}</div>
@@ -479,14 +561,40 @@ export function HomePage() {
                   ))}
                 </div>
                 <div className="pv2-gear-divider" />
-                  <button
-                    type="button"
+                  <div className="pv2-gear-section-label">{lang === "ru" ? "Правовая информация" : "Legal"}</div>
+                  <Link
+                    to="/legal"
+                    className="pv2-gear-item home-gear-item-link"
+                    onClick={() => setGearOpen(false)}
+                  >
+                    <span className="pv2-gear-ico pv2-gear-ico--teal"><i className="ti ti-info-circle" /></span>
+                    <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Дисклеймер" : "Disclaimer"}</span></span>
+                  </Link>
+                  <Link
+                    to="/sources"
+                    className="pv2-gear-item home-gear-item-link"
+                    onClick={() => setGearOpen(false)}
+                  >
+                    <span className="pv2-gear-ico pv2-gear-ico--blue"><i className="ti ti-list-search" /></span>
+                    <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Источники" : "Fuentes"}</span></span>
+                  </Link>
+                  <a
+                    href={PRIVACY_URL}
+                    className="pv2-gear-item home-gear-item-link"
+                    onClick={() => setGearOpen(false)}
+                  >
+                    <span className="pv2-gear-ico pv2-gear-ico--amber"><i className="ti ti-shield-lock" /></span>
+                    <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Политика конфиденциальности" : "Política de privacidad"}</span></span>
+                  </a>
+                <div className="pv2-gear-divider" />
+                  <a
+                    href="mailto:pravilo.ar@gmail.com?subject=Licencia%20AR%20bug%20report"
                     className="pv2-gear-item"
                     onClick={() => setGearOpen(false)}
                   >
                     <span className="pv2-gear-ico pv2-gear-ico--red"><i className="ti ti-bug" /></span>
                     <span className="pv2-gear-text"><span className="pv2-gear-label">{t("home.gear.bug", lang)}</span></span>
-                  </button>
+                  </a>
                   <a
                     href="https://ko-fi.com/alexsun99"
                     target="_blank"
@@ -498,6 +606,8 @@ export function HomePage() {
                     <span className="pv2-gear-text"><span className="pv2-gear-label">{t("home.gear.support", lang)}</span></span>
                   </a>
                 </div>
+                </>,
+                document.body
               )}
             </div>
             </div>

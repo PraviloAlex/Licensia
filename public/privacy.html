@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy — Licencia AR</title>
+    <script>
+      // Inherit app theme before page renders to avoid flash
+      (function () {
+        try {
+          var t = localStorage.getItem('ui_theme');
+          if (t === 'light' || t === 'dark') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch (e) { /* storage unavailable — use default dark */ }
+      })();
+    </script>
+    <style>
+      :root {
+        color-scheme: dark light;
+        /* dark theme defaults */
+        --bg:            #060e1c;
+        --surface:       #0d1829;
+        --surface-muted: #091320;
+        --surface-high:  #142035;
+        --text:          rgba(218, 232, 255, 0.88);
+        --text-heading:  rgba(240, 248, 255, 0.97);
+        --text-muted:    rgba(155, 182, 220, 0.68);
+        --accent:        #60a5fa;
+        --border:        rgba(110, 155, 220, 0.20);
+        --border-strong: rgba(130, 175, 245, 0.34);
+        --shadow-card:   0 24px 64px rgba(0, 0, 0, 0.38);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(ellipse at 18% 0%, rgba(56, 120, 210, 0.13), transparent 36%),
+          radial-gradient(ellipse at 82% 60%, rgba(30, 70, 150, 0.07), transparent 38%),
+          linear-gradient(180deg, #060e1c 0%, #040a15 100%);
+      }
+
+      /* ── Shell ───────────────────────────────────────────── */
+      .privacy-screen {
+        width: min(100% - 32px, 960px);
+        margin: 0 auto;
+        padding: 40px 0 72px;
+      }
+
+      /* ── Brand heading ───────────────────────────────────── */
+      .privacy-header h1 {
+        margin: 0 0 24px;
+        color: var(--text-heading);
+        font-size: clamp(30px, 5vw, 44px);
+        line-height: 1.05;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+      }
+
+      /* ── Control bar ─────────────────────────────────────── */
+      .privacy-control-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        width: 100%;
+        margin-bottom: 12px;
+        padding: 8px 8px 8px 10px;
+        border: 1px solid var(--border-strong);
+        border-radius: 18px;
+        background: var(--surface);
+        box-shadow:
+          0 16px 40px rgba(0, 0, 0, 0.24),
+          inset 0 1px 0 rgba(255, 255, 255, 0.045);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      /* ── Back button ─────────────────────────────────────── */
+      .privacy-back-btn {
+        display: inline-flex;
+        align-items: center;
+        height: 36px;
+        padding: 0 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--surface-muted);
+        color: var(--text-muted);
+        font: inherit;
+        font-size: 14px;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+      }
+
+      .privacy-back-btn:hover {
+        color: var(--text);
+        background: var(--surface-high);
+        border-color: var(--border-strong);
+      }
+
+      .privacy-back-btn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* ── Segmented language switcher ─────────────────────── */
+      .privacy-lang-switcher {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        padding: 3px;
+        border-radius: 13px;
+        background: var(--surface-muted);
+        border: 1px solid var(--border);
+        overflow-x: auto;
+        scrollbar-width: none;
+        flex-shrink: 0;
+      }
+
+      .privacy-lang-switcher::-webkit-scrollbar { display: none; }
+
+      .privacy-lang-tab {
+        min-height: 32px;
+        padding: 0 13px;
+        border: none;
+        border-radius: 10px;
+        background: transparent;
+        color: var(--text-muted);
+        font: inherit;
+        font-size: 13px;
+        font-weight: 900;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+      }
+
+      .privacy-lang-tab:hover {
+        color: var(--text);
+      }
+
+      .privacy-lang-tab.active {
+        background: var(--surface-high);
+        color: var(--accent);
+        box-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.06) inset,
+          0 4px 12px rgba(0, 0, 0, 0.22);
+      }
+
+      .privacy-lang-tab:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* ── Document card ───────────────────────────────────── */
+      .privacy-document {
+        border: 1px solid var(--border-strong);
+        border-radius: 22px;
+        background: var(--surface);
+        padding: clamp(22px, 4vw, 36px);
+        box-shadow:
+          0 28px 72px rgba(0, 0, 0, 0.36),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      .privacy-document h2 {
+        margin: 0 0 6px;
+        color: var(--text-heading);
+        font-size: clamp(24px, 4vw, 32px);
+        line-height: 1.1;
+        font-weight: 900;
+        letter-spacing: -0.035em;
+      }
+
+      .privacy-document .updated {
+        margin: 0 0 26px;
+        color: var(--text-muted);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .privacy-section {
+        margin-top: 28px;
+      }
+
+      .privacy-section h3 {
+        margin: 0 0 8px;
+        color: var(--text-heading);
+        font-size: 16px;
+        font-weight: 900;
+        letter-spacing: -0.01em;
+      }
+
+      .privacy-section p,
+      .privacy-section li {
+        color: var(--text);
+        font-size: 15px;
+        line-height: 1.68;
+      }
+
+      .privacy-section p { margin: 0; }
+      .privacy-section ul { margin: 8px 0 0; padding-left: 20px; }
+      .privacy-section a { color: #93c5fd; }
+
+      /* ── Light theme ─────────────────────────────────────── */
+      [data-theme="light"] {
+        --bg:            #fbf8f3;
+        --surface:       #ffffff;
+        --surface-muted: #f0ebe3;
+        --surface-high:  #e8e2d8;
+        --text:          #374151;
+        --text-heading:  #171a1f;
+        --text-muted:    #7b8492;
+        --accent:        #f97316;
+        --border:        #e5ded4;
+        --border-strong: #d8cfc4;
+        --shadow-card:   0 14px 36px rgba(31, 41, 55, 0.10);
+      }
+
+      [data-theme="light"] body { background: #fbf8f3; }
+
+      [data-theme="light"] .privacy-control-bar {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        box-shadow: 0 4px 16px rgba(31, 41, 55, 0.08);
+      }
+
+      [data-theme="light"] .privacy-document {
+        box-shadow: 0 12px 32px rgba(31, 41, 55, 0.10);
+      }
+
+      [data-theme="light"] .privacy-lang-switcher {
+        border-color: #e5ded4;
+      }
+
+      [data-theme="light"] .privacy-lang-tab.active {
+        background: #ffffff;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.10);
+      }
+
+      [data-theme="light"] .privacy-section a { color: #2563eb; }
+
+      /* ── Mobile ──────────────────────────────────────────── */
+      @media (max-width: 580px) {
+        .privacy-screen {
+          width: min(100% - 24px, 960px);
+          padding-top: 28px;
+          padding-bottom: 56px;
+        }
+
+        .privacy-header h1 {
+          font-size: 30px;
+          margin-bottom: 18px;
+        }
+
+        .privacy-control-bar {
+          flex-direction: column;
+          align-items: stretch;
+          padding: 10px;
+          gap: 8px;
+        }
+
+        .privacy-back-btn {
+          align-self: flex-start;
+        }
+
+        .privacy-lang-switcher {
+          width: 100%;
+          justify-content: stretch;
+        }
+
+        .privacy-lang-tab {
+          flex: 1 0 auto;
+          text-align: center;
+        }
+
+        .privacy-document {
+          padding: 20px;
+          border-radius: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="privacy-screen">
+      <header class="privacy-header">
+        <h1>Licencia AR</h1>
+      </header>
+
+      <div class="privacy-control-bar">
+        <a class="privacy-back-btn" href="./" id="privacyBackLink">← Inicio</a>
+        <div class="privacy-lang-switcher" role="tablist" aria-label="Privacy Policy language">
+          <button class="privacy-lang-tab active" type="button" data-policy-lang="es" role="tab" aria-selected="true">ES Español</button>
+          <button class="privacy-lang-tab" type="button" data-policy-lang="en" role="tab" aria-selected="false">EN English</button>
+          <button class="privacy-lang-tab" type="button" data-policy-lang="ru" role="tab" aria-selected="false">RU Русский</button>
+        </div>
+      </div>
+
+      <article class="privacy-document">
+        <div id="privacyPolicyContent"></div>
+      </article>
+    </main>
+
+    <script>
+      const PRIVACY_POLICY_STORAGE_KEY = "licencia_ar_privacy_lang";
+
+      const privacyPolicies = {
+        es: {
+          title: "Política de privacidad",
+          updated: "Última actualización: 29 de mayo de 2026",
+          sections: [
+            {
+              title: "1. Quiénes somos",
+              body: "Licencia AR es una herramienta independiente de estudio para ayudar a los usuarios a prepararse para el examen teórico de conducción. No somos una aplicación oficial del Gobierno de la Ciudad de Buenos Aires, de la Agencia Nacional de Seguridad Vial ni de ningún otro organismo gubernamental."
+            },
+            {
+              title: "2. Qué datos guardamos",
+              body: "La app puede guardar localmente tu progreso de estudio, configuración de idioma, tema visual, tamaño de texto y preferencias de uso. Estos datos se almacenan en tu dispositivo y se usan para que la experiencia de estudio funcione correctamente."
+            },
+            {
+              title: "3. Qué datos no solicitamos",
+              body: "No solicitamos cuenta de usuario, nombre, email, teléfono, documento de identidad, dirección, ubicación precisa, datos de pago ni información sensible."
+            },
+            {
+              title: "4. Analítica, publicidad y seguimiento",
+              body: "La versión actual no usa publicidad, herramientas de analítica, servicios de seguimiento, cuentas de usuario ni sincronización en la nube. No vendemos datos personales y no compartimos datos personales con anunciantes."
+            },
+            {
+              title: "5. Progreso y almacenamiento local",
+              body: "El progreso de estudio, respuestas, errores, estado de vocabulario y preferencias pueden guardarse localmente en el dispositivo. Podés borrar estos datos desde la configuración del navegador o del dispositivo."
+            },
+            {
+              title: "6. Enlaces externos y caché",
+              body: "La app puede incluir enlaces a fuentes oficiales o materiales públicos. No controlamos el contenido ni las políticas de privacidad de sitios externos. La versión web/PWA puede almacenar archivos en caché para mejorar la carga y el uso sin conexión."
+            },
+            {
+              title: "7. Contacto",
+              body: "Para consultas sobre privacidad o soporte, podés escribir a pravilo.ar@gmail.com."
+            }
+          ]
+        },
+        en: {
+          title: "Privacy Policy",
+          updated: "Last updated: 29 May 2026",
+          sections: [
+            {
+              title: "1. Who we are",
+              body: "Licencia AR is an independent study tool designed to help users prepare for the theoretical driving exam. We are not an official app of the Government of the City of Buenos Aires, the National Road Safety Agency, or any other government body."
+            },
+            {
+              title: "2. What data we store",
+              body: "The app may store your study progress, language setting, visual theme, text size, and app preferences locally on your device. This data is used to make the study experience work correctly."
+            },
+            {
+              title: "3. What data we do not ask for",
+              body: "We do not ask for a user account, name, email, phone number, identity document, address, precise location, payment information, or sensitive personal information."
+            },
+            {
+              title: "4. Analytics, advertising, and tracking",
+              body: "The current version does not use advertising, analytics tools, tracking services, user accounts, or cloud synchronization. We do not sell personal data and we do not share personal data with advertisers."
+            },
+            {
+              title: "5. Local storage and progress",
+              body: "Study progress, answers, mistakes, vocabulary state, and preferences may be stored locally on the device. You can delete this data through your browser or device settings."
+            },
+            {
+              title: "6. External links and cache",
+              body: "The app may include links to official sources or public materials. We do not control the content or privacy practices of external websites. The web/PWA version may cache files to improve loading and offline use."
+            },
+            {
+              title: "7. Contact",
+              body: "For privacy questions or support, contact pravilo.ar@gmail.com."
+            }
+          ]
+        },
+        ru: {
+          title: "Политика конфиденциальности",
+          updated: "Последнее обновление: 29 мая 2026",
+          sections: [
+            {
+              title: "1. Кто мы",
+              body: "Licencia AR — независимый учебный инструмент для подготовки к теоретическому экзамену на водительские права. Мы не являемся официальным приложением Gobierno de la Ciudad de Buenos Aires, Agencia Nacional de Seguridad Vial или другого государственного органа."
+            },
+            {
+              title: "2. Какие данные мы сохраняем",
+              body: "Приложение может сохранять на устройстве прогресс обучения, выбранный язык, тему оформления, размер текста и пользовательские настройки. Эти данные используются для корректной работы учебного опыта."
+            },
+            {
+              title: "3. Какие данные мы не запрашиваем",
+              body: "Мы не запрашиваем аккаунт, имя, email, телефон, документ, адрес, точную геолокацию, платёжные данные или чувствительную персональную информацию."
+            },
+            {
+              title: "4. Аналитика, реклама и трекинг",
+              body: "Текущая версия не использует рекламу, аналитику, трекинг, аккаунты пользователей или облачную синхронизацию. Мы не продаём персональные данные и не передаём персональные данные рекламодателям."
+            },
+            {
+              title: "5. Локальное хранение и прогресс",
+              body: "Прогресс обучения, ответы, ошибки, состояние словаря и настройки могут храниться локально на устройстве. Эти данные можно удалить через настройки браузера или устройства."
+            },
+            {
+              title: "6. Внешние ссылки и кэш",
+              body: "Приложение может содержать ссылки на официальные источники или публичные материалы. Мы не контролируем содержание и политику конфиденциальности внешних сайтов. Web/PWA-версия может кэшировать файлы для улучшения загрузки и офлайн-работы."
+            },
+            {
+              title: "7. Контакт",
+              body: "По вопросам конфиденциальности или поддержки можно написать на pravilo.ar@gmail.com."
+            }
+          ]
+        }
+      };
+
+      function getInitialPrivacyLang() {
+        try {
+          const saved = localStorage.getItem(PRIVACY_POLICY_STORAGE_KEY);
+          if (saved === "es" || saved === "en" || saved === "ru") return saved;
+        } catch (error) {
+          // Keep Spanish default if storage is unavailable.
+        }
+        return "es";
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function renderPrivacyPolicy(lang) {
+        const policy = privacyPolicies[lang] || privacyPolicies.es;
+        const container = document.getElementById("privacyPolicyContent");
+        if (!container) return;
+
+        document.documentElement.lang = lang;
+        const backLink = document.getElementById("privacyBackLink");
+        if (backLink) {
+          backLink.textContent = lang === "ru" ? "← На главную" : lang === "en" ? "← Home" : "← Inicio";
+        }
+        container.innerHTML = `
+          <h2>${escapeHtml(policy.title)}</h2>
+          <p class="updated">${escapeHtml(policy.updated)}</p>
+          ${policy.sections.map((section) => `
+            <section class="privacy-section">
+              <h3>${escapeHtml(section.title)}</h3>
+              <p>${escapeHtml(section.body)}</p>
+            </section>
+          `).join("")}
+        `;
+
+        document.querySelectorAll("[data-policy-lang]").forEach((button) => {
+          const isActive = button.dataset.policyLang === lang;
+          button.classList.toggle("active", isActive);
+          button.setAttribute("aria-selected", String(isActive));
+        });
+      }
+
+      function setPrivacyPolicyLang(lang) {
+        if (!privacyPolicies[lang]) return;
+        try {
+          localStorage.setItem(PRIVACY_POLICY_STORAGE_KEY, lang);
+        } catch (error) {
+          // The language switch still works for the current page view.
+        }
+        renderPrivacyPolicy(lang);
+      }
+
+      document.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-policy-lang]");
+        if (!button) return;
+        setPrivacyPolicyLang(button.dataset.policyLang);
+      });
+
+      renderPrivacyPolicy(getInitialPrivacyLang());
+    </script>
+  </body>
+</html>
