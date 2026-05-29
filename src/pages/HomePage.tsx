@@ -12,7 +12,7 @@ import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
 
 const DAILY_GOAL = 25;
-const APP_VERSION = "v0.1";
+const APP_VERSION = "v0.2";
 const REMINDER_DISMISS_KEY = "licencia_ar_reminder_dismissed";
 
 function getDaysSinceLastPractice(): number | null {
@@ -47,40 +47,44 @@ const DAY_LABELS_RU = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 const DAY_LABELS_ES = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sá", "Do"];
 
 function WeekDots({ activity }: { activity: boolean[] }) {
-  const lang = getUILang();
-  const labels = lang === "es" ? DAY_LABELS_ES : DAY_LABELS_RU;
-  const getDayLabel = (i: number) => {
-    const d = new Date();
-    d.setDate(d.getDate() + (i - 6));
-    return labels[(d.getDay() + 6) % 7];
-  };
+  const completed = activity.filter(Boolean).length;
+  const todayDone = activity[6];
+  const trackPct  = Math.round((completed / 7) * 100);
   return (
-    <div className="week-dots">
-      {activity.map((active, i) => {
-        const isToday  = i === 6;
-        const isPast   = i < 6;
-        const isMissed = isPast && !active;
-        let cls = "week-dot";
-        if (active)   cls += " week-dot--active";
-        if (isToday)  cls += " week-dot--today";
-        if (isMissed) cls += " week-dot--missed";
-        return (
-          <div key={i} className="week-dot-col">
-            <div className={cls} />
-            <span className="week-dot-label">{getDayLabel(i)}</span>
-          </div>
-        );
-      })}
+    <div className="week-progress">
+      <div className="week-progress-header">
+        <span className="week-progress-meta">{completed}/7</span>
+      </div>
+      <div className="week-progress-track-wrap">
+        <div className="week-progress-track">
+          <div className="week-progress-track-fill" style={{ width: `${trackPct}%` }} />
+        </div>
+        <div className="week-progress-dots">
+          {Array.from({ length: 7 }, (_, i) => {
+            let cls = "week-dot";
+            if (i < completed) {
+              cls += " week-dot--active";
+              if (i === completed - 1 && todayDone) cls += " week-dot--today";
+            } else if (i === completed && !todayDone) {
+              cls += " week-dot--today";
+            }
+            return <div key={i} className={cls} />;
+          })}
+        </div>
+      </div>
     </div>
   );
 }
 
-function DailyRing({ completed, goal, lang }: { completed: number; goal: number; lang: UILang }) {
+function DailyRing({ completed, goal, lang, theme }: { completed: number; goal: number; lang: UILang; theme: "dark" | "light" }) {
   const pct = Math.min(1, goal > 0 ? completed / goal : 0);
   const deg = Math.round(pct * 360);
-  const color = pct >= 1 ? "#62f4b4" : "#7db8ff";
+  const isLight = theme === "light";
+  const color = pct >= 1
+    ? (isLight ? "#2A7A4F" : "#62f4b4")
+    : (isLight ? "#D4641A" : "#7db8ff");
   return (
-    <div className="daily-ring" style={{ background: `conic-gradient(${color} ${deg}deg, rgba(255,255,255,0.08) 0deg)` }}>
+    <div className="daily-ring" style={{ background: `conic-gradient(${color} ${deg}deg, ${isLight ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.08)"} 0deg)` }}>
       <div className="daily-ring-inner">
         <span className="daily-ring-val">{completed}/{goal}</span>
         <span className="daily-ring-sub">{t("home.ring.sub", lang)}</span>
@@ -174,11 +178,19 @@ export function HomePage() {
   const [confirmMode, setConfirmMode] = useState(() =>
     typeof window !== "undefined" && (function(){ const v = window.localStorage.getItem("practice_confirm_mode"); return v === null ? true : v === "1"; })()
   );
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    try { return (window.localStorage.getItem('ui_theme') as 'dark' | 'light') || 'dark'; } catch { return 'dark'; }
+  });
   const [dismissedWords, setDismissedWords] = useState<Set<string>>(new Set());
   const [reminderDismissed, setReminderDismissed] = useState(() => getReminderDismissedToday());
   const gearRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setData(readHomeData()); }, [location.key]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    try { window.localStorage.setItem('ui_theme', theme); } catch { /* noop */ }
+  }, [theme]);
 
   useEffect(() => {
     if (!gearOpen) return;
@@ -200,6 +212,10 @@ export function HomePage() {
     setLang_(l);
     window.dispatchEvent(new Event("ui-lang-changed"));
     window.location.reload();
+  }
+
+  function toggleTheme() {
+    setTheme(t => t === 'dark' ? 'light' : 'dark');
   }
 
   function handleWordKnown(wordId: string) {
@@ -301,23 +317,47 @@ export function HomePage() {
           <div className="home-action-grid">
             {/* Row 1 — always */}
             <Link to="/practice" className="home-action-btn">
-              <span className="home-action-icon">{"📝"}</span>
-              <span className="home-action-label">{t("home.action.p20", lang)}</span>
+              <span className="home-action-ico-wrap home-action-ico-wrap--blue">
+                <i className="ti ti-books" />
+              </span>
+              <span className="home-action-body">
+                <span className="home-action-title">{t("home.action.p20", lang)}</span>
+                <span className="home-action-sub">{t("home.action.p20.sub", lang)}</span>
+              </span>
+              <i className="ti ti-chevron-right home-action-chev" />
             </Link>
             <Link to="/practice?quick=1" className="home-action-btn">
-              <span className="home-action-icon">{"⚡"}</span>
-              <span className="home-action-label">{t("home.action.q5", lang)}</span>
+              <span className="home-action-ico-wrap home-action-ico-wrap--orange">
+                <i className="ti ti-bolt" />
+              </span>
+              <span className="home-action-body">
+                <span className="home-action-title">{t("home.action.q5", lang)}</span>
+                <span className="home-action-sub">{t("home.action.q5.sub", lang)}</span>
+              </span>
+              <i className="ti ti-chevron-right home-action-chev" />
             </Link>
             {/* Row 2 — always */}
             <Link to="/vocabulary?tab=review" className={`home-action-btn${dueWordsCount > 0 ? " home-action-btn--words" : ""}`}>
-              <span className="home-action-icon">{"🗣️"}</span>
-              <span className="home-action-label">
-                {t("home.action.words", lang)}{dueWordsCount > 0 ? ` (${dueWordsCount})` : ""}
+              <span className="home-action-ico-wrap home-action-ico-wrap--violet">
+                <i className="ti ti-language" />
               </span>
+              <span className="home-action-body">
+                <span className="home-action-title">{t("home.action.words", lang)}</span>
+                <span className="home-action-sub">{dueWordsCount > 0 ? `${dueWordsCount} ${lang === "ru" ? "слов ждут" : "palabras"}` : t("home.action.words.sub", lang)}</span>
+              </span>
+              {dueWordsCount > 0
+                ? <span className="home-action-count">{dueWordsCount}</span>
+                : <i className="ti ti-chevron-right home-action-chev" />}
             </Link>
             <Link to="/practice?exam=1" className="home-action-btn home-action-btn--exam">
-              <span className="home-action-icon"><i className="ti ti-clipboard-check" /></span>
-              <span className="home-action-label">{t("home.action.exam", lang)}</span>
+              <span className="home-action-ico-wrap home-action-ico-wrap--amber">
+                <i className="ti ti-clipboard-check" />
+              </span>
+              <span className="home-action-body">
+                <span className="home-action-title">{t("home.action.exam", lang)}</span>
+                <span className="home-action-sub">{t("home.action.exam.sub", lang)}</span>
+              </span>
+              <i className="ti ti-chevron-right home-action-chev" />
             </Link>
             {/* Row 3 — two half-cards, conditional */}
             {(mistakeQuestionCount > 0 || weakTopic || freshTopic) && (
@@ -388,7 +428,8 @@ export function HomePage() {
         </div>
 
         <div className="home-hero-right">
-          <div className="home-hero-controls">
+          <div className="home-control-dock">
+            <div className="home-hero-controls">
             <div className="home-gear-row">
               <span className="home-version">{APP_VERSION}</span>
               <div className="home-gear-wrap" ref={gearRef}>
@@ -473,8 +514,31 @@ export function HomePage() {
                 onClick={() => pickLang("es")}
               >ES</button>
             </div>
+            <div className="home-theme-toggle">
+              <button
+                type="button"
+                className={theme === "dark" ? "home-theme-btn home-theme-btn--active" : "home-theme-btn"}
+                onClick={toggleTheme}
+                aria-label="Тёмная тема"
+              ><i className="ti ti-moon" /></button>
+              <button
+                type="button"
+                className={theme === "light" ? "home-theme-btn home-theme-btn--active" : "home-theme-btn"}
+                onClick={toggleTheme}
+                aria-label="Светлая тема"
+              ><i className="ti ti-sun" /></button>
+            </div>
           </div>
-          <DailyRing completed={todayAnswered} goal={DAILY_GOAL} lang={lang} />
+          </div>{/* /home-control-dock */}
+          <div className="home-goal-card">
+            <span className="home-goal-label">{lang === "ru" ? "Цель на сегодня" : "Meta diaria"}</span>
+            <DailyRing completed={todayAnswered} goal={DAILY_GOAL} lang={lang} theme={theme} />
+            <span className="home-goal-remaining">
+              {todayAnswered >= DAILY_GOAL
+                ? (lang === "ru" ? "Цель выполнена ✓" : "Meta cumplida ✓")
+                : `${DAILY_GOAL - todayAnswered} ${lang === "ru" ? "осталось" : "restantes"}`}
+            </span>
+          </div>
         </div>
       </section>
 

@@ -2,8 +2,10 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
+const base = process.env.CI ? "/Licensia/" : "/";
+
 export default defineConfig({
-  base: "/Licensia/",
+  base,
   plugins: [
     react(),
     VitePWA({
@@ -17,8 +19,8 @@ export default defineConfig({
         background_color: "#0a142e",
         display: "standalone",
         orientation: "portrait",
-        scope: "/Licensia/",
-        start_url: "/Licensia/",
+        scope: process.env.CI ? "/Licensia/" : "/",
+        start_url: process.env.CI ? "/Licensia/" : "/",
         icons: [
           {
             src: "icon-192.png",

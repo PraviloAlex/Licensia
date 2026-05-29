@@ -24,6 +24,12 @@ import type { VerifiedQuestion } from "../types/question";
 import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
 
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+function imgSrc(src: string): string {
+  return BASE + (src.startsWith("/") ? src : "/" + src);
+}
+
+
 type LanguageMode = "both" | "es" | "ru";
 type PracticeMode = "practice" | "exam";
 
@@ -485,9 +491,9 @@ export function PracticePage() {
                   <h2 className="pv2-question-es">{question.question_es}</h2>
                   {question.image?.src && imageBrokenForQId !== question.id && (
                     <div className="pv2-image-wrap">
-                      <img src={question.image.src} alt="Imagen de la pregunta" className="pv2-image"
+                      <img src={imgSrc(question.image.src)} alt="Imagen de la pregunta" className="pv2-image"
                         onError={() => setImageBrokenForQId(question.id)}
-                        onClick={() => setImageModalSrc(question.image?.src ?? null)}
+                        onClick={() => setImageModalSrc(question.image?.src ? imgSrc(question.image.src) : null)}
                       />
                     </div>
                   )}
@@ -605,9 +611,9 @@ export function PracticePage() {
                   {showRussian && <p className="pv2-question-ru">{question.question_ru}</p>}
                   {question.image?.src && imageBrokenForQId !== question.id && (
                     <div className={showAnswerState ? "pv2-image-wrap pv2-image-wrap--frozen" : "pv2-image-wrap"}>
-                      <img src={question.image.src} alt="Imagen de la pregunta" className="pv2-image"
+                      <img src={imgSrc(question.image.src)} alt="Imagen de la pregunta" className="pv2-image"
                         onError={() => setImageBrokenForQId(question.id)}
-                        onClick={() => setImageModalSrc(question.image?.src ?? null)}
+                        onClick={() => setImageModalSrc(question.image?.src ? imgSrc(question.image.src) : null)}
                       />
                     </div>
                   )}
