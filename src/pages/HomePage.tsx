@@ -13,7 +13,7 @@ import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
 
 const DAILY_GOAL = 25;
-const APP_VERSION = "v0.04";
+const APP_VERSION = "v0.05";
 const REMINDER_DISMISS_KEY = "licencia_ar_reminder_dismissed";
 const PRIVACY_URL = `${import.meta.env.BASE_URL}privacy.html`;
 const SETTINGS_MENU_WIDTH = 330;

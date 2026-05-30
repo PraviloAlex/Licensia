@@ -158,7 +158,7 @@ export function ProgressPage() {
       )}
 
       {hardQuestions.length > 0 && (
-        <section style={{ display: "grid", gap: "var(--sp-2)" }}>
+        <section id="topics" style={{ display: "grid", gap: "var(--sp-2)" }}>
           <p className="progress-section-title">{t("progress.hard", lang)}</p>
           <div style={{ display: "grid", gap: 8 }}>
             {hardQuestions.map((q) => {

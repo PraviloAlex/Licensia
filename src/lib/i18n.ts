@@ -193,6 +193,7 @@ const T = {
     // PracticePage
     "pv2.title.practice":   "Практика",
     "pv2.title.mistakes":   "Работа над ошибками",
+    "pv2.title.topics":     "Тренировка по темам",
     "pv2.title.exam":       "Экзамен",
     "pv2.next":             "Следующий →",
     "pv2.confirm":          "Подтвердить",
@@ -439,6 +440,7 @@ const T = {
     // PracticePage
     "pv2.title.practice":   "Práctica",
     "pv2.title.mistakes":   "Repaso de errores",
+    "pv2.title.topics":     "Práctica por temas",
     "pv2.title.exam":       "Examen",
     "pv2.next":             "Siguiente →",
     "pv2.confirm":          "Confirmar",
