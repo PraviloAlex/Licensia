@@ -55,7 +55,7 @@ function StatCard({
       <h3 className="stat-value">{value}</h3>
       {barValue !== undefined && (
         <div className="progress-track" style={{ margin: "6px 0 4px" }}>
-          <span style={{ width: `${Math.min(100, barValue)}%`, background: barColor ?? "var(--blue)" }} />
+          <span style={{ width: `${Math.min(100, barValue)}%`, background: barColor ?? "var(--s-accent)" }} />
         </div>
       )}
       {sub && <p className="meta" style={{ marginTop: 4 }}>{sub}</p>}
@@ -80,7 +80,7 @@ export function ProgressPage() {
   );
   const totalAnswered = totalCorrect + totalWrong;
   const accuracyPercent = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
-  const accuracyColor   = accuracyPercent >= 80 ? "var(--green)" : accuracyPercent >= 60 ? "var(--blue)" : "#ffb870";
+  const accuracyColor   = accuracyPercent >= 80 ? "var(--green)" : accuracyPercent >= 60 ? "var(--s-accent)" : "#ffb870";
 
   const hardQuestions = useMemo(
     () =>
@@ -193,7 +193,7 @@ export function ProgressPage() {
             {topics.map(([st, s]) => {
               const seenPct  = s.total > 0 ? Math.round((s.seen / s.total) * 100) : 0;
               const accPct   = s.answered > 0 ? Math.round((s.correct / s.answered) * 100) : 0;
-              const accColor = accPct >= 80 ? "var(--green)" : accPct >= 60 ? "var(--blue)" : "#ffb870";
+              const accColor = accPct >= 80 ? "var(--green)" : accPct >= 60 ? "var(--s-accent)" : "#ffb870";
               const label = (t as (k: string, l: typeof lang) => string)(`subtopic.${st}`, lang);
               return (
                 <Link key={st} to={`/practice?subtopic=${st}`} className="topic-stat-card topic-stat-card--link glass">
@@ -202,12 +202,12 @@ export function ProgressPage() {
                     <span className="topic-stat-name">{label}</span>
                   </div>
                   <div className="progress-track" style={{ margin: "6px 0 4px" }}>
-                    <span style={{ width: `${seenPct}%`, background: "var(--blue)" }} />
+                    <span style={{ width: `${seenPct}%`, background: "var(--s-accent)" }} />
                   </div>
                   <div className="topic-stat-meta">
                     <span style={{ color: "var(--text-low)" }}>{s.seen}/{s.total}</span>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 1 }}>
-                      <span style={{ color: seenPct >= 100 ? "var(--green)" : "var(--blue)", fontWeight: 700 }}>{seenPct}%</span>
+                      <span style={{ color: seenPct >= 100 ? "var(--green)" : "var(--s-accent)", fontWeight: 700 }}>{seenPct}%</span>
                       {s.answered > 0 && <span style={{ color: accColor, fontSize: "0.7rem", opacity: 0.8 }}>{accPct}% ✓</span>}
                     </div>
                   </div>

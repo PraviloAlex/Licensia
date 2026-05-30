@@ -2,7 +2,7 @@ import type { PropsWithChildren, ReactNode } from "react";
 import { Navigation } from "./Navigation";
 
 type PageShellProps = PropsWithChildren<{
-  title: string;
+  title: ReactNode;
   backToHome?: boolean;
   headerRight?: ReactNode;
 }>;

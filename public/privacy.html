@@ -18,19 +18,20 @@
     <style>
       :root {
         color-scheme: dark light;
-        /* dark theme defaults */
-        --bg:            #060e1c;
-        --surface:       #0d1829;
-        --surface-muted: #091320;
-        --surface-high:  #142035;
-        --text:          rgba(218, 232, 255, 0.88);
-        --text-heading:  rgba(240, 248, 255, 0.97);
-        --text-muted:    rgba(155, 182, 220, 0.68);
-        --accent:        #60a5fa;
-        --border:        rgba(110, 155, 220, 0.20);
-        --border-strong: rgba(130, 175, 245, 0.34);
-        --shadow-card:   0 24px 64px rgba(0, 0, 0, 0.38);
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        /* dark theme — graphite + orange */
+        --bg:            #0D1320;
+        --surface:       #121B2C;
+        --surface-muted: #0D1320;
+        --surface-high:  #162238;
+        --text:          rgba(244, 247, 251, 0.88);
+        --text-heading:  #F4F7FB;
+        --text-muted:    rgba(170, 182, 207, 0.70);
+        --accent:        #FF7A1A;
+        --accent-soft:   rgba(255, 122, 26, 0.10);
+        --border:        rgba(42, 58, 88, 0.90);
+        --border-strong: rgba(60, 90, 130, 0.55);
+        --shadow-card:   0 24px 64px rgba(0, 0, 0, 0.42);
+        font-family: "Manrope", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         background: var(--bg);
         color: var(--text);
       }
@@ -41,26 +42,26 @@
         margin: 0;
         min-height: 100vh;
         background:
-          radial-gradient(ellipse at 18% 0%, rgba(56, 120, 210, 0.13), transparent 36%),
-          radial-gradient(ellipse at 82% 60%, rgba(30, 70, 150, 0.07), transparent 38%),
-          linear-gradient(180deg, #060e1c 0%, #040a15 100%);
+          radial-gradient(ellipse 800px 360px at 15% -5%, rgba(255, 122, 26, 0.05) 0%, transparent 70%),
+          radial-gradient(ellipse 500px 260px at 88% 2%, rgba(255, 122, 26, 0.03) 0%, transparent 60%),
+          #0D1320;
       }
 
       /* ── Shell ───────────────────────────────────────────── */
       .privacy-screen {
-        width: min(100% - 32px, 960px);
+        width: min(100% - 28px, 760px);
         margin: 0 auto;
-        padding: 40px 0 72px;
+        padding: 32px 0 64px;
       }
 
       /* ── Brand heading ───────────────────────────────────── */
       .privacy-header h1 {
-        margin: 0 0 24px;
+        margin: 0 0 16px;
         color: var(--text-heading);
-        font-size: clamp(30px, 5vw, 44px);
-        line-height: 1.05;
-        font-weight: 900;
-        letter-spacing: -0.04em;
+        font-size: clamp(22px, 4vw, 28px);
+        line-height: 1.1;
+        font-weight: 800;
+        letter-spacing: -0.025em;
       }
 
       /* ── Control bar ─────────────────────────────────────── */
@@ -149,7 +150,7 @@
       }
 
       .privacy-lang-tab.active {
-        background: var(--surface-high);
+        background: var(--accent-soft);
         color: var(--accent);
         box-shadow:
           0 1px 0 rgba(255, 255, 255, 0.06) inset,
@@ -164,109 +165,123 @@
       /* ── Document card ───────────────────────────────────── */
       .privacy-document {
         border: 1px solid var(--border-strong);
-        border-radius: 22px;
+        border-radius: 18px;
         background: var(--surface);
-        padding: clamp(22px, 4vw, 36px);
+        padding: clamp(18px, 3.5vw, 28px);
         box-shadow:
-          0 28px 72px rgba(0, 0, 0, 0.36),
-          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          0 16px 48px rgba(0, 0, 0, 0.28),
+          inset 0 1px 0 rgba(255, 255, 255, 0.04);
       }
 
       .privacy-document h2 {
-        margin: 0 0 6px;
+        margin: 0 0 5px;
         color: var(--text-heading);
-        font-size: clamp(24px, 4vw, 32px);
-        line-height: 1.1;
-        font-weight: 900;
-        letter-spacing: -0.035em;
+        font-size: clamp(18px, 3vw, 22px);
+        line-height: 1.15;
+        font-weight: 800;
+        letter-spacing: -0.02em;
       }
 
       .privacy-document .updated {
-        margin: 0 0 26px;
+        margin: 0 0 20px;
         color: var(--text-muted);
-        font-size: 13px;
-        font-weight: 700;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
       }
 
       .privacy-section {
-        margin-top: 28px;
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid var(--border);
+      }
+      .privacy-section:first-of-type {
+        border-top: none;
+        padding-top: 0;
+        margin-top: 16px;
       }
 
       .privacy-section h3 {
         margin: 0 0 8px;
-        color: var(--text-heading);
-        font-size: 16px;
-        font-weight: 900;
-        letter-spacing: -0.01em;
+        color: var(--accent);
+        font-size: 12.5px;
+        font-weight: 800;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
       }
 
       .privacy-section p,
       .privacy-section li {
         color: var(--text);
         font-size: 15px;
-        line-height: 1.68;
+        line-height: 1.70;
       }
 
       .privacy-section p { margin: 0; }
       .privacy-section ul { margin: 8px 0 0; padding-left: 20px; }
-      .privacy-section a { color: #93c5fd; }
+      .privacy-section a { color: var(--accent); }
 
       /* ── Light theme ─────────────────────────────────────── */
       [data-theme="light"] {
-        --bg:            #fbf8f3;
-        --surface:       #ffffff;
-        --surface-muted: #f0ebe3;
-        --surface-high:  #e8e2d8;
-        --text:          #374151;
-        --text-heading:  #171a1f;
-        --text-muted:    #7b8492;
-        --accent:        #f97316;
-        --border:        #e5ded4;
-        --border-strong: #d8cfc4;
-        --shadow-card:   0 14px 36px rgba(31, 41, 55, 0.10);
+        --bg:            #F4F0EA;
+        --surface:       #FFFFFF;
+        --surface-muted: #F7F4EF;
+        --surface-high:  #EDE8E1;
+        --text:          #475467;
+        --text-heading:  #101828;
+        --text-muted:    #7F8CA8;
+        --accent:        #FF6A1A;
+        --accent-soft:   #FFF1E8;
+        --border:        #E3D8CC;
+        --border-strong: #D5C9BB;
+        --shadow-card:   0 8px 24px rgba(31, 41, 55, 0.08);
       }
 
-      [data-theme="light"] body { background: #fbf8f3; }
+      [data-theme="light"] body {
+        background:
+          radial-gradient(ellipse 800px 360px at 15% -5%, rgba(255, 106, 26, 0.05) 0%, transparent 70%),
+          #F4F0EA;
+      }
 
       [data-theme="light"] .privacy-control-bar {
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
-        box-shadow: 0 4px 16px rgba(31, 41, 55, 0.08);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
       }
 
       [data-theme="light"] .privacy-document {
-        box-shadow: 0 12px 32px rgba(31, 41, 55, 0.10);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
       }
 
       [data-theme="light"] .privacy-lang-switcher {
-        border-color: #e5ded4;
+        border-color: #E3D8CC;
       }
 
       [data-theme="light"] .privacy-lang-tab.active {
-        background: #ffffff;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.10);
+        background: #FFF1E8;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
       }
 
-      [data-theme="light"] .privacy-section a { color: #2563eb; }
+      [data-theme="light"] .privacy-section a { color: #FF6A1A; }
 
       /* ── Mobile ──────────────────────────────────────────── */
       @media (max-width: 580px) {
         .privacy-screen {
-          width: min(100% - 24px, 960px);
-          padding-top: 28px;
-          padding-bottom: 56px;
+          width: min(100% - 20px, 760px);
+          padding-top: 20px;
+          padding-bottom: 48px;
         }
 
         .privacy-header h1 {
-          font-size: 30px;
-          margin-bottom: 18px;
+          font-size: 22px;
+          margin-bottom: 14px;
         }
 
         .privacy-control-bar {
           flex-direction: column;
           align-items: stretch;
-          padding: 10px;
-          gap: 8px;
+          padding: 8px;
+          gap: 6px;
         }
 
         .privacy-back-btn {
@@ -284,8 +299,8 @@
         }
 
         .privacy-document {
-          padding: 20px;
-          border-radius: 18px;
+          padding: 16px;
+          border-radius: 14px;
         }
       }
     </style>
@@ -323,62 +338,94 @@
               body: "Licencia AR es una herramienta independiente de estudio para ayudar a los usuarios a prepararse para el examen teórico de conducción. No somos una aplicación oficial del Gobierno de la Ciudad de Buenos Aires, de la Agencia Nacional de Seguridad Vial ni de ningún otro organismo gubernamental."
             },
             {
-              title: "2. Qué datos guardamos",
-              body: "La app puede guardar localmente tu progreso de estudio, configuración de idioma, tema visual, tamaño de texto y preferencias de uso. Estos datos se almacenan en tu dispositivo y se usan para que la experiencia de estudio funcione correctamente."
+              title: "2. Datos",
+              bodyHtml: "<strong>Qué guardamos.</strong> La app puede guardar localmente en tu dispositivo tu progreso de estudio, configuración de idioma, tema visual, tamaño de texto y preferencias de uso. Estos datos se usan exclusivamente para el correcto funcionamiento de la aplicación.<br><br><strong>Qué no solicitamos.</strong> No solicitamos ni recopilamos cuenta de usuario, nombre, email, teléfono, documento de identidad, dirección, ubicación ni ninguna otra información personal. Los datos de pago tampoco los recibimos ni almacenamos — son procesados directamente por Google Play."
             },
             {
-              title: "3. Qué datos no solicitamos",
-              body: "No solicitamos cuenta de usuario, nombre, email, teléfono, documento de identidad, dirección, ubicación precisa, datos de pago ni información sensible."
+              title: "3. Analítica, publicidad y seguimiento",
+              body: "La aplicación no usa publicidad, analítica, seguimiento, cuentas de usuario ni sincronización en la nube. No vendemos ni compartimos ningún dato con terceros."
             },
             {
-              title: "4. Analítica, publicidad y seguimiento",
-              body: "La versión actual no usa publicidad, herramientas de analítica, servicios de seguimiento, cuentas de usuario ni sincronización en la nube. No vendemos datos personales y no compartimos datos personales con anunciantes."
+              title: "4. Almacenamiento local y período de retención",
+              body: "El progreso de estudio, respuestas, errores, estado del vocabulario y preferencias se almacenan localmente en tu dispositivo. Los datos se conservan hasta que desinstaléis la app o limpiéis los datos desde la configuración del navegador o del dispositivo. No tenemos acceso a esos datos."
             },
             {
-              title: "5. Progreso y almacenamiento local",
-              body: "El progreso de estudio, respuestas, errores, estado de vocabulario y preferencias pueden guardarse localmente en el dispositivo. Podés borrar estos datos desde la configuración del navegador o del dispositivo."
+              title: "5. Caché y modo sin conexión",
+              body: "La versión PWA de la aplicación puede almacenar archivos en caché para mejorar la velocidad de carga y permitir el uso sin conexión. El caché se almacena localmente y puede eliminarse desde la configuración del navegador."
             },
             {
-              title: "6. Enlaces externos y caché",
-              body: "La app puede incluir enlaces a fuentes oficiales o materiales públicos. No controlamos el contenido ni las políticas de privacidad de sitios externos. La versión web/PWA puede almacenar archivos en caché para mejorar la carga y el uso sin conexión."
+              title: "6. Enlaces externos",
+              body: "La app puede incluir enlaces a fuentes oficiales y materiales públicos. No controlamos el contenido ni las políticas de privacidad de los sitios externos y no nos hacemos responsables de ellos."
             },
             {
-              title: "7. Contacto",
-              body: "Para consultas sobre privacidad o soporte, podés escribir a pravilo.ar@gmail.com."
+              title: "7. Menores de edad",
+              body: "La aplicación no está destinada a menores de 13 años. No recopilamos intencionalmente datos de menores. Si tenés conocimiento de que un menor ha proporcionado datos personales, por favor contactanos."
+            },
+            {
+              title: "8. Derechos de los usuarios",
+              body: "Como todos los datos se almacenan exclusivamente en tu dispositivo, podés acceder, modificar o eliminarlos en cualquier momento desde la configuración del navegador o del dispositivo, sin necesidad de solicitárnoslo. Si tenés preguntas o solicitudes relacionadas con tus datos, podés contactarnos."
+            },
+            {
+              title: "9. Compras y suscripciones",
+              bodyHtml: "La aplicación ofrece funciones de pago mediante compras únicas y/o suscripciones disponibles a través de Google Play. Todos los pagos son procesados por Google Play — no recibimos, vemos ni almacenamos los datos de tu tarjeta ni de tu cuenta de pago.<br><br>La gestión de la suscripción (pausa, cancelación) se realiza desde la configuración de Google Play en tu dispositivo. Tras cancelar, el acceso a las funciones de pago se mantiene hasta el final del período abonado. Los reembolsos se rigen por la <a href=\"https://support.google.com/googleplay/answer/2479637\" target=\"_blank\" rel=\"noopener\">política de devoluciones de Google Play</a>."
+            },
+            {
+              title: "10. Cambios en esta política",
+              body: "Podemos actualizar esta política. Ante cambios importantes, se actualizará la fecha al inicio del documento. Recomendamos revisar periódicamente la versión vigente."
+            },
+            {
+              title: "11. Contacto",
+              body: "Para consultas sobre privacidad o soporte: pravilo.ar@gmail.com."
             }
           ]
         },
         en: {
           title: "Privacy Policy",
-          updated: "Last updated: 29 May 2026",
+          updated: "Last updated: May 29, 2026",
           sections: [
             {
               title: "1. Who we are",
-              body: "Licencia AR is an independent study tool designed to help users prepare for the theoretical driving exam. We are not an official app of the Government of the City of Buenos Aires, the National Road Safety Agency, or any other government body."
+              body: "Licencia AR is an independent study tool to help users prepare for the theoretical driving license exam. We are not an official application of the Gobierno de la Ciudad de Buenos Aires, the Agencia Nacional de Seguridad Vial, or any other government body."
             },
             {
-              title: "2. What data we store",
-              body: "The app may store your study progress, language setting, visual theme, text size, and app preferences locally on your device. This data is used to make the study experience work correctly."
+              title: "2. Data",
+              bodyHtml: "<strong>What we store.</strong> The app may save locally on your device your study progress, language preference, visual theme, text size, and usage settings. This data is used solely to ensure the app functions correctly.<br><br><strong>What we do not collect.</strong> We do not request or collect user accounts, names, emails, phone numbers, ID documents, addresses, location, or any other personal information. Payment data is also never received or stored by us — it is processed directly by Google Play."
             },
             {
-              title: "3. What data we do not ask for",
-              body: "We do not ask for a user account, name, email, phone number, identity document, address, precise location, payment information, or sensitive personal information."
+              title: "3. Analytics, advertising, and tracking",
+              body: "The app does not use advertising, analytics, tracking, user accounts, or cloud synchronization. We do not sell or share any data with third parties."
             },
             {
-              title: "4. Analytics, advertising, and tracking",
-              body: "The current version does not use advertising, analytics tools, tracking services, user accounts, or cloud synchronization. We do not sell personal data and we do not share personal data with advertisers."
+              title: "4. Local storage and data retention",
+              body: "Study progress, answers, mistakes, vocabulary state, and settings are stored locally on your device. Data is retained until you uninstall the app or clear app data through your browser or device settings. We have no access to this data."
             },
             {
-              title: "5. Local storage and progress",
-              body: "Study progress, answers, mistakes, vocabulary state, and preferences may be stored locally on the device. You can delete this data through your browser or device settings."
+              title: "5. Cache and offline mode",
+              body: "The PWA version of the app may cache files to improve loading speed and enable offline use. The cache is stored locally and can be cleared through your browser settings."
             },
             {
-              title: "6. External links and cache",
-              body: "The app may include links to official sources or public materials. We do not control the content or privacy practices of external websites. The web/PWA version may cache files to improve loading and offline use."
+              title: "6. External links",
+              body: "The app may contain links to official sources and public materials. We do not control the content or privacy policies of external websites and are not responsible for them."
             },
             {
-              title: "7. Contact",
-              body: "For privacy questions or support, contact pravilo.ar@gmail.com."
+              title: "7. Minors",
+              body: "The app is not intended for children under 13. We do not knowingly collect data from minors. If you become aware that a minor has provided personal data, please contact us."
+            },
+            {
+              title: "8. User rights",
+              body: "Since all data is stored exclusively on your device, you can access, modify, or delete it at any time through your browser or device settings — no request to us is needed. If you have questions or requests related to your data, you can reach us at the contact address below."
+            },
+            {
+              title: "9. Purchases and subscriptions",
+              bodyHtml: "The app offers paid features through one-time purchases and/or subscriptions available via Google Play. All payments are processed by Google Play — we do not receive, see, or store your card details or payment account information.<br><br>Subscription management (pause, cancellation) is handled through Google Play settings on your device. After cancellation, access to paid features remains available until the end of the paid period. Refunds are governed by the <a href=\"https://support.google.com/googleplay/answer/2479637\" target=\"_blank\" rel=\"noopener\">Google Play refund policy</a>."
+            },
+            {
+              title: "10. Changes to this policy",
+              body: "We may update this policy from time to time. For significant changes, the date at the top of the document will be updated. We recommend checking the current version periodically."
+            },
+            {
+              title: "11. Contact",
+              body: "For privacy questions or support: pravilo.ar@gmail.com."
             }
           ]
         },
@@ -391,28 +438,44 @@
               body: "Licencia AR — независимый учебный инструмент для подготовки к теоретическому экзамену на водительские права. Мы не являемся официальным приложением Gobierno de la Ciudad de Buenos Aires, Agencia Nacional de Seguridad Vial или другого государственного органа."
             },
             {
-              title: "2. Какие данные мы сохраняем",
-              body: "Приложение может сохранять на устройстве прогресс обучения, выбранный язык, тему оформления, размер текста и пользовательские настройки. Эти данные используются для корректной работы учебного опыта."
+              title: "2. Данные",
+              bodyHtml: "<strong>Что мы сохраняем.</strong> Приложение может сохранять на устройстве прогресс обучения, выбранный язык, тему оформления, размер текста и пользовательские настройки. Эти данные используются исключительно для корректной работы приложения.<br><br><strong>Что мы не запрашиваем.</strong> Мы не запрашиваем и не собираем аккаунт, имя, email, номер телефона, документ, адрес, геолокацию или иную персональную информацию. Платёжные данные мы также не получаем и не храним — они обрабатываются напрямую через Google Play."
             },
             {
-              title: "3. Какие данные мы не запрашиваем",
-              body: "Мы не запрашиваем аккаунт, имя, email, телефон, документ, адрес, точную геолокацию, платёжные данные или чувствительную персональную информацию."
+              title: "3. Аналитика, реклама и трекинг",
+              body: "Приложение не использует рекламу, аналитику, трекинг, аккаунты пользователей или облачную синхронизацию. Мы не продаём и не передаём какие-либо данные третьим лицам."
             },
             {
-              title: "4. Аналитика, реклама и трекинг",
-              body: "Текущая версия не использует рекламу, аналитику, трекинг, аккаунты пользователей или облачную синхронизацию. Мы не продаём персональные данные и не передаём персональные данные рекламодателям."
+              title: "4. Локальное хранение и срок хранения данных",
+              body: "Прогресс обучения, ответы, ошибки, состояние словаря и настройки хранятся локально на устройстве. Данные хранятся до тех пор, пока вы не удалите приложение или не очистите данные через настройки браузера или устройства. Мы не имеем доступа к этим данным."
             },
             {
-              title: "5. Локальное хранение и прогресс",
-              body: "Прогресс обучения, ответы, ошибки, состояние словаря и настройки могут храниться локально на устройстве. Эти данные можно удалить через настройки браузера или устройства."
+              title: "5. Кэш и офлайн-режим",
+              body: "PWA-версия приложения может кэшировать файлы для ускорения загрузки и работы без интернета. Кэш хранится локально и может быть удалён через настройки браузера."
             },
             {
-              title: "6. Внешние ссылки и кэш",
-              body: "Приложение может содержать ссылки на официальные источники или публичные материалы. Мы не контролируем содержание и политику конфиденциальности внешних сайтов. Web/PWA-версия может кэшировать файлы для улучшения загрузки и офлайн-работы."
+              title: "6. Внешние ссылки",
+              body: "Приложение может содержать ссылки на официальные источники и публичные материалы. Мы не контролируем содержание и политику конфиденциальности внешних сайтов и не несём за них ответственности."
             },
             {
-              title: "7. Контакт",
-              body: "По вопросам конфиденциальности или поддержки можно написать на pravilo.ar@gmail.com."
+              title: "7. Несовершеннолетние",
+              body: "Приложение не предназначено для детей младше 13 лет. Мы намеренно не собираем данные о несовершеннолетних. Если вам стало известно о предоставлении персональных данных ребёнком — пожалуйста, свяжитесь с нами."
+            },
+            {
+              title: "8. Права пользователей",
+              body: "Поскольку все данные хранятся исключительно локально на вашем устройстве, вы в любой момент можете получить к ним доступ, изменить или удалить их через настройки браузера или устройства — без каких-либо запросов с нашей стороны. Если у вас есть вопросы или запросы, связанные с вашими данными, вы можете обратиться к нам."
+            },
+            {
+              title: "9. Покупки и подписки",
+              bodyHtml: "Приложение предлагает платные функции в виде разовых покупок и/или подписок, доступных через Google Play. Все платежи обрабатываются Google Play — мы не получаем, не видим и не храним данные вашей карты или платёжного аккаунта.<br><br>Управление подпиской (приостановка, отмена) осуществляется через настройки Google Play на вашем устройстве. После отмены подписки доступ к платным функциям сохраняется до конца оплаченного периода. Возврат средств регулируется <a href=\"https://support.google.com/googleplay/answer/2479637\" target=\"_blank\" rel=\"noopener\">политикой возврата Google Play</a>."
+            },
+            {
+              title: "10. Изменения в политике",
+              body: "Мы можем обновлять эту политику. При существенных изменениях будет обновлена дата вверху документа. Рекомендуем периодически проверять актуальную версию."
+            },
+            {
+              title: "11. Контакт",
+              body: "По вопросам конфиденциальности или поддержки: pravilo.ar@gmail.com."
             }
           ]
         }
@@ -453,7 +516,7 @@
           ${policy.sections.map((section) => `
             <section class="privacy-section">
               <h3>${escapeHtml(section.title)}</h3>
-              <p>${escapeHtml(section.body)}</p>
+              <p>${section.bodyHtml ?? escapeHtml(section.body)}</p>
             </section>
           `).join("")}
         `;

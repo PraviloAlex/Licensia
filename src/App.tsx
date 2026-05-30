@@ -9,6 +9,7 @@ import { OnboardingPage } from "./pages/OnboardingPage";
 import { SignsPage } from "./pages/SignsPage";
 import { LegalPage } from "./pages/LegalPage";
 import { SourcesPage } from "./pages/SourcesPage";
+import { EditorPage } from "./pages/EditorPage";
 
 const ONBOARDING_KEY = "licencia_ar_onboarding_done";
 
@@ -31,6 +32,7 @@ export default function App() {
       <Route path="/signs" element={<SignsPage />} />
       <Route path="/legal" element={<LegalPage />} />
       <Route path="/sources" element={<SourcesPage />} />
+      <Route path="/editor" element={<EditorPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

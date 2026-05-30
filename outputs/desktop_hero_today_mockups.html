@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desktop Hero Today Mockups</title>
+  <style>
+    :root {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #070c11;
+      color: #f4f7fb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 28px;
+      background: #070c11;
+    }
+    h1 {
+      margin: 0 0 18px;
+      font-size: 22px;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+    .mock {
+      border: 1px solid #2b3548;
+      border-radius: 20px;
+      background: #111820;
+      overflow: hidden;
+    }
+    .head {
+      padding: 12px 18px;
+      border-bottom: 1px solid #253044;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .name {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .hint {
+      margin: 3px 0 0;
+      color: #7f8ca8;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .hero {
+      min-height: 170px;
+      padding: 28px 30px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: 32px;
+      align-items: center;
+    }
+    .left {
+      min-width: 0;
+    }
+    .label {
+      margin: 0 0 12px;
+      color: #8fa2c0;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .title {
+      margin: 0 0 16px;
+      color: #f4f7fb;
+      font-size: 26px;
+      line-height: 1.15;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+    }
+    .cta {
+      width: min(440px, 100%);
+      height: 54px;
+      border: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ff7a1a, #ff9a40);
+      color: #fff;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 800;
+      box-shadow: 0 12px 28px rgba(255, 122, 26, 0.22);
+    }
+    .right {
+      min-width: 0;
+    }
+    .today-label {
+      margin: 0 0 8px;
+      color: #8fa2c0;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .today-main {
+      margin: 0;
+      color: #f4f7fb;
+      font-size: 24px;
+      line-height: 1.15;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+    }
+    .today-sub {
+      margin: 6px 0 0;
+      color: #aab6cf;
+      font-size: 14px;
+      font-weight: 650;
+    }
+    .track {
+      height: 9px;
+      margin-top: 14px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #273244;
+    }
+    .fill {
+      display: block;
+      width: 28%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ff7a1a, #ff9a40);
+    }
+
+    /* A */
+    .a .right {
+      max-width: 380px;
+      justify-self: end;
+      width: 100%;
+    }
+
+    /* B */
+    .stat-card {
+      width: min(360px, 100%);
+      justify-self: end;
+      border: 1px solid #2d384c;
+      border-radius: 16px;
+      padding: 16px 18px;
+      background: #0f151d;
+    }
+    .stat-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .stat-pct {
+      color: #ff9a40;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    /* C */
+    .c .hero {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .c .left {
+      max-width: 560px;
+    }
+    .inline-today {
+      width: min(440px, 100%);
+      margin-top: 16px;
+    }
+    .inline-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #aab6cf;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* D */
+    .donut-row {
+      width: min(360px, 100%);
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .donut {
+      width: 56px;
+      height: 56px;
+      flex: 0 0 56px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(#ff7a1a 101deg, #273244 0deg);
+    }
+    .donut-inner {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #111820;
+      color: #f4f7fb;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    @media (max-width: 850px) {
+      body { padding: 16px; }
+      .hero { grid-template-columns: 1fr; }
+      .right,
+      .a .right,
+      .stat-card,
+      .donut-row {
+        justify-self: stretch;
+        max-width: none;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Desktop hero today block options</h1>
+  <div class="grid">
+    <article class="mock a">
+      <div class="head">
+        <div>
+          <p class="name">A. Horizontal progress line</p>
+          <p class="hint">Самый чистый вариант: daily progress читается как цель, пустоты меньше.</p>
+        </div>
+      </div>
+      <section class="hero">
+        <div class="left">
+          <p class="label">LA MEJOR ACCIÓN AHORA</p>
+          <h2 class="title">Continuar 7/20</h2>
+          <button class="cta">Continuar 7/20</button>
+        </div>
+        <div class="right">
+          <p class="today-label">HOY</p>
+          <p class="today-main">7 / 25 preguntas</p>
+          <p class="today-sub">28% meta</p>
+          <div class="track"><span class="fill"></span></div>
+        </div>
+      </section>
+    </article>
+
+    <article class="mock b">
+      <div class="head">
+        <div>
+          <p class="name">B. Compact stat card</p>
+          <p class="hint">Похоже на dashboard metric: процент заметнее, блок компактный.</p>
+        </div>
+      </div>
+      <section class="hero">
+        <div class="left">
+          <p class="label">LA MEJOR ACCIÓN AHORA</p>
+          <h2 class="title">Continuar 7/20</h2>
+          <button class="cta">Continuar 7/20</button>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <p class="today-label">HOY</p>
+            <span class="stat-pct">28%</span>
+          </div>
+          <p class="today-main">7 / 25 preguntas</p>
+          <div class="track"><span class="fill"></span></div>
+        </div>
+      </section>
+    </article>
+
+    <article class="mock c">
+      <div class="head">
+        <div>
+          <p class="name">C. Today under CTA</p>
+          <p class="hint">Убирает правую колонку полностью. Самый простой hero, меньше воздуха.</p>
+        </div>
+      </div>
+      <section class="hero">
+        <div class="left">
+          <p class="label">LA MEJOR ACCIÓN AHORA</p>
+          <h2 class="title">Continuar 7/20</h2>
+          <button class="cta">Continuar 7/20</button>
+          <div class="inline-today">
+            <div class="inline-row">
+              <span>Hoy: 7 / 25 preguntas</span>
+              <span>28% meta</span>
+            </div>
+            <div class="track"><span class="fill"></span></div>
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <article class="mock d">
+      <div class="head">
+        <div>
+          <p class="name">D. Small donut badge</p>
+          <p class="hint">Сохраняет идею круга, но делает его второстепенным.</p>
+        </div>
+      </div>
+      <section class="hero">
+        <div class="left">
+          <p class="label">LA MEJOR ACCIÓN AHORA</p>
+          <h2 class="title">Continuar 7/20</h2>
+          <button class="cta">Continuar 7/20</button>
+        </div>
+        <div class="donut-row">
+          <div class="donut"><div class="donut-inner">28%</div></div>
+          <div>
+            <p class="today-label">HOY</p>
+            <p class="today-main">7 / 25 preguntas</p>
+            <p class="today-sub">28% meta</p>
+          </div>
+        </div>
+      </section>
+    </article>
+  </div>
+</body>
+</html>

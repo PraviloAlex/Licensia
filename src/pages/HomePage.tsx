@@ -13,7 +13,7 @@ import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
 
 const DAILY_GOAL = 25;
-const APP_VERSION = "v0.3";
+const APP_VERSION = "v0.04";
 const REMINDER_DISMISS_KEY = "licencia_ar_reminder_dismissed";
 const PRIVACY_URL = `${import.meta.env.BASE_URL}privacy.html`;
 const SETTINGS_MENU_WIDTH = 330;
@@ -79,23 +79,22 @@ function WeekDots({ activity }: { activity: boolean[] }) {
   );
 }
 
-function DailyRing({ completed, goal, lang, theme }: { completed: number; goal: number; lang: UILang; theme: "dark" | "light" }) {
+function DailyRing({ completed, goal }: { completed: number; goal: number }) {
   const pct = Math.min(1, goal > 0 ? completed / goal : 0);
   const deg = Math.round(pct * 360);
-  const isLight = theme === "light";
-  const color = pct >= 1
-    ? (isLight ? "#2A7A4F" : "#62f4b4")
-    : (isLight ? "#D4641A" : "#7db8ff");
+  const fillColor = pct >= 1 ? "#4ee8a4" : "#FF7A1A";
+  const trackColor = "var(--ring-track-color, rgba(255,255,255,0.09))";
   return (
-    <div className="daily-ring" style={{ background: `conic-gradient(${color} ${deg}deg, ${isLight ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.08)"} 0deg)` }}>
-      <div className="daily-ring-inner">
-        <span className="daily-ring-val">{completed}/{goal}</span>
-        <span className="daily-ring-sub">{t("home.ring.sub", lang)}</span>
+    <div className="hd-daily-ring" style={{ background: `conic-gradient(${fillColor} ${deg}deg, ${trackColor} 0deg)` }}>
+      <div className="hd-daily-ring-inner">
+        <span className="hd-daily-ring-pct">{Math.round(pct * 100)}%</span>
+        <span className="hd-daily-ring-sub">goal</span>
       </div>
     </div>
   );
 }
 
+// MissionCard kept for potential reuse
 function MissionCard({ icon, title, progress, done, to, disabled }: {
   icon: ReactNode; title: string; progress?: string; done: boolean; to: string; disabled?: boolean;
 }) {
@@ -123,7 +122,6 @@ function readHomeData() {
   const progressMap    = getQuestionProgressMap();
   const totalCorrect   = Object.values(progressMap).reduce((s, p) => s + p.correctCount, 0);
 
-  // Weak topic computation
   const byTopicMap: Record<string, { total: number; seen: number; correct: number; answered: number }> = {};
   for (const q of questionsData) {
     const st = (q as { subtopic?: string }).subtopic ?? "otros";
@@ -141,18 +139,10 @@ function readHomeData() {
     .map(([key, s]) => ({ key, seen: s.seen, total: s.total, accuracy: Math.round((s.correct / s.answered) * 100) }))
     .sort((a, b) => a.accuracy - b.accuracy || b.seen - a.seen)[0] ?? null;
 
-  // Fresh topic: least covered (fewest seen/total), for left slot when no active mistakes
   const freshTopic = Object.entries(byTopicMap)
     .filter(([, s]) => s.seen < s.total)
     .map(([key, s]) => ({ key, seen: s.seen, total: s.total, coveragePct: Math.round((s.seen / s.total) * 100) }))
     .sort((a, b) => a.coveragePct - b.coveragePct || b.total - a.total)[0] ?? null;
-
-  // Second fresh topic: for right slot when no weakTopic and no mistakes
-  const secondFreshTopic = Object.entries(byTopicMap)
-    .filter(([, s]) => s.seen < s.total)
-    .map(([key, s]) => ({ key, seen: s.seen, total: s.total, coveragePct: Math.round((s.seen / s.total) * 100) }))
-    .sort((a, b) => a.coveragePct - b.coveragePct || b.total - a.total)
-    .filter(t => !freshTopic || t.key !== freshTopic.key)[0] ?? null;
 
   const mistakeQuestionCount = getMistakeQuestionCount(questionsData);
   const correctedMistakeCount = getCorrectedMistakeCount(questionsData);
@@ -160,7 +150,7 @@ function readHomeData() {
   const todayAnswered  = getTodayAnsweredCount();
   const activeSession  = getActivePracticeSessionSummary();
   const dueWordsCount  = getDueWordsCount();
-  const duePreview     = getDueWordsPreview(4);
+  const duePreview     = getDueWordsPreview(3);
   const weekActivity   = getWeeklyActivity();
   const masteredWords  = getMasteredWordIds();
   const examDoneToday  = getExamCompletedToday();
@@ -168,7 +158,8 @@ function readHomeData() {
   return {
     seenCount, mistakesCount, total, readiness,
     todayAnswered, activeSession, dueWordsCount, duePreview,
-    weekActivity, masteredWords, examDoneToday, reviewedTodayCount, weakTopic, mistakeQuestionCount, correctedMistakeCount, freshTopic, secondFreshTopic,
+    weekActivity, masteredWords, examDoneToday, reviewedTodayCount,
+    weakTopic, mistakeQuestionCount, correctedMistakeCount, freshTopic,
   };
 }
 
@@ -181,8 +172,8 @@ export function HomePage() {
   const [confirmMode, setConfirmMode] = useState(() =>
     typeof window !== "undefined" && (function(){ const v = window.localStorage.getItem("practice_confirm_mode"); return v === null ? true : v === "1"; })()
   );
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    try { return (window.localStorage.getItem('ui_theme') as 'dark' | 'light') || 'dark'; } catch { return 'dark'; }
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    try { return (window.localStorage.getItem("ui_theme") as "dark" | "light") || "dark"; } catch { return "dark"; }
   });
   const [dismissedWords, setDismissedWords] = useState<Set<string>>(new Set());
   const [reminderDismissed, setReminderDismissed] = useState(() => getReminderDismissedToday());
@@ -203,7 +194,6 @@ export function HomePage() {
       } as CSSProperties);
       return;
     }
-
     const rect = gear.getBoundingClientRect();
     const menuWidth = Math.min(SETTINGS_MENU_WIDTH, window.innerWidth - 24);
     const top = Math.max(12, Math.min(rect.bottom + 10, window.innerHeight - 32));
@@ -215,50 +205,34 @@ export function HomePage() {
   }, []);
 
   const toggleGearMenu = useCallback(() => {
-    if (gearOpen) {
-      setGearOpen(false);
-      return;
-    }
-    requestAnimationFrame(() => {
-      recalculateGearMenuPosition();
-      setGearOpen(true);
-    });
+    if (gearOpen) { setGearOpen(false); return; }
+    requestAnimationFrame(() => { recalculateGearMenuPosition(); setGearOpen(true); });
   }, [gearOpen, recalculateGearMenuPosition]);
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    try { window.localStorage.setItem('ui_theme', theme); } catch { /* noop */ }
+    document.documentElement.setAttribute("data-theme", theme);
+    try { window.localStorage.setItem("ui_theme", theme); } catch { /* noop */ }
   }, [theme]);
 
   useEffect(() => {
     if (!gearOpen) return;
     const fn = (e: MouseEvent) => {
       const target = e.target as Node;
-      const insideButton = gearRef.current?.contains(target);
-      const insideMenu = gearMenuRef.current?.contains(target);
-      if (!insideButton && !insideMenu) setGearOpen(false);
+      if (!gearRef.current?.contains(target) && !gearMenuRef.current?.contains(target)) setGearOpen(false);
     };
-    const keyFn = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setGearOpen(false);
-    };
+    const keyFn = (e: KeyboardEvent) => { if (e.key === "Escape") setGearOpen(false); };
     document.addEventListener("mousedown", fn);
     document.addEventListener("keydown", keyFn);
-    return () => {
-      document.removeEventListener("mousedown", fn);
-      document.removeEventListener("keydown", keyFn);
-    };
+    return () => { document.removeEventListener("mousedown", fn); document.removeEventListener("keydown", keyFn); };
   }, [gearOpen]);
 
   useEffect(() => {
     if (!gearOpen || typeof window === "undefined") return;
-    const updateMenuPosition = () => requestAnimationFrame(recalculateGearMenuPosition);
-    updateMenuPosition();
-    window.addEventListener("resize", updateMenuPosition);
-    window.addEventListener("scroll", updateMenuPosition, true);
-    return () => {
-      window.removeEventListener("resize", updateMenuPosition);
-      window.removeEventListener("scroll", updateMenuPosition, true);
-    };
+    const update = () => requestAnimationFrame(recalculateGearMenuPosition);
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, true);
+    return () => { window.removeEventListener("resize", update); window.removeEventListener("scroll", update, true); };
   }, [gearOpen, recalculateGearMenuPosition]);
 
   useEffect(() => {
@@ -272,27 +246,15 @@ export function HomePage() {
     setConfirmMode(next);
     if (typeof window !== "undefined") window.localStorage.setItem("practice_confirm_mode", next ? "1" : "0");
   }
-
-  function pickLang(l: UILang) {
-    setUILang(l);
-    setLang_(l);
-    window.dispatchEvent(new Event("ui-lang-changed"));
-  }
-
-  function toggleTheme() {
-    setTheme(t => t === 'dark' ? 'light' : 'dark');
-  }
-
-  function handleWordKnown(wordId: string) {
-    markWordKnown(wordId);
-    setDismissedWords((prev) => new Set([...prev, wordId]));
-    setData(readHomeData());
-  }
+  function pickLang(l: UILang) { setUILang(l); setLang_(l); window.dispatchEvent(new Event("ui-lang-changed")); }
+  function toggleTheme() { setTheme(t => t === "dark" ? "light" : "dark"); }
+  function handleWordKnown(wordId: string) { markWordKnown(wordId); setDismissedWords((prev) => new Set([...prev, wordId])); setData(readHomeData()); }
 
   const {
     seenCount, mistakesCount, total, readiness, todayAnswered,
     activeSession, dueWordsCount, duePreview, weekActivity,
-    masteredWords, examDoneToday, reviewedTodayCount, weakTopic, mistakeQuestionCount, correctedMistakeCount, freshTopic, secondFreshTopic,
+    masteredWords, examDoneToday, reviewedTodayCount,
+    weakTopic, mistakeQuestionCount, correctedMistakeCount, freshTopic,
   } = data;
 
   const visibleWords = duePreview.filter((w) => !dismissedWords.has(w.id));
@@ -312,16 +274,16 @@ export function HomePage() {
 
   const daysSince = getDaysSinceLastPractice();
   const showReminder = !reminderDismissed && seenCount > 0 && daysSince !== null && daysSince >= 1;
+  function handleDismissReminder() { dismissReminderToday(); setReminderDismissed(true); }
 
-  function handleDismissReminder() {
-    dismissReminderToday();
-    setReminderDismissed(true);
-  }
+  const dailyDone       = todayAnswered >= DAILY_GOAL;
+  const dailyPercent    = Math.round((Math.min(todayAnswered, DAILY_GOAL) / DAILY_GOAL) * 100);
+  const toExamRecommend = Math.max(0, EXAM_RECOMMEND_THRESHOLD - seenCount);
+  const seenPercent     = total > 0 ? Math.round((seenCount / total) * 100) : 0;
 
-  const dailyDone        = todayAnswered >= DAILY_GOAL;
-  const dailyPercent     = Math.round((Math.min(todayAnswered, DAILY_GOAL) / DAILY_GOAL) * 100);
-  const toExamRecommend  = Math.max(0, EXAM_RECOMMEND_THRESHOLD - seenCount);
-  const seenPercent      = total > 0 ? Math.round((seenCount / total) * 100) : 0;
+  const continueLabel = activeSession
+    ? `${t("home.continue", lang)} ${activeSession.currentIndex + 1}/${activeSession.totalQuestions}`
+    : null;
 
   const recommendText = activeSession
     ? t("home.rec.continue", lang)
@@ -331,9 +293,13 @@ export function HomePage() {
     ? t("home.rec.exam", lang)
     : t("home.rec.start", lang);
 
-  const continueLabel = activeSession
-    ? `${t("home.continue", lang)} ${activeSession.currentIndex + 1}/${activeSession.totalQuestions}`
-    : null;
+  const heroLink = activeSession
+    ? "/practice"
+    : dueWordsCount > 0
+    ? "/vocabulary?tab=review"
+    : readiness.score >= 80
+    ? "/practice?exam=1"
+    : "/practice";
 
   const missionWordsProgress = reviewedTodayCount > 0
     ? `${t("home.m.reviewed", lang)} ${reviewedTodayCount}`
@@ -343,16 +309,18 @@ export function HomePage() {
 
   const remainingDue = dueWordsCount - visibleWords.length;
 
+  const isRu = lang === "ru";
+
   return (
-    <PageShell title="Licencia AR" backToHome={false} headerRight={
+    <PageShell title={<>Licencia <span style={{color:"var(--s-accent)"}}>AR</span></>} backToHome={false} headerRight={
       <div className="home-header-controls">
         <div className="home-lang-toggle">
           <button type="button" className={lang === "ru" ? "home-lang-btn home-lang-btn--active" : "home-lang-btn"} onClick={() => pickLang("ru")}>RU</button>
           <button type="button" className={lang === "es" ? "home-lang-btn home-lang-btn--active" : "home-lang-btn"} onClick={() => pickLang("es")}>ES</button>
         </div>
         <div className="home-theme-toggle">
-          <button type="button" className={theme === "dark" ? "home-theme-btn home-theme-btn--active" : "home-theme-btn"} onClick={toggleTheme} aria-label="Тёмная тема"><i className="ti ti-moon" /></button>
-          <button type="button" className={theme === "light" ? "home-theme-btn home-theme-btn--active" : "home-theme-btn"} onClick={toggleTheme} aria-label="Светлая тема"><i className="ti ti-sun" /></button>
+          <button type="button" className={theme === "dark" ? "home-theme-btn home-theme-btn--active" : "home-theme-btn"} onClick={toggleTheme} aria-label="Dark"><i className="ti ti-moon" /></button>
+          <button type="button" className={theme === "light" ? "home-theme-btn home-theme-btn--active" : "home-theme-btn"} onClick={toggleTheme} aria-label="Light"><i className="ti ti-sun" /></button>
         </div>
         <div className="home-gear-wrap" ref={gearRef}>
           <button type="button" ref={gearButtonRef} data-settings-gear
@@ -364,7 +332,7 @@ export function HomePage() {
           {gearOpen && createPortal(
             <>
               <button type="button" className="home-settings-backdrop"
-                aria-label={lang === "ru" ? "Закрыть меню настроек" : "Cerrar menú de ajustes"}
+                aria-label={isRu ? "Закрыть" : "Cerrar"}
                 onClick={() => setGearOpen(false)} />
               <div id="home-settings-menu" ref={gearMenuRef}
                 className="pv2-gear-menu home-gear-menu" role="dialog" aria-modal="true" style={gearMenuStyle}>
@@ -392,18 +360,18 @@ export function HomePage() {
                   ))}
                 </div>
                 <div className="pv2-gear-divider" />
-                <div className="pv2-gear-section-label">{lang === "ru" ? "Правовая информация" : "Legal"}</div>
+                <div className="pv2-gear-section-label">{isRu ? "Правовая информация" : "Legal"}</div>
                 <Link to="/legal" className="pv2-gear-item home-gear-item-link" onClick={() => setGearOpen(false)}>
                   <span className="pv2-gear-ico pv2-gear-ico--teal"><i className="ti ti-info-circle" /></span>
-                  <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Дисклеймер" : "Disclaimer"}</span></span>
+                  <span className="pv2-gear-text"><span className="pv2-gear-label">{isRu ? "Дисклеймер" : "Disclaimer"}</span></span>
                 </Link>
                 <Link to="/sources" className="pv2-gear-item home-gear-item-link" onClick={() => setGearOpen(false)}>
                   <span className="pv2-gear-ico pv2-gear-ico--blue"><i className="ti ti-list-search" /></span>
-                  <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Источники" : "Fuentes"}</span></span>
+                  <span className="pv2-gear-text"><span className="pv2-gear-label">{isRu ? "Источники" : "Fuentes"}</span></span>
                 </Link>
                 <a href={PRIVACY_URL} className="pv2-gear-item home-gear-item-link" onClick={() => setGearOpen(false)}>
                   <span className="pv2-gear-ico pv2-gear-ico--amber"><i className="ti ti-shield-lock" /></span>
-                  <span className="pv2-gear-text"><span className="pv2-gear-label">{lang === "ru" ? "Политика конфиденциальности" : "Política de privacidad"}</span></span>
+                  <span className="pv2-gear-text"><span className="pv2-gear-label">{isRu ? "Политика конфиденциальности" : "Política de privacidad"}</span></span>
                 </a>
                 <div className="pv2-gear-divider" />
                 <a href="mailto:pravilo.ar@gmail.com?subject=Licencia%20AR%20bug%20report" className="pv2-gear-item home-gear-item-link" onClick={() => setGearOpen(false)}>
@@ -423,178 +391,149 @@ export function HomePage() {
       </div>
     }>
 
+      {/* Reminder */}
       {showReminder && (
         <div className="home-reminder">
-          <span className="home-reminder-icon">🔔</span>
+          <span className="home-reminder-icon">&#128276;</span>
           <span className="home-reminder-text">
-            {lang === "ru"
-              ? daysSince === 1
-                ? "Вчера не занимались — пора повторить!"
-                : `Не занимались ${daysSince} дня — пора повторить!`
-              : daysSince === 1
-                ? "Ayer no practicaste — es hora de repasar!"
-                : `Hace ${daysSince} días que no practicas — es hora de repasar!`}
+            {isRu
+              ? daysSince === 1 ? "Вчера не занимались — пора повторить!" : `Не занимались ${daysSince} дня — пора повторить!`
+              : daysSince === 1 ? "Ayer no practicaste — es hora de repasar!" : `Hace ${daysSince} días que no practicas!`}
           </span>
-          <button
-            type="button"
-            className="home-reminder-dismiss"
-            onClick={handleDismissReminder}
-            aria-label="Закрыть"
-          >
+          <button type="button" className="home-reminder-dismiss" onClick={handleDismissReminder} aria-label="Cerrar">
             <i className="ti ti-x" />
           </button>
         </div>
       )}
 
-      <section className="home-hero glass">
-        <div className="home-hero-left">
-          <p className="home-recommendation">
-            {t("home.recommend", lang)} <strong>{recommendText}</strong>
-          </p>
+      {/* ── 1. Hero ────────────────────────────────────────────── */}
+      <section className="hd-hero glass">
+        <div className="hd-hero-left">
+          <p className="hd-hero-label">{isRu ? "Лучшее действие сейчас" : "La mejor acción ahora"}</p>
+          <p className="hd-hero-title">{continueLabel ?? recommendText}</p>
+          <Link to={heroLink} className="hd-cta-btn">
+            <i className="ti ti-player-play-filled" aria-hidden="true" />
+            {continueLabel ?? (isRu ? "Начать тренировку" : "Comenzar práctica")}
+          </Link>
+        </div>
+        <div className="hd-hero-right">
+          <div className="hd-daily-card-head">
+            <p className="hd-daily-label">{isRu ? "Сегодня" : "Hoy"}</p>
+            <p className="hd-daily-pct-label">{dailyPercent}%</p>
+          </div>
+          <p className="hd-daily-fraction">{todayAnswered} / {DAILY_GOAL} {isRu ? "вопросов" : "preguntas"}</p>
+          <div className="hd-daily-progress" aria-hidden="true">
+            <span style={{ width: `${dailyPercent}%` }} />
+          </div>
+        </div>
+      </section>
 
-          {continueLabel && (
-            <Link to="/practice" className="cta-primary home-continue-btn">{"▶"} {continueLabel}</Link>
-          )}
+      {/* ── 2. Quick Start ─────────────────────────────────────── */}
+      <section>
+        <p className="hd-section-title">{isRu ? "Быстрый старт" : "Inicio rápido"}</p>
+        <div className="home-action-grid">
+          <Link to="/practice" className="home-action-btn main-action-card main-action-card--practice">
+            <span className="home-action-ico-wrap home-action-ico-wrap--blue"><i className="ti ti-books" /></span>
+            <span className="home-action-body">
+              <span className="home-action-title">{t("home.action.p20", lang)}</span>
+              <span className="home-action-sub">{t("home.action.p20.sub", lang)}</span>
+            </span>
+            <span className="home-action-right">20 <i className="ti ti-chevron-right" /></span>
+          </Link>
+          <Link to="/practice?quick=1" className="home-action-btn main-action-card main-action-card--quick">
+            <span className="home-action-ico-wrap home-action-ico-wrap--orange"><i className="ti ti-bolt" /></span>
+            <span className="home-action-body">
+              <span className="home-action-title">{t("home.action.q5", lang)}</span>
+              <span className="home-action-sub">{t("home.action.q5.sub", lang)}</span>
+            </span>
+            <span className="home-action-right">5 <i className="ti ti-chevron-right" /></span>
+          </Link>
+          <Link to="/vocabulary?tab=review" className={`home-action-btn main-action-card main-action-card--words${dueWordsCount > 0 ? " home-action-btn--words" : ""}`}>
+            <span className="home-action-ico-wrap home-action-ico-wrap--violet"><i className="ti ti-language" /></span>
+            <span className="home-action-body">
+              <span className="home-action-title">{t("home.action.words", lang)}</span>
+              <span className="home-action-sub">
+                {dueWordsCount > 0
+                  ? `${dueWordsCount} ${isRu ? "слов ждут" : "palabras pendientes"}`
+                  : t("home.action.words.sub", lang)}
+              </span>
+            </span>
+            <span className="home-action-right">{dueWordsCount > 0 ? dueWordsCount : 12} <i className="ti ti-chevron-right" /></span>
+          </Link>
+          <Link to="/practice?exam=1" className="home-action-btn main-action-card main-action-card--exam home-action-btn--exam">
+            <span className="home-action-ico-wrap home-action-ico-wrap--amber"><i className="ti ti-clipboard-check" /></span>
+            <span className="home-action-body">
+              <span className="home-action-title">{t("home.action.exam", lang)}</span>
+              <span className="home-action-sub">{t("home.action.exam.sub", lang)}</span>
+            </span>
+            <span className="home-action-right">40 <i className="ti ti-chevron-right" /></span>
+          </Link>
+        </div>
+      </section>
 
-          <p className="home-launch-title">{t("home.launch.title", lang)}</p>
-          <div className="home-action-grid">
-            {/* Row 1 - always */}
-            <Link to="/practice" className="home-action-btn main-action-card main-action-card--practice">
-              <span className="home-action-ico-wrap home-action-ico-wrap--blue">
-                <i className="ti ti-books" />
-              </span>
-              <span className="home-action-body">
-                <span className="home-action-title">{t("home.action.p20", lang)}</span>
-                <span className="home-action-sub">{t("home.action.p20.sub", lang)}</span>
-              </span>
-              <span className="home-action-right">20 <i className="ti ti-chevron-right" /></span>
-            </Link>
-            <Link to="/practice?quick=1" className="home-action-btn main-action-card main-action-card--quick">
-              <span className="home-action-ico-wrap home-action-ico-wrap--orange">
-                <i className="ti ti-bolt" />
-              </span>
-              <span className="home-action-body">
-                <span className="home-action-title">{t("home.action.q5", lang)}</span>
-                <span className="home-action-sub">{t("home.action.q5.sub", lang)}</span>
-              </span>
-              <span className="home-action-right">5 <i className="ti ti-chevron-right" /></span>
-            </Link>
-            {/* Row 2 - always */}
-            <Link to="/vocabulary?tab=review" className={`home-action-btn main-action-card main-action-card--words${dueWordsCount > 0 ? " home-action-btn--words" : ""}`}>
-              <span className="home-action-ico-wrap home-action-ico-wrap--violet">
-                <i className="ti ti-language" />
-              </span>
-              <span className="home-action-body">
-                <span className="home-action-title">{t("home.action.words", lang)}</span>
-                <span className="home-action-sub">{dueWordsCount > 0 ? `${dueWordsCount} ${lang === "ru" ? "слов ждут" : "palabras pendientes"}` : t("home.action.words.sub", lang)}</span>
-              </span>
-              <span className="home-action-right">{dueWordsCount > 0 ? dueWordsCount : 12} <i className="ti ti-chevron-right" /></span>
-            </Link>
-            <Link to="/practice?exam=1" className="home-action-btn main-action-card main-action-card--exam home-action-btn--exam">
-              <span className="home-action-ico-wrap home-action-ico-wrap--amber">
-                <i className="ti ti-clipboard-check" />
-              </span>
-              <span className="home-action-body">
-                <span className="home-action-title">{t("home.action.exam", lang)}</span>
-                <span className="home-action-sub">{t("home.action.exam.sub", lang)}</span>
-              </span>
-              <span className="home-action-right">40 <i className="ti ti-chevron-right" /></span>
-            </Link>
-            {/* Row 3 - two half-cards, conditional */}
-            {(mistakeQuestionCount > 0 || weakTopic || freshTopic) && (
-              <div className="home-row3">
-                {mistakeQuestionCount > 0 && (
-                  <Link to="/practice?mistakes=1" className="home-mistakes-card">
-                    <div className="home-weak-top">
-                      <span className="home-weak-icon"><i className="ti ti-target" /></span>
-                      <span className="home-weak-info">
-                        <span className="home-weak-title">{lang === "ru" ? "Ошибки" : "Errores"}</span>
-                        <span className="home-weak-meta">{mistakeQuestionCount} {lang === "ru" ? (mistakeQuestionCount === 1 ? "вопрос" : mistakeQuestionCount < 5 ? "вопроса" : "вопросов") : "preguntas"}</span>
-                      </span>
-                    </div>
-                    <div className="home-weak-bar-wrap">
-                      <div className="home-weak-bar" style={{ width: (() => { const total = mistakeQuestionCount + correctedMistakeCount; return total > 0 ? `${Math.round(correctedMistakeCount / total * 100)}%` : "0%"; })() }} />
-                    </div>
-                    <span className="home-weak-cta">{lang === "ru" ? "Отработать →" : "Practicar →"}</span>
-                  </Link>
-                )}
-                {mistakeQuestionCount === 0 && freshTopic && (
-                  <Link to={`/practice?subtopic=${freshTopic.key}`} className="home-fresh-card">
-                    <div className="home-weak-top">
-                      <span className="home-weak-icon home-fresh-icon"><i className="ti ti-books" /></span>
-                      <span className="home-weak-info">
-                        <span className="home-weak-title">{(t as (k: string, l: UILang) => string)(`subtopic.${freshTopic.key}`, lang)}</span>
-                        <span className="home-weak-meta">{freshTopic.seen} {lang === "ru" ? "из" : "de"} {freshTopic.total} · {freshTopic.coveragePct}%</span>
-                      </span>
-                    </div>
-                    <div className="home-fresh-bar-wrap">
-                      <div className="home-fresh-bar" style={{ width: `${freshTopic.coveragePct}%` }} />
-                    </div>
-                    <span className="home-fresh-cta">{lang === "ru" ? "Новая тема →" : "Tema nueva →"}</span>
-                  </Link>
-                )}
-                {!weakTopic && mistakeQuestionCount === 0 && secondFreshTopic && (
-                  <Link to={`/practice?subtopic=${secondFreshTopic.key}`} className="home-fresh-card">
-                    <div className="home-weak-top">
-                      <span className="home-weak-icon home-fresh-icon"><i className="ti ti-books" /></span>
-                      <div className="home-weak-info">
-                        <span className="home-weak-title">{(t as (k: string, l: UILang) => string)(`subtopic.${secondFreshTopic.key}`, lang)}</span>
-                        <span className="home-weak-meta">{secondFreshTopic.seen} {lang === "ru" ? "из" : "de"} {secondFreshTopic.total} · {secondFreshTopic.coveragePct}%</span>
-                      </div>
-                    </div>
-                    <div className="home-fresh-bar-wrap">
-                      <div className="home-fresh-bar" style={{ width: `${secondFreshTopic.coveragePct}%` }} />
-                    </div>
-                    <span className="home-fresh-cta">{lang === "ru" ? "Новая тема →" : "Tema nueva →"}</span>
-                  </Link>
-                )}
-                {weakTopic && (
-                  <Link to={`/practice?subtopic=${weakTopic.key}`} className="home-weak-card">
-                    <div className="home-weak-top">
-                      <span className="home-weak-icon"><i className={`ti ${weakTopicIcon}`} /></span>
-                      <span className="home-weak-info">
-                        <span className="home-weak-title">{(t as (k: string, l: UILang) => string)(`subtopic.${weakTopic.key}`, lang)}</span>
-                        <span className="home-weak-meta">{weakTopic.seen} {lang === "ru" ? "из" : "de"} {weakTopic.total} · {weakTopic.accuracy}%</span>
-                      </span>
-                    </div>
-                    <div className="home-weak-bar-wrap">
-                      <div className="home-weak-bar" style={{ width: `${Math.round(weakTopic.seen / weakTopic.total * 100)}%` }} />
-                    </div>
-                    <span className="home-weak-cta">{lang === "ru" ? "Слабая тема →" : "Tema débil →"}</span>
-                  </Link>
-                )}
-              </div>
+      <section className="mobile-today-card glass" aria-label={isRu ? "Сегодня" : "Hoy"}>
+        <div className="mobile-today-head">
+          <p className="mobile-today-title">{isRu ? "Сегодня" : "Hoy"}</p>
+          <p className="mobile-today-main">{todayAnswered} / {DAILY_GOAL} {isRu ? "вопросов" : "preguntas"}</p>
+        </div>
+        <p className="mobile-today-sub">{dailyPercent}% {isRu ? "цели" : "meta"}</p>
+        <div className="mobile-today-track" aria-hidden="true">
+          <span style={{ width: `${dailyPercent}%` }} />
+        </div>
+      </section>
+
+      {/* ── 3. Focus Today ─────────────────────────────────────── */}
+      {(mistakeQuestionCount > 0 || freshTopic || weakTopic) && (
+        <section>
+          <p className="hd-section-title">{isRu ? "Фокус сегодня" : "Foco hoy"}</p>
+          <div className="hd-focus-grid">
+            {mistakeQuestionCount > 0 ? (
+              <Link to="/practice?mistakes=1" className="hd-focus-card hd-focus-card--red">
+                <span className="hd-focus-icon hd-focus-icon--red" aria-hidden="true"><i className="ti ti-target" /></span>
+                <span className="hd-focus-body">
+                  <span className="hd-focus-title">{isRu ? "Ошибки" : "Errores"}</span>
+                  <span className="hd-focus-meta">{mistakeQuestionCount} {isRu ? "вопросов ждут повторения" : "preguntas pendientes"}</span>
+                </span>
+                <i className="ti ti-chevron-right hd-focus-chev" aria-hidden="true" />
+              </Link>
+            ) : freshTopic ? (
+              <Link to={`/practice?subtopic=${freshTopic.key}`} className="hd-focus-card hd-focus-card--blue">
+                <span className="hd-focus-icon hd-focus-icon--blue" aria-hidden="true"><i className="ti ti-books" /></span>
+                <span className="hd-focus-body">
+                  <span className="hd-focus-title">{(t as (k: string, l: UILang) => string)(`subtopic.${freshTopic.key}`, lang)} — {isRu ? "новая тема" : "tema nueva"}</span>
+                  <span className="hd-focus-meta">{freshTopic.seen} {isRu ? "из" : "de"} {freshTopic.total} · {freshTopic.coveragePct}%</span>
+                </span>
+                <i className="ti ti-chevron-right hd-focus-chev" aria-hidden="true" />
+              </Link>
+            ) : null}
+            {weakTopic && (
+              <Link to={`/practice?subtopic=${weakTopic.key}`} className="hd-focus-card hd-focus-card--orange">
+                <span className="hd-focus-icon hd-focus-icon--orange" aria-hidden="true"><i className={`ti ${weakTopicIcon}`} /></span>
+                <span className="hd-focus-body">
+                  <span className="hd-focus-title">{(t as (k: string, l: UILang) => string)(`subtopic.${weakTopic.key}`, lang)} — {isRu ? "слабая тема" : "tema débil"}</span>
+                  <span className="hd-focus-meta">{weakTopic.seen} {isRu ? "из" : "de"} {weakTopic.total} · {weakTopic.accuracy}%</span>
+                </span>
+                <i className="ti ti-chevron-right hd-focus-chev" aria-hidden="true" />
+              </Link>
             )}
           </div>
-        </div>
+        </section>
+      )}
 
-        <div className="home-hero-right">
-          <div className="home-goal-card">
-            <span className="home-goal-label">{lang === "ru" ? "Сегодня" : lang === "es" ? "Hoy" : "Today"}</span>
-            <DailyRing completed={todayAnswered} goal={DAILY_GOAL} lang={lang} theme={theme} />
-            <span className="home-goal-percent">{dailyPercent}%</span>
-            <span className="home-goal-remaining">
-              {todayAnswered >= DAILY_GOAL
-                ? (lang === "ru" ? "Цель выполнена ✓" : "Meta cumplida ✓")
-                : `${DAILY_GOAL - todayAnswered} ${lang === "ru" ? "осталось" : "restantes"}`}
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <section className="home-section-bare">
-        <p className="home-section-label">{t("home.today", lang)}</p>
-        <div className="mission-cards-grid">
-          <MissionCard icon={"📝"} title={t("home.m.p20", lang)} progress={`${todayAnswered}/${DAILY_GOAL}`} done={dailyDone} to="/practice" />
-          <MissionCard icon={<i className="ti ti-bolt" style={{ color: "#F5B41E" }} />} title={t("home.m.q5", lang)} done={false} to="/practice?quick=1" />
-          <MissionCard icon={"🗣️"} title={t("home.m.words", lang)} progress={missionWordsProgress} done={reviewedTodayCount >= 5} to="/vocabulary?tab=review" />
-          <MissionCard icon={<i className="ti ti-clipboard-check" style={{color:"#f5b41e"}} />} title={examDoneToday ? t("home.m.exam.done", lang) : t("home.m.exam", lang)} done={false} to="/practice?exam=1" disabled={examDoneToday} />
-        </div>
-      </section>
-
+      {/* ── Due words ──────────────────────────────────────────── */}
       {visibleWords.length > 0 ? (
         <section className="home-section glass home-words-panel">
-          <h3 className="home-section-title">{t("home.words.title", lang)}</h3>
+          <div className="home-words-header">
+            <h3 className="home-section-title" style={{ margin: 0 }}>{t("home.words.title", lang)}</h3>
+            <div className="home-words-header-right">
+              {dueWordsCount > 0 && (
+                <span className="home-words-count">{dueWordsCount}</span>
+              )}
+              <Link to="/vocabulary?tab=review" className="home-words-btn">
+                {t("home.words.btn", lang)} <i className="ti ti-arrow-right" />
+              </Link>
+            </div>
+          </div>
           <div className={`home-word-cards${visibleWords.length === 1 ? " home-word-cards--single" : ""}`}>
             {visibleWords.map((w) => (
               <div key={w.id} className="home-word-card">
@@ -602,56 +541,52 @@ export function HomePage() {
                   <span className="home-word-card-es">{w.term_es}</span>
                   <span className="home-word-card-ru">{w.translation_ru}</span>
                 </div>
-                <button
-                  type="button"
-                  className="home-word-card-btn"
-                  onClick={() => handleWordKnown(w.id)}
-                  title={lang === "es" ? "Lo sé" : "Знаю"}
-                >
+                <button type="button" className="home-word-card-btn" onClick={() => handleWordKnown(w.id)} title={isRu ? "Знаю" : "Lo sé"}>
                   <i className="ti ti-check" />
                 </button>
               </div>
             ))}
           </div>
           {remainingDue > 0 && (
-            <p className="home-section-meta" style={{ marginBottom: 8 }}>
-              {t("home.words.more", lang)} {remainingDue}{"…"}
+            <p className="home-section-meta" style={{ margin: "4px 0 0" }}>
+              {isRu ? `И ещё ${remainingDue}…` : `Y ${remainingDue} más…`}
             </p>
           )}
-          <Link to="/vocabulary?tab=review" className="cta-secondary" style={{ marginTop: 6, display: "inline-block" }}>
-            {t("home.words.btn", lang)}
-          </Link>
         </section>
       ) : (
         <div className="home-words-empty">
-          <span>{"✓"}</span> {t("home.words.empty", lang)}
+          <span>{"&#10003;"}</span> {t("home.words.empty", lang)}
         </div>
       )}
 
-      <section className="home-section glass home-readiness">
-        <h3 className="home-section-title">{t("home.ready.title", lang)}</h3>
-        <div className="readiness-header">
-          <span className="readiness-pct" style={{ color: readiness.color }}>{readiness.score}%</span>
-          {readiness.label && (
-            <span className="readiness-label" style={{ color: readiness.color }}>{readiness.label}</span>
-          )}
-        </div>
-        <div className="progress-track readiness-track">
-          <span style={{ width: `${Math.max(readiness.score, 1)}%`, background: readiness.color }} />
-        </div>
-        <p className="home-section-meta" style={{ marginTop: 6 }}>
-          {toExamRecommend > 0
-            ? `${t("home.ready.more", lang)} ${toExamRecommend} ${t("home.ready.questions", lang)}`
-            : t("home.ready.go", lang)}
-        </p>
-        <p className="home-section-meta">{seenCount} / {total} {t("home.ready.seen", lang)}</p>
-      </section>
+      {/* ── 4+5. Readiness + Week side by side ─────────────────── */}
+      <div className="hd-bottom-row">
+        <section className="home-section glass home-readiness">
+          <h3 className="home-section-title">{t("home.ready.title", lang)}</h3>
+          <div className="readiness-header">
+            <span className="readiness-pct" style={{ color: readiness.color }}>{readiness.score}%</span>
+            {readiness.label && (
+              <span className="readiness-label" style={{ color: readiness.color }}>{readiness.label}</span>
+            )}
+          </div>
+          <div className="progress-track readiness-track">
+            <span style={{ width: `${Math.max(readiness.score, 1)}%`, background: readiness.color }} />
+          </div>
+          <p className="home-section-meta" style={{ marginTop: 6 }}>
+            {toExamRecommend > 0
+              ? `${t("home.ready.more", lang)} ${toExamRecommend} ${t("home.ready.questions", lang)}`
+              : t("home.ready.go", lang)}
+          </p>
+          <p className="home-section-meta">{seenCount} / {total} {t("home.ready.seen", lang)}</p>
+        </section>
 
-      <section className="home-section glass">
-        <h3 className="home-section-title">{t("home.week.title", lang)}</h3>
-        <WeekDots activity={weekActivity} />
-      </section>
+        <section className="home-section glass">
+          <h3 className="home-section-title">{t("home.week.title", lang)}</h3>
+          <WeekDots activity={weekActivity} />
+        </section>
+      </div>
 
+      {/* ── Stats row ──────────────────────────────────────────── */}
       <section className="home-stats-row">
         <div className="home-stat">
           <span className="home-stat-val">{seenCount}</span>

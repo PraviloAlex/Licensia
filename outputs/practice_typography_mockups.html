@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Practice Typography Mockups</title>
+  <style>
+    :root {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #101828;
+      background: #f4f0ea;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 28px;
+      background: #f4f0ea;
+    }
+    h1 {
+      margin: 0 0 18px;
+      font-size: 22px;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+    .mock {
+      border: 1px solid #e3d8cc;
+      border-radius: 18px;
+      background: #fffdf9;
+      overflow: hidden;
+      box-shadow: 0 8px 26px rgba(16, 24, 40, 0.06);
+    }
+    .mock.dark {
+      margin-top: 18px;
+      color: #f4f7fb;
+      background: #0b0f14;
+      border-color: #202938;
+      box-shadow: none;
+    }
+    .head {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e8ded4;
+    }
+    .dark .head { border-bottom-color: #202938; }
+    .name {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 800;
+      color: #101828;
+    }
+    .dark .name { color: #f4f7fb; }
+    .hint {
+      margin: 4px 0 0;
+      color: #667085;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .dark .hint { color: #7f8ca8; }
+    .body {
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+    }
+    .answer {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border: 1px solid #e3d8cc;
+      border-radius: 14px;
+      padding: 18px 20px;
+      background: #fff;
+    }
+    .dark .answer {
+      background: #111820;
+      border-color: #293447;
+    }
+    .letter {
+      flex: 0 0 30px;
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #d6cabd;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #344054;
+      background: #f7f2ed;
+    }
+    .dark .letter {
+      color: #aab6cf;
+      background: #12203a;
+      border-color: #2e4263;
+    }
+    .content { min-width: 0; flex: 1; }
+    .es {
+      margin: 0;
+      color: #101828;
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 750;
+    }
+    .dark .es { color: #f4f7fb; }
+    .ru {
+      margin: 0;
+      color: #475467;
+      font-size: 16px;
+      line-height: 1.45;
+      font-weight: 500;
+    }
+    .dark .ru { color: #aab6cf; }
+    .explain {
+      margin-top: 4px;
+      border: 1px solid #e3d8cc;
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: #fff;
+    }
+    .dark .explain {
+      background: #101828;
+      border-color: #25324a;
+    }
+    .explain-title {
+      margin: 0 0 8px;
+      color: #101828;
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .dark .explain-title { color: #f4f7fb; }
+    .explain p {
+      margin: 0;
+      color: #475467;
+      font-size: 17px;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+    .dark .explain p { color: #aab6cf; }
+
+    /* Variant A */
+    .a .ru {
+      margin-top: 8px;
+      color: #53627a;
+      font-size: 15.5px;
+      font-weight: 500;
+    }
+    .dark.a .ru { color: #9eabc4; }
+
+    /* Variant B */
+    .b .ru {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #e3d8cc;
+      color: #475467;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .dark.b .ru {
+      border-top-color: #2b374b;
+      color: #aab6cf;
+    }
+
+    /* Variant C */
+    .c .ru-row {
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      margin-top: 10px;
+    }
+    .c .tag {
+      display: inline-grid;
+      place-items: center;
+      height: 22px;
+      border-radius: 999px;
+      background: #fff1e8;
+      color: #c2500d;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .dark.c .tag {
+      background: rgba(255, 122, 26, 0.14);
+      color: #ffb179;
+    }
+    .c .ru {
+      color: #475467;
+      font-size: 15.5px;
+      font-weight: 500;
+    }
+    .dark.c .ru { color: #aab6cf; }
+
+    @media (max-width: 980px) {
+      body { padding: 18px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Practice answer typography mockups</h1>
+  <div class="grid">
+    <section>
+      <article class="mock a">
+        <div class="head">
+          <p class="name">A. Мягкая иерархия</p>
+          <p class="hint">ES главный, RU ниже и спокойнее. Минимум визуального шума.</p>
+        </div>
+        <div class="body">
+          <div class="answer">
+            <span class="letter">B</span>
+            <div class="content">
+              <p class="es">Garantizar el cumplimiento de las normas de seguridad de los vehículos.</p>
+              <p class="ru">Обеспечить соблюдение норм безопасности транспортных средств.</p>
+            </div>
+          </div>
+          <div class="explain">
+            <p class="explain-title">Объяснение</p>
+            <p>La VTV verifica que el vehículo cumpla condiciones mínimas de seguridad y emisiones. Поэтому цель проверки — подтвердить исправность транспорта и снизить риски на дороге.</p>
+          </div>
+        </div>
+      </article>
+      <article class="mock dark a">
+        <div class="head">
+          <p class="name">A. Dark</p>
+          <p class="hint">Та же логика в тёмной теме.</p>
+        </div>
+        <div class="body">
+          <div class="answer">
+            <span class="letter">B</span>
+            <div class="content">
+              <p class="es">Garantizar el cumplimiento de las normas de seguridad de los vehículos.</p>
+              <p class="ru">Обеспечить соблюдение норм безопасности транспортных средств.</p>
+            </div>
+          </div>
+          <div class="explain">
+            <p class="explain-title">Объяснение</p>
+            <p>La VTV verifica que el vehículo cumpla condiciones mínimas de seguridad y emisiones. Поэтому цель проверки — подтвердить исправность транспорта и снизить риски на дороге.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section>
+      <article class="mock b">
+        <div class="head">
+          <p class="name">B. Разделитель</p>
+          <p class="hint">RU отделён линией. Самое понятное разделение языков.</p>
+        </div>
+        <div class="body">
+          <div class="answer">
+            <span class="letter">B</span>
+            <div class="content">
+              <p class="es">Garantizar el cumplimiento de las normas de seguridad de los vehículos.</p>
+              <p class="ru">Обеспечить соблюдение норм безопасности транспортных средств.</p>
+            </div>
+          </div>
+          <div class="explain">
+            <p class="explain-title">Объяснение</p>
+            <p>La VTV verifica que el vehículo cumpla condiciones mínimas de seguridad y emisiones. Поэтому цель проверки — подтвердить исправность транспорта и снизить риски на дороге.</p>
+          </div>
+        </div>
+      </article>
+      <article class="mock dark b">
+        <div class="head">
+          <p class="name">B. Dark</p>
+          <p class="hint">Чётко, но карточка визуально тяжелее.</p>
+        </div>
+        <div class="body">
+          <div class="answer">
+            <span class="letter">B</span>
+            <div class="content">
+              <p class="es">Garantizar el cumplimiento de las normas de seguridad de los vehículos.</p>
+              <p class="ru">Обеспечить соблюдение норм безопасности транспортных средств.</p>
+            </div>
+          </div>
+          <div class="explain">
+            <p class="explain-title">Объяснение</p>
+            <p>La VTV verifica que el vehículo cumpla condiciones mínimas de seguridad y emisiones. Поэтому цель проверки — подтвердить исправность транспорта и снизить риски на дороге.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section>
+      <article class="mock c">
+        <div class="head">
+          <p class="name">C. Метка RU</p>
+          <p class="hint">Перевод явно подписан. Самый структурный вариант.</p>
+        </div>
+        <div class="body">
+          <div class="answer">
+            <span class="letter">B</span>
+            <div class="content">
+              <p class="es">Garantizar el cumplimiento de las normas de seguridad de los vehículos.</p>
+              <div class="ru-row">
+                <span class="tag">RU</span>
+                <p class="ru">Обеспечить соблюдение норм безопасности транспортных средств.</p>
+              </div>
+            </div>
+          </div>
+          <div class="explain">
+            <p class="explain-title">Объяснение</p>
+            <p>La VTV verifica que el vehículo cumpla condiciones mínimas de seguridad y emisiones. Поэтому цель проверки — подтвердить исправность транспорта и снизить риски на дороге.</p>
+          </div>
+        </div>
+      </article>
+      <article class="mock dark c">
+        <div class="head">
+          <p class="name">C. Dark</p>
+          <p class="hint">Лучше всего различает языки, но добавляет UI-метку.</p>
+        </div>
+        <div class="body">
+          <div class="answer">
+            <span class="letter">B</span>
+            <div class="content">
+              <p class="es">Garantizar el cumplimiento de las normas de seguridad de los vehículos.</p>
+              <div class="ru-row">
+                <span class="tag">RU</span>
+                <p class="ru">Обеспечить соблюдение норм безопасности транспортных средств.</p>
+              </div>
+            </div>
+          </div>
+          <div class="explain">
+            <p class="explain-title">Объяснение</p>
+            <p>La VTV verifica que el vehículo cumpla condiciones mínimas de seguridad y emisiones. Поэтому цель проверки — подтвердить исправность транспорта и снизить риски на дороге.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+</body>
+</html>

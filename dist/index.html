@@ -8,14 +8,18 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="LicenciaAR" />
-    <link rel="icon" href="/Licensia/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/Licensia/favicon-32.png" />
-    <link rel="apple-touch-icon" href="/Licensia/icon-192.png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
     <title>Licencia AR</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-    <script type="module" crossorigin src="/Licensia/assets/index-HPv33sGD.js"></script>
-    <link rel="stylesheet" crossorigin href="/Licensia/assets/index-BODuuKvq.css">
-  <link rel="manifest" href="/Licensia/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/Licensia/registerSW.js"></script></head>
+    <!-- Apply saved theme before React mounts to prevent flash and wrong theme on reload -->
+    <script>
+      (function(){try{var t=localStorage.getItem('ui_theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();
+    </script>
+    <script type="module" crossorigin src="/assets/index-BI8LJ6Ur.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BwHNC7OY.css">
+  <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
   <body>
     <div id="root"></div>
   </body>
