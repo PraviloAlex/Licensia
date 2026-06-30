@@ -3,18 +3,6 @@ import { Confetti } from "../components/Confetti";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { glossaryData, questionsData } from "../lib/data";
 import { resolveQuestionGlossaryIds } from "../lib/glossaryLinkage";
-import {
-  buildMistakesPracticeQuestionIds,
-  buildPracticeQuestionIds,
-  buildQuickSessionQuestionIds,
-  buildSubtopicSessionQuestionIds,
-  createPracticeSession,
-  getCurrentPracticeSession,
-  saveCurrentPracticeSession,
-  PRACTICE_SESSION_SIZE,
-  QUICK_SESSION_SIZE,
-  type PracticeSession,
-} from "../lib/questionProgress";
 import { addWordToReview } from "../lib/vocabularyStatus";
 import type { VerifiedQuestion } from "../types/question";
 import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
@@ -119,20 +107,6 @@ function buildAnsweredQuestion(params: {
     correctAnswer: correctOption?.text_es ?? "",
     isCorrect,
   };
-}
-function getInitialPracticeSession(useMistakesOnly: boolean, useQuick: boolean, subtopicFilter?: string): PracticeSession {
-  const persisted = getCurrentPracticeSession();
-  const expectedSize = useQuick ? QUICK_SESSION_SIZE : PRACTICE_SESSION_SIZE;
-  // For mistakes mode — never restore old session, always rebuild with current mistakes
-  if (!useMistakesOnly && !subtopicFilter && persisted && !persisted.completedAt && persisted.currentIndex < persisted.questionIds.length && persisted.questionIds.length === expectedSize) return persisted;
-  const questionIds = useQuick
-    ? buildQuickSessionQuestionIds(questionsData)
-    : useMistakesOnly ? buildMistakesPracticeQuestionIds(questionsData)
-    : subtopicFilter ? buildSubtopicSessionQuestionIds(questionsData, subtopicFilter)
-    : buildPracticeQuestionIds(questionsData);
-  const session = createPracticeSession(questionIds);
-  saveCurrentPracticeSession(session);
-  return session;
 }
 
 export function PracticePage() {
