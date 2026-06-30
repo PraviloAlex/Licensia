@@ -21,23 +21,19 @@ function imgSrc(src: string): string {
   return BASE + (src.startsWith("/") ? src : "/" + src);
 }
 
+const OPTION_LETTERS = ["A", "B", "C", "D", "E"];
+const ANSWER_KEY_INDEX: Record<string, number> = { a: 0, b: 1, c: 2, d: 3, e: 4 };
 
 type LanguageMode = "both" | "es" | "ru";
 type PracticeMode = "practice" | "exam";
 
 const STORAGE_LANGUAGE  = "practice_language_mode";
-const STORAGE_MODE      = "practice_mode";
 const STORAGE_CONFIRM   = "practice_confirm_mode";
 
 function readLanguageMode(): LanguageMode {
   if (typeof window === "undefined") return "both";
   const v = window.localStorage.getItem(STORAGE_LANGUAGE);
   return v === "es" || v === "ru" || v === "both" ? v : "both";
-}
-function readPracticeMode(): PracticeMode {
-  if (typeof window === "undefined") return "practice";
-  const v = window.localStorage.getItem(STORAGE_MODE);
-  return v === "exam" || v === "practice" ? v : "practice";
 }
 function readConfirmMode(): boolean {
   if (typeof window === "undefined") return false;
@@ -261,7 +257,6 @@ export function PracticePage() {
   const showRussian   = !isExam && (languageMode === "both" || languageMode === "ru");
   const resultLang: UILang = isExam || languageMode === "es" ? "es" : languageMode === "ru" ? "ru" : uiLang;
   const practiceTitleKey = mistakesOnly ? "pv2.title.mistakes" : topicMode ? "pv2.title.topics" : "pv2.title.practice";
-  const optionLetters = ["A", "B", "C", "D", "E"];
   const practiceDots  = practiceSession.questionIds.map((qid, i) => {
     if (i < practiceSession.currentIndex) return practiceSession.answers?.[qid]?.isCorrect ? "ok" : "err";
     if (i === practiceSession.currentIndex) return "cur";
@@ -291,7 +286,7 @@ export function PracticePage() {
       if ((e.key === " " || e.key === "Enter") && s.showAnswerState) { e.preventDefault(); goNextPracticeQuestion(); return; }
       if ((e.key === " " || e.key === "Enter") && s.confirmMode && s.pendingOptionId && !s.showAnswerState) { e.preventDefault(); handleConfirmOrNext(); return; }
       if (!s.showAnswerState && !s.isExam && !s.selectingOptionId && s.question) {
-        const idx = ({ a:0,b:1,c:2,d:3,e:4 } as Record<string,number>)[e.key.toLowerCase()];
+        const idx = ANSWER_KEY_INDEX[e.key.toLowerCase()];
         if (idx !== undefined) { const opt = s.question.options[idx]; if (opt) handleOptionClick(opt.id); }
       }
     };
@@ -325,6 +320,24 @@ export function PracticePage() {
     setUILang_(lang);
     window.dispatchEvent(new Event("ui-lang-changed"));
     window.location.reload();
+  }
+  function handlePracticeFromExamStart() {
+    setMode("practice");
+    navigate("/practice", { replace: true });
+  }
+  function handleStartExamModeFromSettings() {
+    setMode("exam");
+    resetExamStartScreen();
+    setGearOpen(false);
+    navigate("/practice?exam=1", { replace: true });
+  }
+  function handleFontSizeChange(next: FontSizePref) {
+    setFontSizePref(next);
+    setFontSizePref_(next);
+  }
+  function handleResetPracticeFromSettings() {
+    startPracticeSession(false);
+    setGearOpen(false);
   }
   function handleOptionClick(optionId: string) {
     if (isExam) {
@@ -370,7 +383,7 @@ export function PracticePage() {
               examTotal={examTotal}
               examHistory={examHistory}
               onStartExam={handleStartExam}
-              onPractice={() => { setMode("practice"); navigate("/practice", { replace: true }); }}
+              onPractice={handlePracticeFromExamStart}
             />
           )}
 
@@ -422,7 +435,7 @@ export function PracticePage() {
                   <QuestionCard
                     mode="exam"
                     question={question}
-                    optionLetters={optionLetters}
+                    optionLetters={OPTION_LETTERS}
                     imageBrokenForQId={imageBrokenForQId}
                     selectingOptionId={selectingOptionId}
                     alreadyAnswered={examAnswers[examQuestionIds[examIndex]] !== undefined}
@@ -459,10 +472,10 @@ export function PracticePage() {
                     onClose={() => setGearOpen(false)}
                     onSetLanguage={setLanguage}
                     onToggleConfirmMode={toggleConfirmMode}
-                    onStartExamMode={() => { setMode("exam"); resetExamStartScreen(); setGearOpen(false); navigate("/practice?exam=1", { replace: true }); }}
+                    onStartExamMode={handleStartExamModeFromSettings}
                     onSetUILang={handleUILangChange}
-                    onSetFontSize={(next) => { setFontSizePref(next); setFontSizePref_(next); }}
-                    onResetPractice={() => { startPracticeSession(false); setGearOpen(false); }}
+                    onSetFontSize={handleFontSizeChange}
+                    onResetPractice={handleResetPracticeFromSettings}
                   />
                 </div>
               </div>}
@@ -484,7 +497,7 @@ export function PracticePage() {
                   <QuestionCard
                     mode="practice"
                     question={question}
-                    optionLetters={optionLetters}
+                    optionLetters={OPTION_LETTERS}
                     imageBrokenForQId={imageBrokenForQId}
                     selectingOptionId={selectingOptionId}
                     selectedOptionId={selectedId}
