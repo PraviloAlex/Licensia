@@ -14,6 +14,7 @@ import { useExamSession } from "../hooks/useExamSession";
 import { usePracticeSession } from "../hooks/usePracticeSession";
 import { ExamStart } from "../components/practice/ExamStart";
 import { PracticeSettings } from "../components/practice/PracticeSettings";
+import { QuestionCard } from "../components/practice/QuestionCard";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 function imgSrc(src: string): string {
@@ -418,37 +419,19 @@ export function PracticePage() {
                       return <span key={i} className={`pv2-dot pv2-dot--${state}`} />;
                     })}
                   </div>
-                  <div className="pv2-badge-row">
-                    <span className="pv2-badge">{question.topic}</span>
-                    <span className="pv2-exam-tag"><i className="ti ti-clipboard-check" /> {t("pv2.exam.tag", uiLang)}</span>
-                  </div>
-                  <h2 className="pv2-question-es">{question.question_es}</h2>
-                  {question.image?.src && imageBrokenForQId !== question.id && (
-                    <div className="pv2-image-wrap">
-                      <img src={imgSrc(question.image.src)} alt="Imagen de la pregunta" className="pv2-image"
-                        onError={() => setImageBrokenForQId(question.id)}
-                        onClick={() => setImageModalSrc(question.image?.src ? imgSrc(question.image.src) : null)}
-                      />
-                    </div>
-                  )}
-                  <div className="pv2-options">
-                    {question.options.map((option, idx) => {
-                      const isSelecting     = selectingOptionId === option.id;
-                      const alreadyAnswered = examAnswers[examQuestionIds[examIndex]] !== undefined;
-                      const cls = ["pv2-option", isSelecting ? "pv2-option--selecting" : "", alreadyAnswered ? "pv2-option--frozen" : ""].filter(Boolean).join(" ");
-                      return (
-                        <button key={option.id} type="button" className={cls}
-                          onClick={() => handleOptionClick(option.id)}
-                          disabled={alreadyAnswered || !!selectingOptionId}
-                        >
-                          <span className="pv2-option-letter">{optionLetters[idx] ?? String(idx + 1)}</span>
-                          <span className="pv2-option-content">
-                            <span className="pv2-option-es">{option.text_es}</span>
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <QuestionCard
+                    mode="exam"
+                    question={question}
+                    optionLetters={optionLetters}
+                    imageBrokenForQId={imageBrokenForQId}
+                    selectingOptionId={selectingOptionId}
+                    alreadyAnswered={examAnswers[examQuestionIds[examIndex]] !== undefined}
+                    examTagLabel={t("pv2.exam.tag", uiLang)}
+                    onImageError={setImageBrokenForQId}
+                    onImageOpen={setImageModalSrc}
+                    onOptionClick={handleOptionClick}
+                    resolveImageSrc={imgSrc}
+                  />
                 </>
               )}
             </>
@@ -498,46 +481,23 @@ export function PracticePage() {
                       );
                     })}
                   </div>
-                  <div className="pv2-q-layout">
-                  <div className="pv2-q-left">
-                  <div className="pv2-badge-row"><span className="pv2-badge">{question.topic}</span></div>
-                  {showSpanish && <h2 className="pv2-question-es">{question.question_es}</h2>}
-                  {showRussian && <p className="pv2-question-ru">{question.question_ru}</p>}
-                  {question.image?.src && imageBrokenForQId !== question.id && (
-                    <div className={showAnswerState ? "pv2-image-wrap pv2-image-wrap--frozen" : "pv2-image-wrap"}>
-                      <img src={imgSrc(question.image.src)} alt="Imagen de la pregunta" className="pv2-image"
-                        onError={() => setImageBrokenForQId(question.id)}
-                        onClick={() => setImageModalSrc(question.image?.src ? imgSrc(question.image.src) : null)}
-                      />
-                    </div>
-                  )}
-                  </div>
-                  <div className="pv2-q-right">
-                  <div className="pv2-options">
-                    {question.options.map((option, idx) => {
-                      const isSelected  = selectedId === option.id;
-                      const isRight     = showAnswerState && option.id === question.correctOptionId;
-                      const isWrong     = showAnswerState && isSelected && option.id !== question.correctOptionId;
-                      const frozen      = showAnswerState && !isRight && !isWrong;
-                      const isSelecting = selectingOptionId === option.id;
-                      const isPending   = !showAnswerState && confirmMode && pendingOptionId === option.id;
-                      const cls = ["pv2-option", isRight ? "pv2-option--correct" : "", isWrong ? "pv2-option--wrong" : "", frozen ? "pv2-option--frozen" : "", isSelecting ? "pv2-option--selecting" : "", isPending ? "pv2-option--pending" : ""].filter(Boolean).join(" ");
-                      return (
-                        <button key={option.id} type="button" className={cls}
-                          onClick={() => handleOptionClick(option.id)}
-                          disabled={showAnswerState || !!selectingOptionId}
-                        >
-                          <span className={["pv2-option-letter", isRight ? "pv2-option-letter--correct" : "", isWrong ? "pv2-option-letter--wrong" : "", isPending ? "pv2-option-letter--pending" : ""].filter(Boolean).join(" ")}>
-                            {optionLetters[idx] ?? String(idx + 1)}
-                          </span>
-                          <span className="pv2-option-content">
-                            {showSpanish && <span className="pv2-option-es">{option.text_es}</span>}
-                            {showRussian && <span className="pv2-option-ru">{option.text_ru}</span>}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <QuestionCard
+                    mode="practice"
+                    question={question}
+                    optionLetters={optionLetters}
+                    imageBrokenForQId={imageBrokenForQId}
+                    selectingOptionId={selectingOptionId}
+                    selectedOptionId={selectedId}
+                    showAnswerState={showAnswerState}
+                    showSpanish={showSpanish}
+                    showRussian={showRussian}
+                    confirmMode={confirmMode}
+                    pendingOptionId={pendingOptionId}
+                    onImageError={setImageBrokenForQId}
+                    onImageOpen={setImageModalSrc}
+                    onOptionClick={handleOptionClick}
+                    resolveImageSrc={imgSrc}
+                  >
                   <button type="button"
                     className={["pv2-next", nextBtnActive ? "pv2-next--active" : "pv2-next--disabled", nextBtnIsConfirm ? "pv2-next--confirm" : ""].filter(Boolean).join(" ")}
                     onClick={handleConfirmOrNext} disabled={!nextBtnActive}
@@ -608,8 +568,7 @@ export function PracticePage() {
                       </div>
                     </div>
                   )}
-                  </div>
-                  </div>
+                  </QuestionCard>
                 </>
               )}
 
