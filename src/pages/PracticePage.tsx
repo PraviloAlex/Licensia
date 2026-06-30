@@ -1,10 +1,9 @@
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import { Confetti } from "../components/Confetti";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { glossaryData, questionsData } from "../lib/data";
 import { resolveQuestionGlossaryIds } from "../lib/glossaryLinkage";
 import {
-  buildExamQuestionIds,
   buildMistakesPracticeQuestionIds,
   buildPracticeQuestionIds,
   buildQuickSessionQuestionIds,
@@ -19,13 +18,13 @@ import {
   type PracticeSession,
 } from "../lib/questionProgress";
 import { addWordToReview, addWordsToReview } from "../lib/vocabularyStatus";
-import { markExamCompletedToday } from "../lib/homeStats";
 import type { VerifiedQuestion } from "../types/question";
 import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
 import { EXAM_PASS_CORRECT, EXAM_PASS_PERCENT } from "../constants/exam";
 import { SessionResultScreen } from "../screens/SessionResultScreen";
 import { buildSessionResult, type AnsweredQuestion } from "../utils/buildSessionResult";
+import { useExamSession } from "../hooks/useExamSession";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 function imgSrc(src: string): string {
@@ -39,10 +38,6 @@ type PracticeMode = "practice" | "exam";
 const STORAGE_LANGUAGE  = "practice_language_mode";
 const STORAGE_MODE      = "practice_mode";
 const STORAGE_CONFIRM   = "practice_confirm_mode";
-const STORAGE_EXAM_HIST = "exam_history_v1";
-const EXAM_TIME_LIMIT   = 2700;
-
-interface ExamHistoryData { attempts: number; bestPct: number; lastPct: number; lastDate: string; }
 
 function readLanguageMode(): LanguageMode {
   if (typeof window === "undefined") return "both";
@@ -57,21 +52,6 @@ function readPracticeMode(): PracticeMode {
 function readConfirmMode(): boolean {
   if (typeof window === "undefined") return false;
   return window.localStorage.getItem(STORAGE_CONFIRM) === "1";
-}
-function getExamHistory(): ExamHistoryData {
-  if (typeof window === "undefined") return { attempts: 0, bestPct: 0, lastPct: 0, lastDate: "" };
-  try { const v = window.localStorage.getItem(STORAGE_EXAM_HIST); if (v) return JSON.parse(v); } catch {}
-  return { attempts: 0, bestPct: 0, lastPct: 0, lastDate: "" };
-}
-function saveExamHistory(pct: number): void {
-  if (typeof window === "undefined") return;
-  const prev = getExamHistory();
-  window.localStorage.setItem(STORAGE_EXAM_HIST, JSON.stringify({
-    attempts: prev.attempts + 1,
-    bestPct: Math.max(prev.bestPct, pct),
-    lastPct: pct,
-    lastDate: new Date().toISOString(),
-  }));
 }
 function pickQuestionById(id: string | undefined): VerifiedQuestion | null {
   if (!id) return null;
@@ -182,26 +162,16 @@ export function PracticePage() {
     const qid = practiceSession.questionIds[practiceSession.currentIndex];
     return Boolean(practiceSession.answers?.[qid]);
   });
-  const [examQuestionIds,  setExamQuestionIds]   = useState<string[]>(() => buildExamQuestionIds(questionsData));
-  const [examIndex,        setExamIndex]         = useState(0);
-  const [examAnswers,      setExamAnswers]       = useState<Record<string, boolean>>({});
-  const [examSelAnswers,   setExamSelAnswers]    = useState<Record<string, string>>({});
-  const [examStarted,      setExamStarted]       = useState(false);
-  const [showExitConfirm,  setShowExitConfirm]   = useState(false);
-  const [examHistory,      setExamHistory]       = useState<ExamHistoryData>(getExamHistory);
   const [showConfetti,     setShowConfetti]      = useState(false);
   const [accordionOpen,    setAccordionOpen]     = useState<Record<string, boolean>>({ explain: true, memo: false, words: false });
   const [addedWordIds,     setAddedWordIds]      = useState<Set<string>>(new Set());
   const [gearOpen,         setGearOpen]          = useState(false);
   const [selectingOptionId,setSelectingOptionId] = useState<string | null>(null);
   const [pendingOptionId,  setPendingOptionId]   = useState<string | null>(null);
-  const [examElapsed,      setExamElapsed]       = useState(0);
-  const [examForceEnd,     setExamForceEnd]      = useState(false);
 
   // ── ALL useRef ────────────────────────────────────────────────────
   const confettiTimer = useRef<ReturnType<typeof setTimeout>  | null>(null);
   const gearRef       = useRef<HTMLDivElement>(null);
-  const examTimerRef  = useRef<ReturnType<typeof setInterval> | null>(null);
   const touchStartX   = useRef<number | null>(null);
   const liveRef       = useRef({
     isExam: false, question: null as VerifiedQuestion | null,
@@ -212,13 +182,49 @@ export function PracticePage() {
   // ── Derived values ────────────────────────────────────────────────
   const isExam            = practiceMode === "exam";
   const practiceTotal     = practiceSession.questionIds.length;
-  const examTotal         = examQuestionIds.length;
-  const examAnsweredCount = Object.keys(examAnswers).length;
-  const examCorrectCount  = Object.values(examAnswers).filter(Boolean).length;
   const showPracticeSummary = !isExam && practiceSession.completedAt !== null;
-  const showExamSummary     = isExam && examStarted && (examAnsweredCount >= examTotal || examForceEnd);
   const practiceQuestion  = pickQuestionById(practiceSession.questionIds[practiceSession.currentIndex]);
-  const examQuestion      = pickQuestionById(examQuestionIds[examIndex]);
+  const onEnterExamMode = useCallback(() => {
+    setPendingOptionId(null);
+    setLanguageMode("es"); // exam-only: don't persist to localStorage
+    setMode("exam");
+  }, []);
+  const onExitExam = useCallback(() => {
+    navigate("/", { replace: true });
+  }, [navigate]);
+  const {
+    examAnswers,
+    examAnsweredCount,
+    examCorrectCount,
+    examElapsed,
+    examHistory,
+    examIndex,
+    examQuestion,
+    examQuestionIds,
+    examResult,
+    examSelAnswers,
+    examStarted,
+    examTotal,
+    exitExam,
+    handleExamAnswer,
+    handleStartExam,
+    resetExamStartScreen,
+    setShowExitConfirm,
+    showExamSummary,
+    showExitConfirm,
+    timerBarColor,
+    timerCritical,
+    timerPct,
+    timerStr,
+    timerWarning,
+  } = useExamSession({
+    isExam,
+    uiLang,
+    pickQuestionById,
+    buildAnsweredQuestion,
+    onEnterExamMode,
+    onExitExam,
+  });
   const question          = isExam ? examQuestion : practiceQuestion;
   const selectedId        = isExam ? null : selectedOptionId;
   const showAnswerState   = isExam ? false : showResult;
@@ -267,38 +273,7 @@ export function PracticePage() {
     });
   }, [practiceSession.answers, practiceSession.questionIds, quickMode, uiLang]);
 
-  const examResult = useMemo(() => {
-    const answeredQuestions = examQuestionIds
-      .map((qid, index) => {
-        const q = pickQuestionById(qid);
-        if (!q) return null;
-        return buildAnsweredQuestion({
-          question: q,
-          index,
-          selectedOptionId: examSelAnswers[qid],
-          isCorrect: examAnswers[qid] === true,
-          lang: uiLang,
-        });
-      })
-      .filter((q): q is AnsweredQuestion => q !== null);
-
-    return buildSessionResult({
-      mode: "exam",
-      answeredQuestions,
-      durationMinutes: Math.max(1, Math.ceil(examElapsed / 60)),
-    });
-  }, [examAnswers, examElapsed, examQuestionIds, examSelAnswers, uiLang]);
-
   liveRef.current = { isExam, question, showAnswerState, showPracticeSummary, showExamSummary, selectingOptionId, confirmMode, pendingOptionId };
-
-  const examRemaining = Math.max(0, EXAM_TIME_LIMIT - examElapsed);
-  const timerMin      = Math.floor(examRemaining / 60);
-  const timerSec      = examRemaining % 60;
-  const timerStr      = `${timerMin}:${timerSec.toString().padStart(2, "0")}`;
-  const timerPct      = examRemaining / EXAM_TIME_LIMIT;
-  const timerCritical = timerPct < 0.1;
-  const timerWarning  = !timerCritical && timerPct < 0.25;
-  const timerBarColor = timerCritical ? "rgba(163,45,45,0.85)" : timerWarning ? "rgba(186,117,23,0.75)" : "rgba(91,159,255,0.6)";
 
   const showSpanish   = languageMode === "both" || languageMode === "es" || isExam;
   const showRussian   = !isExam && (languageMode === "both" || languageMode === "ru");
@@ -317,7 +292,6 @@ export function PracticePage() {
 
   // ── ALL useEffect — unconditional ───────────────────────────────────────
   useEffect(() => () => { if (confettiTimer.current) clearTimeout(confettiTimer.current); }, []);
-  useEffect(() => () => { if (examTimerRef.current)  clearInterval(examTimerRef.current);  }, []);
 
   useEffect(() => {
     if (!gearOpen) return;
@@ -343,33 +317,6 @@ export function PracticePage() {
     return () => document.removeEventListener("keydown", fn);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (!isExam || !examStarted || showExamSummary) {
-      if (examTimerRef.current) { clearInterval(examTimerRef.current); examTimerRef.current = null; }
-      return;
-    }
-    examTimerRef.current = setInterval(() => setExamElapsed((p) => Math.min(p + 1, EXAM_TIME_LIMIT)), 1000);
-    return () => { if (examTimerRef.current) { clearInterval(examTimerRef.current); examTimerRef.current = null; } };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isExam, examStarted, showExamSummary]);
-
-  useEffect(() => {
-    if (isExam && examStarted && examElapsed >= EXAM_TIME_LIMIT && !showExamSummary) {
-      setExamForceEnd(true);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [examElapsed, isExam, examStarted]);
-
-  useEffect(() => {
-    if (showExamSummary) {
-      markExamCompletedToday();
-      const pct = examTotal > 0 ? Math.round((examCorrectCount / examTotal) * 100) : 0;
-      saveExamHistory(pct);
-      setExamHistory(getExamHistory());
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showExamSummary]);
 
   // ── Static early guard only ───────────────────────────────────────────────
   if (questionsData.length === 0) return (
@@ -406,24 +353,6 @@ export function PracticePage() {
     setPracticeSession(nextSession);
     setSelectedOptionId(null); setShowResult(false); setPendingOptionId(null); setImageBrokenForQId(null);
     setMode("practice");
-  }
-  function handleStartExam() {
-    const ids = buildExamQuestionIds(questionsData);
-    setExamQuestionIds(ids);
-    setExamIndex(0);
-    setExamAnswers({});
-    setExamSelAnswers({});
-    setExamElapsed(0);
-    setExamForceEnd(false);
-    setPendingOptionId(null);
-    setLanguageMode("es"); // exam-only: don't persist to localStorage
-    setMode("exam");
-    setExamStarted(true);
-  }
-  function exitExam() {
-    setExamStarted(false); setShowExitConfirm(false);
-    setExamAnswers({}); setExamSelAnswers({}); setExamIndex(0); setExamElapsed(0); setExamForceEnd(false);
-    navigate("/", { replace: true });
   }
   function handleOptionClick(optionId: string) {
     if (isExam) {
@@ -485,16 +414,6 @@ export function PracticePage() {
     const answered = Boolean(nextSession.answers?.[qid]);
     setShowResult(answered);
     setSelectedOptionId(answered ? nextSession.answers?.[qid]?.selectedOptionId ?? null : null);
-  }
-  function handleExamAnswer(optionId: string) {
-    if (showExamSummary) return;
-    const q = pickQuestionById(examQuestionIds[examIndex]);
-    if (!q || examAnswers[q.id] !== undefined) return;
-    const correct = optionId === q.correctOptionId;
-    setExamAnswers((p) => ({ ...p, [q.id]: correct }));
-    setExamSelAnswers((p) => ({ ...p, [q.id]: optionId }));
-    updateQuestionProgress(q.id, correct);
-    if (examIndex < examQuestionIds.length - 1) setExamIndex((p) => p + 1);
   }
   function toggleAccordion(key: string) { setAccordionOpen((p) => ({ ...p, [key]: !p[key] })); }
   function handleAddChipWord(wordId: string) { addWordToReview(wordId); setAddedWordIds((p) => new Set([...p, wordId])); }
@@ -673,7 +592,7 @@ export function PracticePage() {
                           <span className="pv2-gear-text"><span className="pv2-gear-label">{t("pv2.gear.practice", uiLang)}</span><span className="pv2-gear-sub">{t("pv2.gear.practiceHint", uiLang)}</span></span>
                           <span className="pv2-gear-badge pv2-gear-badge--on">{t("pv2.gear.on", uiLang)}</span>
                         </button>
-                        <button type="button" className="pv2-gear-item" onClick={() => { setMode("exam"); setExamStarted(false); setGearOpen(false); navigate("/practice?exam=1", { replace: true }); }}>
+                        <button type="button" className="pv2-gear-item" onClick={() => { setMode("exam"); resetExamStartScreen(); setGearOpen(false); navigate("/practice?exam=1", { replace: true }); }}>
                           <span className="pv2-gear-ico pv2-gear-ico--amber"><i className="ti ti-clipboard-check" /></span>
                           <span className="pv2-gear-text"><span className="pv2-gear-label">{t("pv2.gear.exam", uiLang)}</span><span className="pv2-gear-sub">{t("pv2.gear.examHint", uiLang)}</span></span>
                         </button>
