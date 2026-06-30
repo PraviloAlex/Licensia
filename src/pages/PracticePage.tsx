@@ -11,20 +11,19 @@ import {
   createPracticeSession,
   getCurrentPracticeSession,
   saveCurrentPracticeSession,
-  updateQuestionProgress,
   PRACTICE_SESSION_SIZE,
   QUICK_SESSION_SIZE,
-  shuffle,
   type PracticeSession,
 } from "../lib/questionProgress";
-import { addWordToReview, addWordsToReview } from "../lib/vocabularyStatus";
+import { addWordToReview } from "../lib/vocabularyStatus";
 import type { VerifiedQuestion } from "../types/question";
 import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
 import { EXAM_PASS_CORRECT, EXAM_PASS_PERCENT } from "../constants/exam";
 import { SessionResultScreen } from "../screens/SessionResultScreen";
-import { buildSessionResult, type AnsweredQuestion } from "../utils/buildSessionResult";
+import type { AnsweredQuestion } from "../utils/buildSessionResult";
 import { useExamSession } from "../hooks/useExamSession";
+import { usePracticeSession } from "../hooks/usePracticeSession";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 function imgSrc(src: string): string {
@@ -153,15 +152,6 @@ export function PracticePage() {
   const [fontSizePref,     setFontSizePref_]     = useState<FontSizePref>(getFontSizePref);
   const [imageBrokenForQId,setImageBrokenForQId] = useState<string | null>(null);
   const [imageModalSrc,    setImageModalSrc]     = useState<string | null>(null);
-  const [practiceSession,  setPracticeSession]   = useState<PracticeSession>(() => getInitialPracticeSession(mistakesOnly, quickMode, subtopicFilter));
-  const [selectedOptionId, setSelectedOptionId]  = useState<string | null>(() => {
-    const qid = practiceSession.questionIds[practiceSession.currentIndex];
-    return practiceSession.answers?.[qid]?.selectedOptionId ?? null;
-  });
-  const [showResult,       setShowResult]        = useState<boolean>(() => {
-    const qid = practiceSession.questionIds[practiceSession.currentIndex];
-    return Boolean(practiceSession.answers?.[qid]);
-  });
   const [showConfetti,     setShowConfetti]      = useState(false);
   const [accordionOpen,    setAccordionOpen]     = useState<Record<string, boolean>>({ explain: true, memo: false, words: false });
   const [addedWordIds,     setAddedWordIds]      = useState<Set<string>>(new Set());
@@ -177,6 +167,44 @@ export function PracticePage() {
     isExam: false, question: null as VerifiedQuestion | null,
     showAnswerState: false, showPracticeSummary: false, showExamSummary: false,
     selectingOptionId: null as string | null, confirmMode: false, pendingOptionId: null as string | null,
+  });
+  const handleCorrectPracticeAnswer = useCallback(() => {
+    setShowConfetti(true);
+    confettiTimer.current = setTimeout(() => setShowConfetti(false), 1400);
+  }, []);
+  const resetPracticeQuestionUi = useCallback(() => {
+    setImageBrokenForQId(null);
+    setAccordionOpen({ explain: true, memo: false, words: false });
+    setAddedWordIds(new Set());
+    setPendingOptionId(null);
+  }, []);
+  const resetPracticeSessionUi = useCallback(() => {
+    setPendingOptionId(null);
+    setImageBrokenForQId(null);
+  }, []);
+  const onEnterPracticeMode = useCallback(() => {
+    setMode("practice");
+  }, []);
+  const {
+    goNextPracticeQuestion,
+    goToPracticeQuestion,
+    handlePracticeAnswer,
+    practiceResult,
+    practiceSession,
+    selectedOptionId,
+    showResult,
+    startPracticeSession,
+  } = usePracticeSession({
+    useMistakesOnly: mistakesOnly,
+    useQuick: quickMode,
+    subtopicFilter,
+    uiLang,
+    buildAnsweredQuestion,
+    pickQuestionById,
+    onCorrectAnswer: handleCorrectPracticeAnswer,
+    onEnterPracticeMode,
+    onQuestionReset: resetPracticeQuestionUi,
+    onSessionStartReset: resetPracticeSessionUi,
   });
 
   // ── Derived values ────────────────────────────────────────────────
@@ -250,29 +278,6 @@ export function PracticePage() {
     [linkedGlossaryIds.join(",")],
   );
 
-  const practiceResult = useMemo(() => {
-    const answeredQuestions = practiceSession.questionIds
-      .map((qid, index) => {
-        const q = pickQuestionById(qid);
-        const answer = practiceSession.answers?.[qid];
-        if (!q || !answer) return null;
-        return buildAnsweredQuestion({
-          question: q,
-          index,
-          selectedOptionId: answer.selectedOptionId,
-          isCorrect: answer.isCorrect,
-          lang: uiLang,
-        });
-      })
-      .filter((q): q is AnsweredQuestion => q !== null);
-
-    return buildSessionResult({
-      mode: "practice",
-      answeredQuestions,
-      durationMinutes: quickMode ? 8 : Math.max(8, Math.round(answeredQuestions.length * 1.6)),
-    });
-  }, [practiceSession.answers, practiceSession.questionIds, quickMode, uiLang]);
-
   liveRef.current = { isExam, question, showAnswerState, showPracticeSummary, showExamSummary, selectingOptionId, confirmMode, pendingOptionId };
 
   const showSpanish   = languageMode === "both" || languageMode === "es" || isExam;
@@ -344,16 +349,6 @@ export function PracticePage() {
     window.dispatchEvent(new Event("ui-lang-changed"));
     window.location.reload();
   }
-  function startPracticeSession(useMistakesOnly: boolean, useQuick = false, specificIds?: string[]) {
-    const nextIds = specificIds ? shuffle(specificIds)
-      : useQuick ? buildQuickSessionQuestionIds(questionsData)
-      : useMistakesOnly ? buildMistakesPracticeQuestionIds(questionsData) : buildPracticeQuestionIds(questionsData);
-    const nextSession = createPracticeSession(nextIds);
-    saveCurrentPracticeSession(nextSession);
-    setPracticeSession(nextSession);
-    setSelectedOptionId(null); setShowResult(false); setPendingOptionId(null); setImageBrokenForQId(null);
-    setMode("practice");
-  }
   function handleOptionClick(optionId: string) {
     if (isExam) {
       const currentQid = examQuestionIds[examIndex];
@@ -374,46 +369,6 @@ export function PracticePage() {
       return;
     }
     if (showAnswerState) goNextPracticeQuestion();
-  }
-  function handlePracticeAnswer(optionId: string) {
-    if (showResult || practiceSession.completedAt) return;
-    const qid = practiceSession.questionIds[practiceSession.currentIndex];
-    if (!qid) return;
-    const q = pickQuestionById(qid);
-    if (!q) return;
-    const correct = optionId === q.correctOptionId;
-    setSelectedOptionId(optionId); setShowResult(true);
-    if (correct) { setShowConfetti(true); confettiTimer.current = setTimeout(() => setShowConfetti(false), 1400); }
-    updateQuestionProgress(q.id, correct);
-    if (!correct) addWordsToReview(resolveQuestionGlossaryIds(q));
-    const answers = { ...(practiceSession.answers ?? {}), [q.id]: { selectedOptionId: optionId, isCorrect: correct } };
-    const nextSession: PracticeSession = { ...practiceSession, answers, correctCount: (practiceSession.correctCount ?? 0) + (correct ? 1 : 0), wrongCount: (practiceSession.wrongCount ?? 0) + (correct ? 0 : 1) };
-    setPracticeSession(nextSession); saveCurrentPracticeSession(nextSession);
-  }
-  function goNextPracticeQuestion() {
-    if (!showResult || practiceSession.completedAt) return;
-    const isLast = practiceSession.currentIndex >= practiceSession.questionIds.length - 1;
-    const nextSession: PracticeSession = isLast
-      ? { ...practiceSession, completedAt: new Date().toISOString() }
-      : { ...practiceSession, currentIndex: practiceSession.currentIndex + 1 };
-    setPracticeSession(nextSession); saveCurrentPracticeSession(nextSession);
-    setImageBrokenForQId(null); setAccordionOpen({ explain: true, memo: false, words: false });
-    setAddedWordIds(new Set()); setPendingOptionId(null);
-    const nextQid = nextSession.questionIds[nextSession.currentIndex];
-    const nextAnswered = Boolean(nextSession.answers?.[nextQid]);
-    setShowResult(nextAnswered);
-    setSelectedOptionId(nextAnswered ? nextSession.answers?.[nextQid]?.selectedOptionId ?? null : null);
-  }
-  function goToPracticeQuestion(index: number) {
-    if (index >= practiceSession.currentIndex || !!practiceSession.completedAt) return;
-    const nextSession: PracticeSession = { ...practiceSession, currentIndex: index };
-    setPracticeSession(nextSession); saveCurrentPracticeSession(nextSession);
-    setImageBrokenForQId(null); setAccordionOpen({ explain: true, memo: false, words: false });
-    setAddedWordIds(new Set()); setPendingOptionId(null);
-    const qid = nextSession.questionIds[index];
-    const answered = Boolean(nextSession.answers?.[qid]);
-    setShowResult(answered);
-    setSelectedOptionId(answered ? nextSession.answers?.[qid]?.selectedOptionId ?? null : null);
   }
   function toggleAccordion(key: string) { setAccordionOpen((p) => ({ ...p, [key]: !p[key] })); }
   function handleAddChipWord(wordId: string) { addWordToReview(wordId); setAddedWordIds((p) => new Set([...p, wordId])); }
