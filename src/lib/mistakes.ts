@@ -1,21 +1,9 @@
-﻿const STORAGE_KEY = "licencia_ar_mistakes";
+import { readStringArray, writeJson } from "./storage";
+
+const STORAGE_KEY = "licencia_ar_mistakes";
 
 export function getMistakeIds(): string[] {
-  if (typeof window === "undefined") {
-    return [];
-  }
-
-  const raw = window.localStorage.getItem(STORAGE_KEY);
-  if (!raw) {
-    return [];
-  }
-
-  try {
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.filter((v) => typeof v === "string") : [];
-  } catch {
-    return [];
-  }
+  return readStringArray(STORAGE_KEY);
 }
 
 export function getLatestMistakeId(): string | null {
@@ -29,6 +17,5 @@ export function saveMistake(questionId: string): void {
     return;
   }
 
-  ids.push(questionId);
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+  writeJson(STORAGE_KEY, [...ids, questionId]);
 }

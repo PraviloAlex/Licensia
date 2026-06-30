@@ -1,4 +1,5 @@
 import { getQuestionProgressMap } from "./questionProgress";
+import { readJson, writeJson } from "./storage";
 
 const STREAK_KEY = "licencia_ar_streak";
 
@@ -19,20 +20,11 @@ function yesterdayStr(): string {
 }
 
 function readStreak(): StreakData {
-  if (typeof window === "undefined") return { current: 0, best: 0, lastActiveDate: "" };
-  try {
-    const raw = window.localStorage.getItem(STREAK_KEY);
-    if (!raw) return { current: 0, best: 0, lastActiveDate: "" };
-    return JSON.parse(raw) as StreakData;
-  } catch {
-    return { current: 0, best: 0, lastActiveDate: "" };
-  }
+  return readJson<StreakData>(STREAK_KEY, { current: 0, best: 0, lastActiveDate: "" });
 }
 
 function writeStreak(data: StreakData): void {
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(STREAK_KEY, JSON.stringify(data));
-  }
+  writeJson(STREAK_KEY, data);
 }
 
 /**

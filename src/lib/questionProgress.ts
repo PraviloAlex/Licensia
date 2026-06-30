@@ -1,5 +1,6 @@
 import type { VerifiedQuestion } from "../types/question";
 import { EXAM_TOTAL_QUESTIONS } from "../constants/exam";
+import { readJson, writeJson } from "./storage";
 
 export const QUESTION_PROGRESS_KEY = "licensia_question_progress";
 export const CURRENT_PRACTICE_SESSION_KEY = "licensia_current_practice_session";
@@ -29,10 +30,6 @@ export type PracticeSession = {
   wrongCount?: number;
 };
 
-function isBrowser(): boolean {
-  return typeof window !== "undefined";
-}
-
 export function shuffle<T>(items: T[]): T[] {
   const arr = [...items];
   for (let i = arr.length - 1; i > 0; i -= 1) {
@@ -40,31 +37,6 @@ export function shuffle<T>(items: T[]): T[] {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
-}
-
-function readJson<T>(key: string, fallback: T): T {
-  if (!isBrowser()) {
-    return fallback;
-  }
-
-  const raw = window.localStorage.getItem(key);
-  if (!raw) {
-    return fallback;
-  }
-
-  try {
-    return JSON.parse(raw) as T;
-  } catch {
-    return fallback;
-  }
-}
-
-function writeJson<T>(key: string, value: T): void {
-  if (!isBrowser()) {
-    return;
-  }
-
-  window.localStorage.setItem(key, JSON.stringify(value));
 }
 
 export function getQuestionProgressMap(): QuestionProgressMap {
@@ -111,8 +83,10 @@ export function updateQuestionProgress(questionId: string, isCorrect: boolean): 
     lastAnswerCorrect: isCorrect,
   };
 
-  map[questionId] = next;
-  saveQuestionProgressMap(map);
+  saveQuestionProgressMap({
+    ...map,
+    [questionId]: next,
+  });
   return next;
 }
 
@@ -203,7 +177,7 @@ export function buildPracticeQuestionIds(questions: VerifiedQuestion[]): string[
 
 export function buildMistakesPracticeQuestionIds(questions: VerifiedQuestion[]): string[] {
   const activeIds = getActiveMistakeIds(questions);
-  return shuffle(activeIds); // no cap — use all active (uncorrected) mistakes
+  return shuffle(activeIds).slice(0, MISTAKES_SESSION_CAP);
 }
 
 export function buildExamQuestionIds(questions: VerifiedQuestion[]): string[] {

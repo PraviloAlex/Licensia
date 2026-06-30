@@ -3340,9 +3340,9 @@ a { color: inherit; }
 .pv2-question-es {
   padding: 0 20px;
   font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
-  font-weight: 800;
+  font-weight: 500;
   color: var(--color-text-primary, #eef4ff);
-  line-height: 1.35;
+  line-height: 1.38;
   margin-bottom: 6px;
 }
 .pv2-question-ru {
@@ -6174,14 +6174,12 @@ a { color: inherit; }
 /* ── Question text ────────────────────────────────────────── */
 [data-theme="light"] .pv2-question-es {
   color: var(--pt-text-main);
-  font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
-  font-weight: 800;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
+  font-weight: 500;
+  line-height: 1.38;
+  letter-spacing: 0;
 }
 [data-theme="light"] .pv2-question-ru {
   color: var(--pt-text-secondary);
-  font-size: clamp(0.9375rem, 1vw, 1rem);
   font-weight: 500;
   line-height: 1.5;
   opacity: 1;
@@ -6206,7 +6204,6 @@ a { color: inherit; }
 /* ── Spanish text inside option ───────────────────────────── */
 [data-theme="light"] .pv2-option-es {
   color:       var(--pt-text-main);
-  font-size:   clamp(15px, 1vw, 16px);
   font-weight: 700;
   line-height: 1.42;
 }
@@ -6214,7 +6211,6 @@ a { color: inherit; }
 /* ── Russian translation inside option ───────────────────── */
 [data-theme="light"] .pv2-option-ru {
   color:       var(--pt-text-muted);
-  font-size:   clamp(13.5px, 0.9vw, 14.5px);
   font-weight: 500;
   line-height: 1.45;
   opacity:     1;
@@ -6635,7 +6631,6 @@ a { color: inherit; }
 /* ── Toolbar title readable in light theme ────────────────── */
 [data-theme="light"] .pv2-title {
   color: #171A1F;
-  font-weight: 600;
 }
 
 /* ── Toggle thumb visible in light theme ──────────────────── */
@@ -7726,6 +7721,108 @@ a { color: inherit; }
   align-items: center;
 }
 .editor-btn--import:hover { background: rgba(234,179,8,0.25); }
+
+.editor-btn--import input {
+  display: none;
+}
+
+.editor-notice {
+  margin: 10px 18px 0;
+  padding: 9px 12px;
+  border: 1px solid rgba(74, 222, 128, 0.28);
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.13);
+  color: #bbf7d0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.editor-status {
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  color: #94a3b8;
+  font-size: 11px;
+  font-family: monospace;
+}
+
+.editor-status--accepted {
+  border-color: rgba(74, 222, 128, 0.32);
+  color: #4ade80;
+}
+
+.editor-status--needs_check {
+  border-color: rgba(250, 204, 21, 0.32);
+  color: #fde047;
+}
+
+.editor-status--keep_old {
+  border-color: rgba(148, 163, 184, 0.28);
+  color: #cbd5e1;
+}
+
+.editor-risk-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 18px 0;
+}
+
+.editor-risk-chip {
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  background: rgba(127, 29, 29, 0.22);
+  color: #fecaca;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.editor-body--review {
+  grid-template-columns: minmax(320px, 0.85fr) minmax(520px, 1.15fr);
+}
+
+.editor-review-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.editor-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.editor-mini-label {
+  margin-bottom: 4px;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.editor-readonly--compact {
+  min-height: 48px;
+  max-height: 132px;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.editor-readonly--new {
+  border-color: rgba(168, 85, 247, 0.32);
+  background: rgba(168, 85, 247, 0.10);
+  color: #f5f3ff;
+}
+
+.editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 6px;
+}
 
 /* ═══════════════════════════════════════════════════════════
    HOME DASHBOARD v2  —  hd-* classes
@@ -9206,9 +9303,9 @@ a { color: inherit; }
   .pv2-question-es {
     color: #F4F7FB;
     font-size: var(--pv2-question-es-size);
-    line-height: 1.22;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    line-height: 1.38;
+    font-weight: 500;
+    letter-spacing: 0;
   }
 
   .pv2-question-ru {

@@ -642,11 +642,6 @@ export function PracticePage() {
               {!showPracticeSummary && <div className="pv2-toolbar">
                 <div className="pv2-tb-left">
                   <Link to="/" className="pv2-back" aria-label={t("pv2.home", uiLang)}><i className="ti ti-arrow-left" aria-hidden="true" /></Link>
-                  <div className="pv2-lang-group" role="group">
-                    <button type="button" className={languageMode === "both" ? "pv2-lang-btn pv2-lang-btn--active" : "pv2-lang-btn"} onClick={() => setLanguage("both")}>ES·RU</button>
-                    <button type="button" className={languageMode === "es"   ? "pv2-lang-btn pv2-lang-btn--active" : "pv2-lang-btn"} onClick={() => setLanguage("es")}>ES</button>
-                    <button type="button" className={languageMode === "ru"   ? "pv2-lang-btn pv2-lang-btn--active" : "pv2-lang-btn"} onClick={() => setLanguage("ru")}>RU</button>
-                  </div>
                 </div>
                 <span className="pv2-title">{t(practiceTitleKey, uiLang)}</span>
                 <div className="pv2-tb-right">
@@ -657,6 +652,12 @@ export function PracticePage() {
                     </button>
                     {gearOpen && (
                       <div className="pv2-gear-menu" role="dialog" aria-label={t("pv2.settings", uiLang)}>
+                        <div className="pv2-gear-section-label">{t("pv2.gear.qLang", uiLang)}</div>
+                        <div className="pv2-gear-lang-row">
+                          <button type="button" className={languageMode === "both" ? "pv2-gear-lang-btn pv2-gear-lang-btn--active" : "pv2-gear-lang-btn"} onClick={() => { setLanguage("both"); setGearOpen(false); }}>ES+RU</button>
+                          <button type="button" className={languageMode === "es"   ? "pv2-gear-lang-btn pv2-gear-lang-btn--active" : "pv2-gear-lang-btn"} onClick={() => { setLanguage("es");   setGearOpen(false); }}>ES</button>
+                          <button type="button" className={languageMode === "ru"   ? "pv2-gear-lang-btn pv2-gear-lang-btn--active" : "pv2-gear-lang-btn"} onClick={() => { setLanguage("ru");   setGearOpen(false); }}>RU</button>
+                        </div>
                         <div className="pv2-gear-section-label">{t("pv2.gear.answers", uiLang)}</div>
                         <button type="button" className="pv2-gear-item" onClick={toggleConfirmMode}>
                           <span className="pv2-gear-ico pv2-gear-ico--blue"><i className="ti ti-hand-finger" /></span>

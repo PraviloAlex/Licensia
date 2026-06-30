@@ -1,7 +1,12 @@
 import { getQuestionProgressMap, getCurrentPracticeSession } from "./questionProgress";
 import { getDueReviewWordIds, getMasteredWordIds } from "./vocabularyStatus";
 import { glossaryData } from "./data";
+import { readJson, writeJson } from "./storage";
 import type { GlossaryEntry } from "../types/glossary";
+
+const glossaryById = new Map<string, GlossaryEntry>(
+  glossaryData.map((entry) => [entry.id, entry]),
+);
 
 // ─── Today helpers ───────────────────────────────────────────
 
@@ -56,13 +61,9 @@ export function getDueWordsPreview(limit: number): WordPreview[] {
   const dueIds = getDueReviewWordIds().filter((id) => !masteredIds.has(id));
   const sliced = dueIds.slice(0, limit);
 
-  const glossaryMap = new Map<string, GlossaryEntry>(
-    glossaryData.map((e) => [e.id, e])
-  );
-
   return sliced
     .map((id) => {
-      const entry = glossaryMap.get(id);
+      const entry = glossaryById.get(id);
       if (!entry) return null;
       return { id, term_es: entry.term_es, translation_ru: entry.translation_ru };
     })
@@ -126,18 +127,9 @@ export function getWeeklyActivity(): boolean[] {
 const EXAM_TODAY_KEY = "licencia_ar_exam_today";
 
 export function getExamCompletedToday(): boolean {
-  if (typeof window === "undefined") return false;
-  try {
-    const raw = window.localStorage.getItem(EXAM_TODAY_KEY);
-    if (!raw) return false;
-    const { date } = JSON.parse(raw) as { date: string };
-    return date === todayStr();
-  } catch {
-    return false;
-  }
+  return readJson<{ date: string }>(EXAM_TODAY_KEY, { date: "" }).date === todayStr();
 }
 
 export function markExamCompletedToday(): void {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(EXAM_TODAY_KEY, JSON.stringify({ date: todayStr() }));
+  writeJson(EXAM_TODAY_KEY, { date: todayStr() });
 }
