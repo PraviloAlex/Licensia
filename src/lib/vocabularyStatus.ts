@@ -1,3 +1,5 @@
+import { readJson, readStorageString, removeStorageItem, writeJson, writeStorageString } from "./storage";
+
 const WORD_STATUS_KEY = "licencia_ar_word_status";
 const KNOWN_SESSIONS_KEY = "licencia_ar_known_sessions";
 const SESSION_ID_KEY = "licencia_ar_session_id";
@@ -40,28 +42,46 @@ function daysToMs(days: number): number {
   return days * 24 * 60 * 60 * 1000;
 }
 
-function ensureVocabularyStorageVersion(): void {
-  if (typeof window === "undefined") return;
+function getNumberMap(key: string): Record<string, number> {
+  const parsed = readJson<Record<string, unknown>>(key, {});
+  const result: Record<string, number> = {};
 
-  const raw = window.localStorage.getItem(DATA_VERSION_KEY);
+  for (const [mapKey, value] of Object.entries(parsed)) {
+    if (typeof value === "number") {
+      result[mapKey] = value;
+    }
+  }
+
+  return result;
+}
+
+function setNumberMap(key: string, map: Record<string, number>): void {
+  writeJson(key, map);
+}
+
+function omitRecordKey<T>(map: Record<string, T>, key: string): Record<string, T> {
+  const { [key]: _removed, ...rest } = map;
+  return rest;
+}
+
+function ensureVocabularyStorageVersion(): void {
+  const raw = readStorageString(DATA_VERSION_KEY);
   const current = raw ? Number(raw) : null;
   if (current === CURRENT_DATA_VERSION) return;
 
-  window.localStorage.removeItem(REVIEW_SRS_KEY);
-  window.localStorage.removeItem(WORD_STATUS_KEY);
-  window.localStorage.removeItem(KNOWN_SESSIONS_KEY);
-  window.localStorage.removeItem(REVIEW_LEGACY_KEY);
-  window.localStorage.setItem(DATA_VERSION_KEY, String(CURRENT_DATA_VERSION));
+  removeStorageItem(REVIEW_SRS_KEY);
+  removeStorageItem(WORD_STATUS_KEY);
+  removeStorageItem(KNOWN_SESSIONS_KEY);
+  removeStorageItem(REVIEW_LEGACY_KEY);
+  writeStorageString(DATA_VERSION_KEY, String(CURRENT_DATA_VERSION));
 }
 
 export function resetVocabularyState(): void {
-  if (typeof window === "undefined") return;
-
-  window.localStorage.removeItem(REVIEW_SRS_KEY);
-  window.localStorage.removeItem(WORD_STATUS_KEY);
-  window.localStorage.removeItem(KNOWN_SESSIONS_KEY);
-  window.localStorage.removeItem(REVIEW_LEGACY_KEY);
-  window.localStorage.setItem(DATA_VERSION_KEY, String(CURRENT_DATA_VERSION));
+  removeStorageItem(REVIEW_SRS_KEY);
+  removeStorageItem(WORD_STATUS_KEY);
+  removeStorageItem(KNOWN_SESSIONS_KEY);
+  removeStorageItem(REVIEW_LEGACY_KEY);
+  writeStorageString(DATA_VERSION_KEY, String(CURRENT_DATA_VERSION));
 }
 
 function getSessionId(): string {
@@ -78,23 +98,11 @@ function getSessionId(): string {
 // ─── Known clicks (replaces session-based mastering) ─────────
 
 export function getKnownClicksMap(): Record<string, number> {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = window.localStorage.getItem(KNOWN_CLICKS_KEY);
-    if (!raw) return {};
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
-    const result: Record<string, number> = {};
-    for (const [k, v] of Object.entries(parsed)) {
-      if (typeof v === "number") result[k] = v;
-    }
-    return result;
-  } catch { return {}; }
+  return getNumberMap(KNOWN_CLICKS_KEY);
 }
 
 function setKnownClicksMap(map: Record<string, number>): void {
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(KNOWN_CLICKS_KEY, JSON.stringify(map));
-  }
+  setNumberMap(KNOWN_CLICKS_KEY, map);
 }
 
 export function getKnownClickCount(wordId: string): number {
@@ -104,23 +112,11 @@ export function getKnownClickCount(wordId: string): number {
 // ─── 24h cooldown between counted clicks ─────────────────────
 
 function getKnownLastCountedMap(): Record<string, number> {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = window.localStorage.getItem(KNOWN_LAST_COUNTED_KEY);
-    if (!raw) return {};
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
-    const result: Record<string, number> = {};
-    for (const [k, v] of Object.entries(parsed)) {
-      if (typeof v === "number") result[k] = v;
-    }
-    return result;
-  } catch { return {}; }
+  return getNumberMap(KNOWN_LAST_COUNTED_KEY);
 }
 
 function setKnownLastCountedMap(map: Record<string, number>): void {
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(KNOWN_LAST_COUNTED_KEY, JSON.stringify(map));
-  }
+  setNumberMap(KNOWN_LAST_COUNTED_KEY, map);
 }
 
 /** Returns true if the word can be counted as "known" (calendar day cooldown: one click per calendar day) */
@@ -140,17 +136,7 @@ export function knownClickCooldownMs(wordId: string): number {
 // ─── Review added-at timestamps (for NEW badge) ───────────────
 
 function getReviewAddedAtMap(): Record<string, number> {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = window.localStorage.getItem(REVIEW_ADDED_AT_KEY);
-    if (!raw) return {};
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
-    const result: Record<string, number> = {};
-    for (const [k, v] of Object.entries(parsed)) {
-      if (typeof v === "number") result[k] = v;
-    }
-    return result;
-  } catch { return {}; }
+  return getNumberMap(REVIEW_ADDED_AT_KEY);
 }
 
 /** Returns true if word was added to review within the last 24 hours */
@@ -169,22 +155,15 @@ function todayStr(): string {
 type ReviewedTodayData = { date: string; count: number };
 
 function getReviewedTodayData(): ReviewedTodayData {
-  if (typeof window === "undefined") return { date: todayStr(), count: 0 };
-  try {
-    const raw = window.localStorage.getItem(REVIEWED_TODAY_KEY);
-    if (!raw) return { date: todayStr(), count: 0 };
-    const parsed = JSON.parse(raw) as ReviewedTodayData;
-    if (parsed.date !== todayStr()) return { date: todayStr(), count: 0 };
-    return parsed;
-  } catch { return { date: todayStr(), count: 0 }; }
+  const parsed = readJson<ReviewedTodayData>(REVIEWED_TODAY_KEY, { date: todayStr(), count: 0 });
+  if (parsed.date !== todayStr()) return { date: todayStr(), count: 0 };
+  return parsed;
 }
 
 function incrementReviewedToday(): void {
   const data = getReviewedTodayData();
   const next: ReviewedTodayData = { date: todayStr(), count: data.count + 1 };
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(REVIEWED_TODAY_KEY, JSON.stringify(next));
-  }
+  writeJson(REVIEWED_TODAY_KEY, next);
 }
 
 /** How many words were reviewed (Знаю or Повторить) today */
@@ -194,64 +173,48 @@ export function getReviewedTodayCount(): number {
 
 export function getWordStatusMap(): WordStatusMap {
   ensureVocabularyStorageVersion();
-  if (typeof window === "undefined") return {};
-  const raw = window.localStorage.getItem(WORD_STATUS_KEY);
-  if (!raw) return {};
+  const parsed = readJson<Record<string, unknown>>(WORD_STATUS_KEY, {});
+  const result: WordStatusMap = {};
 
-  try {
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
-    const result: WordStatusMap = {};
-    for (const [key, value] of Object.entries(parsed)) {
-      if (value === "known" || value === "repeat") result[key] = value;
+  for (const [key, value] of Object.entries(parsed)) {
+    if (value === "known" || value === "repeat") {
+      result[key] = value;
     }
-    return result;
-  } catch {
-    return {};
   }
+
+  return result;
 }
 
 function setWordStatusMap(map: WordStatusMap): WordStatusMap {
   ensureVocabularyStorageVersion();
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(WORD_STATUS_KEY, JSON.stringify(map));
-  }
+  writeJson(WORD_STATUS_KEY, map);
   return map;
 }
 
 function getReviewSrsMap(): ReviewSrsMap {
   ensureVocabularyStorageVersion();
-  if (typeof window === "undefined") return {};
-  const raw = window.localStorage.getItem(REVIEW_SRS_KEY);
-  if (!raw) return {};
+  const parsed = readJson<Record<string, unknown>>(REVIEW_SRS_KEY, {});
+  const result: ReviewSrsMap = {};
 
-  try {
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
-    const result: ReviewSrsMap = {};
-
-    for (const [wordId, value] of Object.entries(parsed)) {
-      if (!value || typeof value !== "object") continue;
-      const v = value as Record<string, unknown>;
-      const intervalIndex = typeof v.intervalIndex === "number" ? v.intervalIndex : 0;
-      const dueAt = typeof v.dueAt === "number" ? v.dueAt : nowMs();
-      const lastReviewedAt = typeof v.lastReviewedAt === "number" ? v.lastReviewedAt : null;
-      result[wordId] = {
-        intervalIndex: Math.max(0, Math.min(intervalIndex, SRS_DAYS.length - 1)),
-        dueAt,
-        lastReviewedAt,
-      };
-    }
-
-    return result;
-  } catch {
-    return {};
+  for (const [wordId, value] of Object.entries(parsed)) {
+    if (!value || typeof value !== "object") continue;
+    const v = value as Record<string, unknown>;
+    const intervalIndex = typeof v.intervalIndex === "number" ? v.intervalIndex : 0;
+    const dueAt = typeof v.dueAt === "number" ? v.dueAt : nowMs();
+    const lastReviewedAt = typeof v.lastReviewedAt === "number" ? v.lastReviewedAt : null;
+    result[wordId] = {
+      intervalIndex: Math.max(0, Math.min(intervalIndex, SRS_DAYS.length - 1)),
+      dueAt,
+      lastReviewedAt,
+    };
   }
+
+  return result;
 }
 
 function setReviewSrsMap(map: ReviewSrsMap): ReviewSrsMap {
   ensureVocabularyStorageVersion();
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(REVIEW_SRS_KEY, JSON.stringify(map));
-  }
+  writeJson(REVIEW_SRS_KEY, map);
   return map;
 }
 
@@ -278,12 +241,13 @@ function upsertReviewWord(wordId: string, partial?: Partial<ReviewSrsState>): Re
     lastReviewedAt: null,
   };
 
-  srs[wordId] = {
-    ...current,
-    ...(partial ?? {}),
-  };
-
-  return setReviewSrsMap(srs);
+  return setReviewSrsMap({
+    ...srs,
+    [wordId]: {
+      ...current,
+      ...(partial ?? {}),
+    },
+  });
 }
 
 export function addWordToReview(wordId: string): string[] {
@@ -294,12 +258,12 @@ export function addWordToReview(wordId: string): string[] {
     lastReviewedAt: null,
   });
   // Record when this word was added (for NEW badge)
-  if (typeof window !== "undefined") {
-    const addedAt = getReviewAddedAtMap();
-    if (!addedAt[wordId]) { // only set once (first add)
-      addedAt[wordId] = nowMs();
-      window.localStorage.setItem(REVIEW_ADDED_AT_KEY, JSON.stringify(addedAt));
-    }
+  const addedAt = getReviewAddedAtMap();
+  if (!addedAt[wordId]) {
+    writeJson(REVIEW_ADDED_AT_KEY, {
+      ...addedAt,
+      [wordId]: nowMs(),
+    });
   }
   return getReviewWordIds();
 }
@@ -314,31 +278,21 @@ export function addWordsToReview(wordIds: string[]): string[] {
 
 function getKnownSessionsMap(): KnownSessionsMap {
   ensureVocabularyStorageVersion();
-  if (typeof window === "undefined") return {};
-  const raw = window.localStorage.getItem(KNOWN_SESSIONS_KEY);
-  if (!raw) return {};
+  const parsed = readJson<Record<string, unknown>>(KNOWN_SESSIONS_KEY, {});
+  const result: KnownSessionsMap = {};
 
-  try {
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
-    const result: KnownSessionsMap = {};
-
-    for (const [wordId, value] of Object.entries(parsed)) {
-      if (Array.isArray(value)) {
-        result[wordId] = value.filter((v): v is string => typeof v === "string");
-      }
+  for (const [wordId, value] of Object.entries(parsed)) {
+    if (Array.isArray(value)) {
+      result[wordId] = value.filter((v): v is string => typeof v === "string");
     }
-
-    return result;
-  } catch {
-    return {};
   }
+
+  return result;
 }
 
 function setKnownSessionsMap(map: KnownSessionsMap): KnownSessionsMap {
   ensureVocabularyStorageVersion();
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(KNOWN_SESSIONS_KEY, JSON.stringify(map));
-  }
+  writeJson(KNOWN_SESSIONS_KEY, map);
   return map;
 }
 
@@ -373,18 +327,24 @@ export function markWordKnown(wordId: string): { statusMap: WordStatusMap; revie
   // Only count click if 24h cooldown has passed
   const counted = canCountKnownClick(wordId);
   const clicks = getKnownClicksMap();
+  let nextClicks = clicks;
 
   if (counted) {
-    clicks[wordId] = (clicks[wordId] ?? 0) + 1;
-    setKnownClicksMap(clicks);
+    nextClicks = {
+      ...clicks,
+      [wordId]: (clicks[wordId] ?? 0) + 1,
+    };
+    setKnownClicksMap(nextClicks);
     // Record timestamp for cooldown
     const lastCounted = getKnownLastCountedMap();
-    lastCounted[wordId] = nowMs();
-    setKnownLastCountedMap(lastCounted);
+    setKnownLastCountedMap({
+      ...lastCounted,
+      [wordId]: nowMs(),
+    });
     incrementReviewedToday();
   }
 
-  const mastered = (clicks[wordId] ?? 0) >= MASTERED_THRESHOLD;
+  const mastered = (nextClicks[wordId] ?? 0) >= MASTERED_THRESHOLD;
 
   const statusMap = setWordStatusMap({
     ...getWordStatusMap(),
@@ -404,9 +364,7 @@ export function markWordKnown(wordId: string): { statusMap: WordStatusMap; revie
       dueAt: nowMs() + daysToMs(SRS_DAYS[nextIndex]),
     });
   } else {
-    const srs = getReviewSrsMap();
-    delete srs[wordId];
-    setReviewSrsMap(srs);
+    setReviewSrsMap(omitRecordKey(getReviewSrsMap(), wordId));
   }
 
   return { statusMap, reviewIds: getReviewWordIds(), counted };
@@ -419,8 +377,10 @@ export function markWordRepeat(wordId: string): { statusMap: WordStatusMap; revi
   // Penalty: subtract 1 click (minimum 0)
   const clicks = getKnownClicksMap();
   if ((clicks[wordId] ?? 0) > 0) {
-    clicks[wordId] = clicks[wordId] - 1;
-    setKnownClicksMap(clicks);
+    setKnownClicksMap({
+      ...clicks,
+      [wordId]: clicks[wordId] - 1,
+    });
   }
 
   const statusMap = setWordStatusMap({
@@ -450,9 +410,7 @@ export function getKnownSessionCount(wordId: string): number {
 /** Remove a word from the review queue entirely */
 export function removeWordFromReview(wordId: string): string[] {
   ensureVocabularyStorageVersion();
-  const srs = getReviewSrsMap();
-  delete srs[wordId];
-  setReviewSrsMap(srs);
+  setReviewSrsMap(omitRecordKey(getReviewSrsMap(), wordId));
   return getReviewWordIds();
 }
 
