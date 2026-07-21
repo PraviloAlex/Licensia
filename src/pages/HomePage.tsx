@@ -1,7 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import { createPortal } from "react-dom";
-import { useMemo, useCallback, useEffect, useState, useRef, type CSSProperties, type ReactNode } from "react";
+import { useMemo, useCallback, useEffect, useState, useRef, type CSSProperties } from "react";
 import { PageShell } from "../components/PageShell";
+import { ProCard } from "../components/ProCard";
+import { ReadinessRing } from "../components/ReadinessRing";
 import { glossaryData, questionsData } from "../lib/data";
 import { getQuestionProgressMap, getUniqueSeenCount, getTotalWrongAnswersCount, getMistakeQuestionCount, getCorrectedMistakeCount } from "../lib/questionProgress";
 import { getMasteredWordIds, getReviewedTodayCount, markWordKnown } from "../lib/vocabularyStatus";
@@ -79,42 +81,6 @@ function WeekDots({ activity }: { activity: boolean[] }) {
   );
 }
 
-function DailyRing({ completed, goal }: { completed: number; goal: number }) {
-  const pct = Math.min(1, goal > 0 ? completed / goal : 0);
-  const deg = Math.round(pct * 360);
-  const fillColor = pct >= 1 ? "#4ee8a4" : "#FF7A1A";
-  const trackColor = "var(--ring-track-color, rgba(255,255,255,0.09))";
-  return (
-    <div className="hd-daily-ring" style={{ background: `conic-gradient(${fillColor} ${deg}deg, ${trackColor} 0deg)` }}>
-      <div className="hd-daily-ring-inner">
-        <span className="hd-daily-ring-pct">{Math.round(pct * 100)}%</span>
-        <span className="hd-daily-ring-sub">goal</span>
-      </div>
-    </div>
-  );
-}
-
-// MissionCard kept for potential reuse
-function MissionCard({ icon, title, progress, done, to, disabled }: {
-  icon: ReactNode; title: string; progress?: string; done: boolean; to: string; disabled?: boolean;
-}) {
-  if (disabled) {
-    return (
-      <div className="mission-card mission-card--disabled">
-        <span className="mission-card-icon">{icon}</span>
-        <span className="mission-card-title">{title}</span>
-      </div>
-    );
-  }
-  return (
-    <Link to={to} className={`mission-card${done ? " mission-card--done" : ""}`}>
-      <span className="mission-card-icon">{done ? "✓" : icon}</span>
-      <span className="mission-card-title">{title}</span>
-      {progress && !done && <span className="mission-card-progress">{progress}</span>}
-    </Link>
-  );
-}
-
 function readHomeData() {
   const seenCount      = getUniqueSeenCount();
   const mistakesCount  = getTotalWrongAnswersCount();
@@ -173,7 +139,7 @@ export function HomePage() {
     typeof window !== "undefined" && (function(){ const v = window.localStorage.getItem("practice_confirm_mode"); return v === null ? true : v === "1"; })()
   );
   const [theme, setTheme] = useState<"dark" | "light">(() => {
-    try { return (window.localStorage.getItem("ui_theme") as "dark" | "light") || "dark"; } catch { return "dark"; }
+    try { return (window.localStorage.getItem("ui_theme") as "dark" | "light") || "light"; } catch { return "light"; }
   });
   const [dismissedWords, setDismissedWords] = useState<Set<string>>(new Set());
   const [reminderDismissed, setReminderDismissed] = useState(() => getReminderDismissedToday());
@@ -212,6 +178,8 @@ export function HomePage() {
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     try { window.localStorage.setItem("ui_theme", theme); } catch { /* noop */ }
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeColorMeta) themeColorMeta.setAttribute("content", theme === "light" ? "#EEF3F8" : "#0F161E");
   }, [theme]);
 
   useEffect(() => {
@@ -277,7 +245,8 @@ export function HomePage() {
   function handleDismissReminder() { dismissReminderToday(); setReminderDismissed(true); }
 
   const dailyDone       = todayAnswered >= DAILY_GOAL;
-  const dailyPercent    = Math.round((Math.min(todayAnswered, DAILY_GOAL) / DAILY_GOAL) * 100);
+  const quickDone       = todayAnswered >= 5;
+  const wordsDone       = dueWordsCount === 0;
   const toExamRecommend = Math.max(0, EXAM_RECOMMEND_THRESHOLD - seenCount);
   const seenPercent     = total > 0 ? Math.round((seenCount / total) * 100) : 0;
 
@@ -406,119 +375,130 @@ export function HomePage() {
         </div>
       )}
 
-      {/* ── 1. Hero ────────────────────────────────────────────── */}
+      {/* ── 1. Hero: кольцо готовности + одна CTA ─────────────── */}
       <section className="hd-hero glass">
         <div className="hd-hero-left">
           <p className="hd-hero-label">{isRu ? "Лучшее действие сейчас" : "La mejor acción ahora"}</p>
-          <p className="hd-hero-title">{continueLabel ?? recommendText}</p>
+          {/* Title states the RECOMMENDATION, the button states the ACTION.
+              Previously both rendered `continueLabel`, so an active session showed
+              the identical string ("Продолжить 1/20") stacked twice. */}
+          <p className="hd-hero-title">{recommendText}</p>
           <Link to={heroLink} className="hd-cta-btn">
             <i className="ti ti-player-play-filled" aria-hidden="true" />
             {continueLabel ?? (isRu ? "Начать тренировку" : "Comenzar práctica")}
           </Link>
         </div>
-        <div className="hd-hero-right">
-          <div className="hd-daily-card-head">
-            <p className="hd-daily-label">{isRu ? "Сегодня" : "Hoy"}</p>
-            <p className="hd-daily-pct-label">{dailyPercent}%</p>
-          </div>
-          <p className="hd-daily-fraction">{todayAnswered} / {DAILY_GOAL} {isRu ? "вопросов" : "preguntas"}</p>
-          <div className="hd-daily-progress" aria-hidden="true">
-            <span style={{ width: `${dailyPercent}%` }} />
+        <div className="hb-hero-ring">
+          <ReadinessRing score={readiness.score} color={readiness.color} caption={t("progress.ready.word", lang)} />
+          <div className="hb-ring-caption">
+            <span className="hb-ring-title" style={{ color: readiness.color }}>{t(readiness.labelKey, lang)}</span>
+            <span className="hb-ring-meta">{seenCount} / {total} {t("home.ready.seen", lang)}</span>
+            <span className="hb-ring-meta">
+              {toExamRecommend > 0
+                ? `${t("home.ready.more", lang)} ${toExamRecommend} ${t("home.ready.questions", lang)}`
+                : t("home.ready.go", lang)}
+            </span>
           </div>
         </div>
       </section>
 
-      {/* ── 2. Quick Start ─────────────────────────────────────── */}
-      <section>
-        <p className="hd-section-title">{isRu ? "Быстрый старт" : "Inicio rápido"}</p>
-        <div className="home-action-grid">
-          <Link to="/practice" className="home-action-btn main-action-card main-action-card--practice">
-            <span className="home-action-ico-wrap home-action-ico-wrap--blue"><i className="ti ti-books" /></span>
-            <span className="home-action-body">
-              <span className="home-action-title">{t("home.action.p20", lang)}</span>
-              <span className="home-action-sub">{t("home.action.p20.sub", lang)}</span>
-            </span>
-            <span className="home-action-right">20 <i className="ti ti-chevron-right" /></span>
-          </Link>
-          <Link to="/practice?quick=1" className="home-action-btn main-action-card main-action-card--quick">
-            <span className="home-action-ico-wrap home-action-ico-wrap--orange"><i className="ti ti-bolt" /></span>
-            <span className="home-action-body">
-              <span className="home-action-title">{t("home.action.q5", lang)}</span>
-              <span className="home-action-sub">{t("home.action.q5.sub", lang)}</span>
-            </span>
-            <span className="home-action-right">5 <i className="ti ti-chevron-right" /></span>
-          </Link>
-          <Link to="/vocabulary?tab=review" className={`home-action-btn main-action-card main-action-card--words${dueWordsCount > 0 ? " home-action-btn--words" : ""}`}>
-            <span className="home-action-ico-wrap home-action-ico-wrap--violet"><i className="ti ti-language" /></span>
-            <span className="home-action-body">
-              <span className="home-action-title">{t("home.action.words", lang)}</span>
-              <span className="home-action-sub">
-                {dueWordsCount > 0
-                  ? `${dueWordsCount} ${isRu ? "слов ждут" : "palabras pendientes"}`
-                  : t("home.action.words.sub", lang)}
-              </span>
-            </span>
-            <span className="home-action-right">{dueWordsCount > 0 ? dueWordsCount : 12} <i className="ti ti-chevron-right" /></span>
-          </Link>
-          <Link to="/practice?exam=1" className="home-action-btn main-action-card main-action-card--exam home-action-btn--exam">
-            <span className="home-action-ico-wrap home-action-ico-wrap--amber"><i className="ti ti-clipboard-check" /></span>
-            <span className="home-action-body">
-              <span className="home-action-title">{t("home.action.exam", lang)}</span>
-              <span className="home-action-sub">{t("home.action.exam.sub", lang)}</span>
-            </span>
-            <span className="home-action-right">40 <i className="ti ti-chevron-right" /></span>
-          </Link>
-        </div>
-      </section>
+      <div className="hb-columns">
+        <div className="hb-col-main">
 
-      <section className="mobile-today-card glass" aria-label={isRu ? "Сегодня" : "Hoy"}>
-        <div className="mobile-today-head">
-          <p className="mobile-today-title">{isRu ? "Сегодня" : "Hoy"}</p>
-          <p className="mobile-today-main">{todayAnswered} / {DAILY_GOAL} {isRu ? "вопросов" : "preguntas"}</p>
-        </div>
-        <p className="mobile-today-sub">{dailyPercent}% {isRu ? "цели" : "meta"}</p>
-        <div className="mobile-today-track" aria-hidden="true">
-          <span style={{ width: `${dailyPercent}%` }} />
-        </div>
-      </section>
+          {/* ── 2. Сегодня: миссии с чекбоксами ─────────────────── */}
+          <section>
+            <p className="hd-section-title">{isRu ? "Сегодня" : "Hoy"}</p>
+            <div className="hm-list">
+              <Link to="/practice" className={dailyDone ? "hm-row hm-row--done" : "hm-row"}>
+                <span className={dailyDone ? "hm-check hm-check--done" : "hm-check"} aria-hidden="true">
+                  {dailyDone && <i className="ti ti-check" />}
+                </span>
+                <span className="hm-body">
+                  <span className="hm-title">{t("home.action.p20", lang)}</span>
+                  <span className="hm-meta">{todayAnswered} / {DAILY_GOAL} {isRu ? "вопросов сегодня" : "preguntas hoy"}</span>
+                </span>
+                <i className="ti ti-chevron-right hm-chev" aria-hidden="true" />
+              </Link>
+              <Link to="/practice?quick=1" className={quickDone ? "hm-row hm-row--done" : "hm-row"}>
+                <span className={quickDone ? "hm-check hm-check--done" : "hm-check"} aria-hidden="true">
+                  {quickDone && <i className="ti ti-check" />}
+                </span>
+                <span className="hm-body">
+                  <span className="hm-title">{t("home.action.q5", lang)}</span>
+                  <span className="hm-meta">{t("home.action.q5.sub", lang)}</span>
+                </span>
+                <i className="ti ti-chevron-right hm-chev" aria-hidden="true" />
+              </Link>
+              <Link to="/vocabulary?tab=review" className={wordsDone ? "hm-row hm-row--done" : "hm-row"}>
+                <span className={wordsDone ? "hm-check hm-check--done" : "hm-check"} aria-hidden="true">
+                  {wordsDone && <i className="ti ti-check" />}
+                </span>
+                <span className="hm-body">
+                  <span className="hm-title">{t("home.action.words", lang)}</span>
+                  <span className="hm-meta">
+                    {dueWordsCount > 0
+                      ? `${dueWordsCount} ${t("home.m.waiting", lang)}`
+                      : reviewedTodayCount > 0
+                      ? `${t("home.m.reviewed", lang)} ${reviewedTodayCount}`
+                      : t("home.words.empty", lang)}
+                  </span>
+                </span>
+                <i className="ti ti-chevron-right hm-chev" aria-hidden="true" />
+              </Link>
+              {mistakeQuestionCount > 0 && (
+                <Link to="/practice?mistakes=1" className="hm-row">
+                  <span className="hm-check" aria-hidden="true" />
+                  <span className="hm-body">
+                    <span className="hm-title">{isRu ? "Разобрать ошибки" : "Repasar errores"}</span>
+                    <span className="hm-meta">{mistakeQuestionCount} {isRu ? "вопросов ждут" : "preguntas pendientes"}</span>
+                  </span>
+                  <i className="ti ti-chevron-right hm-chev" aria-hidden="true" />
+                </Link>
+              )}
+              <Link to="/practice?exam=1" className={examDoneToday ? "hm-row hm-row--done" : "hm-row"}>
+                <span className={examDoneToday ? "hm-check hm-check--done" : "hm-check"} aria-hidden="true">
+                  {examDoneToday && <i className="ti ti-check" />}
+                </span>
+                <span className="hm-body">
+                  <span className="hm-title">{t("home.action.exam", lang)}</span>
+                  <span className="hm-meta">{examDoneToday ? t("home.m.exam.done", lang) : t("home.action.exam.sub", lang)}</span>
+                </span>
+                <i className="ti ti-chevron-right hm-chev" aria-hidden="true" />
+              </Link>
+            </div>
+          </section>
 
-      {/* ── 3. Focus Today ─────────────────────────────────────── */}
-      {(mistakeQuestionCount > 0 || freshTopic || weakTopic) && (
-        <section>
-          <p className="hd-section-title">{isRu ? "Фокус сегодня" : "Foco hoy"}</p>
-          <div className="hd-focus-grid">
-            {mistakeQuestionCount > 0 ? (
-              <Link to="/practice?mistakes=1" className="hd-focus-card hd-focus-card--red">
-                <span className="hd-focus-icon hd-focus-icon--red" aria-hidden="true"><i className="ti ti-target" /></span>
-                <span className="hd-focus-body">
-                  <span className="hd-focus-title">{isRu ? "Ошибки" : "Errores"}</span>
-                  <span className="hd-focus-meta">{mistakeQuestionCount} {isRu ? "вопросов ждут повторения" : "preguntas pendientes"}</span>
-                </span>
-                <i className="ti ti-chevron-right hd-focus-chev" aria-hidden="true" />
-              </Link>
-            ) : freshTopic ? (
-              <Link to={`/practice?subtopic=${freshTopic.key}`} className="hd-focus-card hd-focus-card--blue">
-                <span className="hd-focus-icon hd-focus-icon--blue" aria-hidden="true"><i className="ti ti-books" /></span>
-                <span className="hd-focus-body">
-                  <span className="hd-focus-title">{(t as (k: string, l: UILang) => string)(`subtopic.${freshTopic.key}`, lang)} — {isRu ? "новая тема" : "tema nueva"}</span>
-                  <span className="hd-focus-meta">{freshTopic.seen} {isRu ? "из" : "de"} {freshTopic.total} · {freshTopic.coveragePct}%</span>
-                </span>
-                <i className="ti ti-chevron-right hd-focus-chev" aria-hidden="true" />
-              </Link>
-            ) : null}
-            {weakTopic && (
-              <Link to={`/practice?subtopic=${weakTopic.key}`} className="hd-focus-card hd-focus-card--orange">
-                <span className="hd-focus-icon hd-focus-icon--orange" aria-hidden="true"><i className={`ti ${weakTopicIcon}`} /></span>
-                <span className="hd-focus-body">
-                  <span className="hd-focus-title">{(t as (k: string, l: UILang) => string)(`subtopic.${weakTopic.key}`, lang)} — {isRu ? "слабая тема" : "tema débil"}</span>
-                  <span className="hd-focus-meta">{weakTopic.seen} {isRu ? "из" : "de"} {weakTopic.total} · {weakTopic.accuracy}%</span>
-                </span>
-                <i className="ti ti-chevron-right hd-focus-chev" aria-hidden="true" />
-              </Link>
-            )}
-          </div>
-        </section>
-      )}
+          {/* ── 3. Focus Today ──────────────────────────────────── */}
+          {(freshTopic || weakTopic) && (
+            <section>
+              <p className="hd-section-title">{isRu ? "Фокус сегодня" : "Foco hoy"}</p>
+              <div className="hd-focus-grid">
+                {freshTopic && (
+                  <Link to={`/practice?subtopic=${freshTopic.key}`} className="hd-focus-card hd-focus-card--blue">
+                    <span className="hd-focus-icon hd-focus-icon--blue" aria-hidden="true"><i className="ti ti-books" /></span>
+                    <span className="hd-focus-body">
+                      <span className="hd-focus-title">{(t as (k: string, l: UILang) => string)(`subtopic.${freshTopic.key}`, lang)} — {isRu ? "новая тема" : "tema nueva"}</span>
+                      <span className="hd-focus-meta">{freshTopic.seen} {isRu ? "из" : "de"} {freshTopic.total} · {freshTopic.coveragePct}%</span>
+                    </span>
+                    <i className="ti ti-chevron-right hd-focus-chev" aria-hidden="true" />
+                  </Link>
+                )}
+                {weakTopic && (
+                  <Link to={`/practice?subtopic=${weakTopic.key}`} className="hd-focus-card hd-focus-card--orange">
+                    <span className="hd-focus-icon hd-focus-icon--orange" aria-hidden="true"><i className={`ti ${weakTopicIcon}`} /></span>
+                    <span className="hd-focus-body">
+                      <span className="hd-focus-title">{(t as (k: string, l: UILang) => string)(`subtopic.${weakTopic.key}`, lang)} — {isRu ? "слабая тема" : "tema débil"}</span>
+                      <span className="hd-focus-meta">{weakTopic.seen} {isRu ? "из" : "de"} {weakTopic.total} · {weakTopic.accuracy}%</span>
+                    </span>
+                    <i className="ti ti-chevron-right hd-focus-chev" aria-hidden="true" />
+                  </Link>
+                )}
+              </div>
+            </section>
+          )}
+        </div>
+
+        <div className="hb-col-side">
 
       {/* ── Due words ──────────────────────────────────────────── */}
       {visibleWords.length > 0 ? (
@@ -553,38 +533,13 @@ export function HomePage() {
             </p>
           )}
         </section>
-      ) : (
-        <div className="home-words-empty">
-          <span>{"&#10003;"}</span> {t("home.words.empty", lang)}
-        </div>
-      )}
+      ) : null}
 
-      {/* ── 4+5. Readiness + Week side by side ─────────────────── */}
-      <div className="hd-bottom-row">
-        <section className="home-section glass home-readiness">
-          <h3 className="home-section-title">{t("home.ready.title", lang)}</h3>
-          <div className="readiness-header">
-            <span className="readiness-pct" style={{ color: readiness.color }}>{readiness.score}%</span>
-            {readiness.label && (
-              <span className="readiness-label" style={{ color: readiness.color }}>{readiness.label}</span>
-            )}
-          </div>
-          <div className="progress-track readiness-track">
-            <span style={{ width: `${Math.max(readiness.score, 1)}%`, background: readiness.color }} />
-          </div>
-          <p className="home-section-meta" style={{ marginTop: 6 }}>
-            {toExamRecommend > 0
-              ? `${t("home.ready.more", lang)} ${toExamRecommend} ${t("home.ready.questions", lang)}`
-              : t("home.ready.go", lang)}
-          </p>
-          <p className="home-section-meta">{seenCount} / {total} {t("home.ready.seen", lang)}</p>
-        </section>
-
-        <section className="home-section glass">
-          <h3 className="home-section-title">{t("home.week.title", lang)}</h3>
-          <WeekDots activity={weekActivity} />
-        </section>
-      </div>
+      {/* ── Week ──────────────────────────────────────────────── */}
+      <section className="home-section glass">
+        <h3 className="home-section-title">{t("home.week.title", lang)}</h3>
+        <WeekDots activity={weekActivity} />
+      </section>
 
       {/* ── Stats row ──────────────────────────────────────────── */}
       <section className="home-stats-row">
@@ -601,6 +556,12 @@ export function HomePage() {
           <span className="home-stat-label">{t("home.stat.words", lang)}</span>
         </div>
       </section>
+
+      {/* ── Licencia PRO (анонс, без оплаты) ───────────────────── */}
+      <ProCard lang={lang} />
+
+        </div>
+      </div>
 
     </PageShell>
   );

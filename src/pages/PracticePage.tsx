@@ -267,6 +267,10 @@ export function PracticePage() {
   const nextBtnIsConfirm = confirmMode && !showAnswerState && !!pendingOptionId;
   const nextBtnLabel     = nextBtnIsConfirm ? t("pv2.confirm", uiLang) : t("pv2.next", uiLang);
 
+  const hasExplainContent = !!(question && ((question as unknown as { whyCorrect_ru?: string }).whyCorrect_ru || (question.image?.src && visualAnalysisRu)));
+  const hasMemoContent    = !!question?.memoryHint_ru;
+  const hasSheetContent   = hasExplainContent || hasMemoContent || relatedWords.length > 0;
+
   // ── ALL useEffect — unconditional ───────────────────────────────────────
   useEffect(() => () => { if (confettiTimer.current) clearTimeout(confettiTimer.current); }, []);
 
@@ -511,17 +515,26 @@ export function PracticePage() {
                     onOptionClick={handleOptionClick}
                     resolveImageSrc={imgSrc}
                   >
+                  {showAnswerState && (
+                    <div className={isCorrect ? "pv2-verdict pv2-verdict--correct result-enter" : "pv2-verdict pv2-verdict--wrong result-enter"} role="status">
+                      <i className={isCorrect ? "ti ti-circle-check" : "ti ti-circle-x"} aria-hidden="true" />
+                      <span className="pv2-verdict-text">
+                        <span className="pv2-verdict-label">{isCorrect ? t("pv2.correct", uiLang) : t("pv2.wrong", uiLang)}</span>
+                        {!isCorrect && correctOption && (
+                          <span className="pv2-verdict-answer">
+                            {correctOption.text_es}
+                            {correctOption.text_ru ? ` — ${correctOption.text_ru}` : ""}
+                          </span>
+                        )}
+                      </span>
+                    </div>
+                  )}
                   <button type="button"
                     className={["pv2-next", nextBtnActive ? "pv2-next--active" : "pv2-next--disabled", nextBtnIsConfirm ? "pv2-next--confirm" : ""].filter(Boolean).join(" ")}
                     onClick={handleConfirmOrNext} disabled={!nextBtnActive}
                   >{nextBtnLabel}</button>
-                  {showAnswerState && (
-                    <div className={isCorrect ? "pv2-sheet pv2-sheet--correct result-enter" : "pv2-sheet pv2-sheet--wrong result-enter"}>
-                      <div className="pv2-sheet-result">
-                        <span className="pv2-sheet-label">{isCorrect ? t("pv2.correct", uiLang) : t("pv2.wrong", uiLang)}</span>
-                        {correctOption && <p className="pv2-sheet-answer">{correctOption.text_es}</p>}
-                        {!isCorrect && correctOption?.text_ru && <p className="pv2-sheet-sub">{correctOption.text_ru}</p>}
-                      </div>
+                  {showAnswerState && hasSheetContent && (
+                    <div className="pv2-sheet result-enter">
                       <div className="pv2-accordion">
                         {((question as unknown as { whyCorrect_ru?: string }).whyCorrect_ru || (question.image?.src && visualAnalysisRu)) && (
                           <div className="pv2-acc-item">
@@ -639,7 +652,7 @@ export function PracticePage() {
                 return (
                   <section className="session-summary session-summary--practice glass result-enter">
                     <div className="summary-hero">
-                      <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, rgba(255,255,255,0.07) 0deg)` }}>
+                      <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, var(--ring-track-color) 0deg)` }}>
                         <div className="summary-score-inner">
                           <span className="summary-pct">{pct}%</span>
                           <span className="summary-label" style={{ color: scoreColor }}>{scoreLabel}</span>
@@ -712,7 +725,7 @@ export function PracticePage() {
                 );
                 return (
                   <section className="session-summary glass result-enter">
-                    <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, rgba(255,255,255,0.07) 0deg)` }}>
+                    <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, var(--ring-track-color) 0deg)` }}>
                       <div className="summary-score-inner">
                         <span className="summary-pct">{pct}%</span>
                         {!mistakesOnly && <span className="summary-label" style={{ color: scoreColor }}>{scoreLabel}</span>}
@@ -812,7 +825,7 @@ export function PracticePage() {
                   <Link to="/" className="pv2-back" aria-label={t("pv2.home", uiLang)}><i className="ti ti-arrow-left" /></Link>
                 </div>
                 <div className="summary-hero">
-                  <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, rgba(255,255,255,0.07) 0deg)` }}>
+                  <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, var(--ring-track-color) 0deg)` }}>
                     <div className="summary-score-inner">
                       <span className="summary-pct">{pct}%</span>
                       <span className="summary-label" style={{ color: scoreColor }}>{scoreLabel}</span>
@@ -889,7 +902,7 @@ export function PracticePage() {
                 <div className="pv2-exam-summary-toolbar">
                   <Link to="/" className="pv2-back" aria-label={t("pv2.home", uiLang)}><i className="ti ti-arrow-left" /></Link>
                 </div>
-                <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, rgba(255,255,255,0.07) 0deg)` }}>
+                <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, var(--ring-track-color) 0deg)` }}>
                   <div className="summary-score-inner">
                     <span className="summary-pct">{pct}%</span>
                     <span className="summary-label" style={{ color: scoreColor }}>{scoreLabel}</span>

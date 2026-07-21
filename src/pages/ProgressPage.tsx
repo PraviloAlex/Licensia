@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../components/PageShell";
+import { ReadinessRing } from "../components/ReadinessRing";
 import { questionsData, glossaryData } from "../lib/data";
 import {
   getQuestionProgressMap,
@@ -9,7 +10,8 @@ import {
   type QuestionProgressItem,
 } from "../lib/questionProgress";
 import { getMasteredWordIds, getReviewWordIds } from "../lib/vocabularyStatus";
-import { getUILang, t } from "../lib/i18n";
+import { getReadinessLevel } from "../lib/homeStats";
+import { getUILang, t, type UILang } from "../lib/i18n";
 
 const PROGRESS_KEYS_TO_CLEAR = [
   "licensia_question_progress",
@@ -34,37 +36,64 @@ function resetProgress() {
   window.location.reload();
 }
 
+/** Read-only view of the history that useExamSession writes (that hook is protected). */
+function readExamHistory(): { attempts: number; bestPct: number } {
+  try {
+    const raw = window.localStorage.getItem("exam_history_v1");
+    if (!raw) return { attempts: 0, bestPct: 0 };
+    const data = JSON.parse(raw) as { attempts?: number; bestPct?: number };
+    return {
+      attempts: Number.isFinite(data.attempts) ? Number(data.attempts) : 0,
+      bestPct: Number.isFinite(data.bestPct) ? Number(data.bestPct) : 0,
+    };
+  } catch {
+    return { attempts: 0, bestPct: 0 };
+  }
+}
+
 const SUBTOPIC_ICONS: Record<string, string> = {
-  seguridad_vial: "🛡️", velocidad: "⚡", ciclistas: "🚲",
-  peatones: "🚶", semaforos: "🚦", ferroviario: "🚂",
-  adelantamiento: "↗️", luces: "💡", estacionamiento: "🅿️",
-  documentos: "📄", cinturon_ninos: "👶", senales: "🔺",
-  demarcacion: "🛣️", prioridad: "⬆️", intersecciones: "✚",
-  mecanico: "🔧", alcohol: "🍺", fatiga: "😴", otros: "📋",
+  semaforos: "ti-traffic-lights", prioridad: "ti-arrows-exchange",
+  intersecciones: "ti-road", senales: "ti-sign-left",
+  velocidad: "ti-gauge", adelantamiento: "ti-car",
+  estacionamiento: "ti-parking", peatones: "ti-walk",
+  ciclistas: "ti-bike", alcohol: "ti-glass-off",
+  cinturon_ninos: "ti-armchair", luces: "ti-bulb",
+  documentos: "ti-id", mecanico: "ti-tool",
+  seguridad_vial: "ti-shield-check", demarcacion: "ti-line",
+  ferroviario: "ti-train", fatiga: "ti-zzz", otros: "ti-dots",
 };
 
-function StatCard({
-  icon, label, value, sub, barValue, barColor,
-}: {
-  icon: string; label: string; value: string;
-  sub?: string; barValue?: number; barColor?: string;
+/** Above this accuracy a topic is not "weak" — the CTA is hidden instead. */
+const WEAK_TOPIC_MAX_ACCURACY = 80;
+
+/** Coverage scale from the design spec: <30 bad, 30-60 gold, >60 good. */
+function coverageColor(pct: number): string {
+  if (pct > 60) return "var(--green)";
+  if (pct >= 30) return "var(--gold)";
+  return "var(--red)";
+}
+
+function accuracyColor(pct: number): string {
+  if (pct >= 80) return "var(--green)";
+  if (pct >= 60) return "var(--accent)";
+  return "var(--gold)";
+}
+
+function Tile({ icon, label, value, sub, subColor }: {
+  icon: string; label: string; value: string; sub: string; subColor?: string;
 }) {
   return (
-    <article className="stat-card glass">
-      <div className="stat-head"><span>{icon}</span><p>{label}</p></div>
-      <h3 className="stat-value">{value}</h3>
-      {barValue !== undefined && (
-        <div className="progress-track" style={{ margin: "6px 0 4px" }}>
-          <span style={{ width: `${Math.min(100, barValue)}%`, background: barColor ?? "var(--s-accent)" }} />
-        </div>
-      )}
-      {sub && <p className="meta" style={{ marginTop: 4 }}>{sub}</p>}
+    <article className="pg-tile">
+      <span className="pg-tile-ico" aria-hidden="true"><i className={`ti ${icon}`} /></span>
+      <span className="pg-tile-label">{label}</span>
+      <span className="pg-tile-value">{value}</span>
+      <span className="pg-tile-sub" style={subColor ? { color: subColor } : undefined}>{sub}</span>
     </article>
   );
 }
 
 export function ProgressPage() {
-  const lang = getUILang();
+  const lang: UILang = getUILang();
   const [confirmReset, setConfirmReset] = useState(false);
   const progressMap = useMemo(getQuestionProgressMap, []);
   const total         = questionsData.length;
@@ -72,6 +101,7 @@ export function ProgressPage() {
   const totalWrong    = getTotalWrongAnswersCount();
   const masteredWords = getMasteredWordIds();
   const reviewWords   = getReviewWordIds();
+  const examHistory   = useMemo(readExamHistory, []);
 
   const seenPercent   = total > 0 ? Math.round((seen / total) * 100) : 0;
   const totalCorrect  = useMemo(
@@ -80,7 +110,7 @@ export function ProgressPage() {
   );
   const totalAnswered = totalCorrect + totalWrong;
   const accuracyPercent = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
-  const accuracyColor   = accuracyPercent >= 80 ? "var(--green)" : accuracyPercent >= 60 ? "var(--s-accent)" : "#ffb870";
+  const readiness = getReadinessLevel(seen, total, totalCorrect, totalWrong);
 
   const hardQuestions = useMemo(
     () =>
@@ -91,7 +121,6 @@ export function ProgressPage() {
     [progressMap],
   );
 
-  const unseenCount = total - seen;
   const wordBarValue = glossaryData.length > 0
     ? Math.round((masteredWords.length / glossaryData.length) * 100)
     : 0;
@@ -118,34 +147,59 @@ export function ProgressPage() {
     .filter(([, s]) => s.total > 0)
     .sort((a, b) => b[1].seen - a[1].seen || a[0].localeCompare(b[0]));
 
+  const weakTopic = useMemo(() => {
+    const answered = Object.entries(byTopic).filter(([, s]) => s.answered >= 1);
+    if (answered.length === 0) return null;
+    const [key, s] = answered
+      .map(([k, v]) => [k, v] as const)
+      .sort((a, b) => {
+        const accA = Math.round((a[1].correct / a[1].answered) * 100);
+        const accB = Math.round((b[1].correct / b[1].answered) * 100);
+        return accA - accB || b[1].seen - a[1].seen;
+      })[0];
+    const accuracy = Math.round((s.correct / s.answered) * 100);
+    // Nothing is actually weak yet — offering "train the weak topic · 100%" reads wrong.
+    if (accuracy >= WEAK_TOPIC_MAX_ACCURACY) return null;
+    return { key, accuracy };
+  }, [byTopic]);
+
+  const topicLabel = (st: string) => (t as (k: string, l: UILang) => string)(`subtopic.${st}`, lang);
+
   return (
     <PageShell title={t("progress.title", lang)}>
-      <div className="progress-stats-grid">
-        <StatCard
-          icon="📖" label={t("progress.s.questions", lang)}
+      {/* ── Hero: готовность ───────────────────────────────────── */}
+      <section className="pg-hero glass">
+        <ReadinessRing score={readiness.score} color={readiness.color} caption={t("progress.ready.word", lang)} />
+        <div className="pg-hero-text">
+          <p className="pg-hero-label">{t("progress.ready", lang)}</p>
+          <p className="pg-hero-title" style={{ color: readiness.color }}>{t(readiness.labelKey, lang)}</p>
+          <p className="pg-hero-meta">
+            {seen} / {total} {t("progress.s.questions", lang).toLowerCase()}
+            {totalAnswered > 0 && <> · {accuracyPercent}% {t("progress.t.accuracy", lang).toLowerCase()}</>}
+          </p>
+        </div>
+      </section>
+
+      {/* ── 4 плитки ───────────────────────────────────────────── */}
+      <div className="pg-tiles">
+        <Tile icon="ti-book" label={t("progress.t.studied", lang)}
           value={`${seen}/${total}`}
-          barValue={seenPercent}
-          sub={`${unseenCount} ${t("progress.s.unseen", lang)}`}
-        />
-        <StatCard
-          icon="🎯" label={t("progress.s.accuracy", lang)}
-          value={`${accuracyPercent}%`}
-          barValue={accuracyPercent}
-          barColor={accuracyColor}
-          sub={`${totalCorrect} ${t("progress.s.of", lang)} ${totalAnswered} ${t("progress.s.answers", lang)}`}
-        />
-        <StatCard
-          icon="⚠️" label={t("progress.s.mistakes", lang)}
-          value={String(totalWrong)}
-          sub={`${t("progress.s.inQ", lang)} ${hardQuestions.length} ${t("progress.s.inQend", lang)}`}
-        />
-        <StatCard
-          icon="🧠" label={t("progress.s.words", lang)}
+          sub={`${seenPercent}% ${t("progress.t.coverage", lang)}`}
+          subColor={coverageColor(seenPercent)} />
+        <Tile icon="ti-target" label={t("progress.t.accuracy", lang)}
+          value={totalAnswered > 0 ? `${accuracyPercent}%` : "—"}
+          sub={`${totalCorrect} ${t("progress.s.of", lang)} ${totalAnswered}`}
+          subColor={totalAnswered > 0 ? accuracyColor(accuracyPercent) : undefined} />
+        <Tile icon="ti-language" label={t("progress.t.words", lang)}
           value={`${masteredWords.length}/${glossaryData.length}`}
-          barValue={wordBarValue}
-          barColor="var(--green)"
           sub={`${Math.max(0, reviewWords.length - masteredWords.length)} ${t("progress.s.onRep", lang)}`}
-        />
+          subColor={wordBarValue > 0 ? "var(--green)" : undefined} />
+        <Tile icon="ti-clipboard-check" label={t("progress.t.exams", lang)}
+          value={String(examHistory.attempts)}
+          sub={examHistory.attempts > 0
+            ? `${t("progress.t.exams.best", lang)} ${examHistory.bestPct}%`
+            : t("progress.t.exams.none", lang)}
+          subColor={examHistory.attempts > 0 ? accuracyColor(examHistory.bestPct) : undefined} />
       </div>
 
       {seen === 0 && (
@@ -157,9 +211,51 @@ export function ProgressPage() {
         </section>
       )}
 
+      {/* ── По темам: полоса = покрытие, цифра справа = точность ─ */}
+      {seen > 0 && (
+        <section style={{ display: "grid", gap: "var(--sp-2)" }}>
+          <p className="progress-section-title">{t("progress.byTopic", lang)}</p>
+          <div className="progress-topics-grid">
+            {topics.map(([st, s]) => {
+              const coveragePct = s.total > 0 ? Math.round((s.seen / s.total) * 100) : 0;
+              const accPct      = s.answered > 0 ? Math.round((s.correct / s.answered) * 100) : 0;
+              return (
+                <Link key={st} to={`/practice?subtopic=${st}`} className="topic-stat-card topic-stat-card--link glass">
+                  <div className="topic-stat-head">
+                    <span className="topic-stat-icon" aria-hidden="true"><i className={`ti ${SUBTOPIC_ICONS[st] ?? "ti-dots"}`} /></span>
+                    <span className="topic-stat-name">{topicLabel(st)}</span>
+                  </div>
+                  <div className="progress-track" style={{ margin: "6px 0 4px" }}>
+                    <span style={{ width: `${coveragePct}%`, background: coverageColor(coveragePct) }} />
+                  </div>
+                  <div className="topic-stat-meta">
+                    <span className="pg-topic-coverage">{s.seen}/{s.total} · {coveragePct}%</span>
+                    {s.answered > 0
+                      ? <span className="pg-topic-acc" style={{ color: accuracyColor(accPct) }}>{accPct}%</span>
+                      : <span className="pg-topic-acc pg-topic-acc--empty">—</span>}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+          {weakTopic && (
+            <Link to={`/practice?subtopic=${weakTopic.key}`} className="pg-weak-cta">
+              <i className="ti ti-flame" aria-hidden="true" />
+              <span className="pg-weak-cta-text">
+                {t("progress.weakBtn", lang)}
+                <span className="pg-weak-cta-sub">{topicLabel(weakTopic.key)} · {weakTopic.accuracy}%</span>
+              </span>
+              <i className="ti ti-chevron-right" aria-hidden="true" />
+            </Link>
+          )}
+        </section>
+      )}
+
       {hardQuestions.length > 0 && (
         <section id="topics" style={{ display: "grid", gap: "var(--sp-2)" }}>
-          <p className="progress-section-title">{t("progress.hard", lang)}</p>
+          <p className="progress-section-title">
+            {t("progress.hard", lang)} · {totalWrong} {t("progress.hard.sub", lang)}
+          </p>
           <div style={{ display: "grid", gap: 8 }}>
             {hardQuestions.map((q) => {
               const p = progressMap[q.id];
@@ -169,8 +265,12 @@ export function ProgressPage() {
               return (
                 <article key={q.id} className="hard-question-card">
                   <div className="hard-question-stats">
-                    <span className="hard-question-stat" style={{ color: "var(--red)" }}>❌ {wrong}</span>
-                    <span className="hard-question-stat" style={{ color: "var(--green)" }}>✅ {correct}</span>
+                    <span className="hard-question-stat" style={{ color: "var(--red)" }}>
+                      <i className="ti ti-x" aria-hidden="true" /> {wrong}
+                    </span>
+                    <span className="hard-question-stat" style={{ color: "var(--green)" }}>
+                      <i className="ti ti-check" aria-hidden="true" /> {correct}
+                    </span>
                     <span className="hard-question-stat">{acc}%</span>
                   </div>
                   <p className="hard-question-es">{q.question_es}</p>
@@ -183,38 +283,6 @@ export function ProgressPage() {
           <Link to="/practice?mistakes=1" className="cta-secondary" style={{ textAlign: "center" }}>
             {t("progress.mistakesLink", lang)}
           </Link>
-        </section>
-      )}
-
-      {seen > 0 && (
-        <section style={{ display: "grid", gap: "var(--sp-2)" }}>
-          <p className="progress-section-title">{t("progress.byTopic", lang)}</p>
-          <div className="progress-topics-grid">
-            {topics.map(([st, s]) => {
-              const seenPct  = s.total > 0 ? Math.round((s.seen / s.total) * 100) : 0;
-              const accPct   = s.answered > 0 ? Math.round((s.correct / s.answered) * 100) : 0;
-              const accColor = accPct >= 80 ? "var(--green)" : accPct >= 60 ? "var(--s-accent)" : "#ffb870";
-              const label = (t as (k: string, l: typeof lang) => string)(`subtopic.${st}`, lang);
-              return (
-                <Link key={st} to={`/practice?subtopic=${st}`} className="topic-stat-card topic-stat-card--link glass">
-                  <div className="topic-stat-head">
-                    <span className="topic-stat-icon">{SUBTOPIC_ICONS[st] ?? "📋"}</span>
-                    <span className="topic-stat-name">{label}</span>
-                  </div>
-                  <div className="progress-track" style={{ margin: "6px 0 4px" }}>
-                    <span style={{ width: `${seenPct}%`, background: "var(--s-accent)" }} />
-                  </div>
-                  <div className="topic-stat-meta">
-                    <span style={{ color: "var(--text-low)" }}>{s.seen}/{s.total}</span>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 1 }}>
-                      <span style={{ color: seenPct >= 100 ? "var(--green)" : "var(--s-accent)", fontWeight: 700 }}>{seenPct}%</span>
-                      {s.answered > 0 && <span style={{ color: accColor, fontSize: "0.7rem", opacity: 0.8 }}>{accPct}% ✓</span>}
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
         </section>
       )}
 

@@ -21,13 +21,6 @@ function getWordState(wordId: string, reviewIds: string[], masteredIds: string[]
   return "new";
 }
 
-const STATE_STYLES: Record<WordState, { border: string; glow: string }> = {
-  new:           { border: "rgba(100, 160, 255, 0.30)", glow: "rgba(100,160,255,0.06)" },
-  review:        { border: "rgba(100, 160, 255, 0.30)", glow: "rgba(100,160,255,0.06)" },
-  "known-today": { border: "rgba(255, 195, 60, 0.55)",  glow: "rgba(255,195,60,0.12)"  },
-  mastered:      { border: "rgba(100, 230, 170, 0.45)", glow: "rgba(100,230,170,0.08)" },
-};
-
 function ProgressDots({ count, mastered }: { count: number; mastered: boolean }) {
   const lang = getUILang();
   const total = 4;
@@ -61,18 +54,22 @@ function EmptyState({ tab }: { tab: Tab }) {
 
 export function VocabularyPage() {
   const [searchParams] = useSearchParams();
-  const initialTab = searchParams.get("tab") === "mastered" ? "mastered"
-    : searchParams.get("tab") === "all" ? "all" : "review";
+  const tabParam = searchParams.get("tab");
+  const hasEmptyReviewQueue = getReviewWordIds().filter((id) => !getMasteredWordIds().includes(id)).length === 0;
+  const initialTab: Tab = tabParam === "mastered" ? "mastered"
+    : tabParam === "all" ? "all"
+    : tabParam !== null ? "review"
+    : hasEmptyReviewQueue ? "all" : "review";
 
   const lang = getUILang();
 
   const categoryOptions: Array<{ label: string; value: "all" | GlossaryCategory }> = [
-    { label: t("vocab.cat.all", lang), value: "all" },
-    { label: "prioridad",      value: "prioridad"      },
-    { label: "infraestructura",value: "infraestructura"},
-    { label: "maniobra",       value: "maniobra"       },
-    { label: "seguridad",      value: "seguridad"      },
-    { label: "via",            value: "via"            },
+    { label: t("vocab.cat.all", lang),            value: "all"            },
+    { label: t("vocab.cat.prioridad", lang),      value: "prioridad"      },
+    { label: t("vocab.cat.infraestructura", lang),value: "infraestructura"},
+    { label: t("vocab.cat.maniobra", lang),       value: "maniobra"       },
+    { label: t("vocab.cat.seguridad", lang),      value: "seguridad"      },
+    { label: t("vocab.cat.via", lang),            value: "via"            },
   ];
 
   const [statusMap,          setStatusMap]          = useState(getWordStatusMap);
@@ -254,16 +251,12 @@ export function VocabularyPage() {
             const mastered   = masteredIds.includes(word.id);
             const wordNew    = isWordNew(word.id);
             const wordState  = getWordState(word.id, reviewIds, masteredIds);
-            const stateStyle = STATE_STYLES[wordState];
             const inReview   = reviewIds.includes(word.id);
             const justAdded  = justAddedIds.has(word.id);
             const onCooldown = cooldownIds.has(word.id);
             const canCount   = canCountKnownClick(word.id);
             return (
-              <article key={word.id}
-                className={`flashcard-v2 glass vocab-state-${wordState}`}
-                style={{ borderColor: stateStyle.border, boxShadow: `0 0 0 1px ${stateStyle.border}, inset 0 0 40px ${stateStyle.glow}` }}
-              >
+              <article key={word.id} className={`flashcard-v2 glass vocab-state-${wordState}`}>
                 <div className="vocab-card-header">
                   <span className="vocab-meta">
                     {wordNew && <span className="vocab-new-badge">NEW</span>}

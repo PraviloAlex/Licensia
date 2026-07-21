@@ -118,7 +118,13 @@ export function SignsPage() {
               alt={t(img.captionKey as Parameters<typeof t>[0], lang)}
               className="signs-img"
               loading="lazy"
+              role="button" tabIndex={0}
               onClick={() => setLightbox(`${base}signs/${img.file}.webp`)}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter" && e.key !== " ") return;
+                e.preventDefault();
+                setLightbox(`${base}signs/${img.file}.webp`);
+              }}
             />
           </div>
         ))}

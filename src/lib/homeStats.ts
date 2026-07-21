@@ -81,9 +81,18 @@ export function getDueWordsCount(): number {
 export type ReadinessLevel = {
   score: number;
   label: string;
+  /** i18n key for `label` — use this in UI so the level is translated (label stays RU). */
+  labelKey: ReadinessLabelKey;
   color: string;
   hint: string;
 };
+
+export type ReadinessLabelKey =
+  | "ready.lvl.none"
+  | "ready.lvl.exam"
+  | "ready.lvl.confident"
+  | "ready.lvl.base"
+  | "ready.lvl.more";
 
 export function getReadinessLevel(
   seenCount: number,
@@ -91,7 +100,7 @@ export function getReadinessLevel(
   totalCorrect: number,
   totalWrong: number
 ): ReadinessLevel {
-  if (total === 0) return { score: 0, label: "", color: "rgba(150,185,230,0.55)", hint: "Начни первую тренировку" };
+  if (total === 0) return { score: 0, label: "", labelKey: "ready.lvl.none", color: "var(--s-text-muted)", hint: "Начни первую тренировку" };
   const coverage = seenCount / total;
   const answered = totalCorrect + totalWrong;
   const accuracy = answered > 0 ? totalCorrect / answered : 0;
@@ -99,10 +108,10 @@ export function getReadinessLevel(
   const raw = coverage * 0.4 + accuracy * 0.4 - mistakePenalty + (seenCount > 0 ? 0.2 : 0) * Math.min(1, seenCount / 10);
   const score = Math.min(100, Math.max(0, Math.round(raw * 100)));
 
-  if (score >= 80) return { score, label: "Можно пробовать экзамен", color: "#62f4b4", hint: "Готовность достаточная" };
-  if (score >= 51) return { score, label: "Уверенный прогресс", color: "#7db8ff", hint: "Продолжай в том же духе" };
-  if (score >= 21) return { score, label: "База формируется", color: "#ffb869", hint: "Продолжай тренировки" };
-  return { score, label: "Нужно больше практики", color: "#ffb869", hint: "Продолжай тренировки" };
+  if (score >= 80) return { score, label: "Можно пробовать экзамен", labelKey: "ready.lvl.exam", color: "var(--green)", hint: "Готовность достаточная" };
+  if (score >= 51) return { score, label: "Уверенный прогресс", labelKey: "ready.lvl.confident", color: "var(--accent)", hint: "Продолжай в том же духе" };
+  if (score >= 21) return { score, label: "База формируется", labelKey: "ready.lvl.base", color: "var(--gold)", hint: "Продолжай тренировки" };
+  return { score, label: "Нужно больше практики", labelKey: "ready.lvl.more", color: "var(--red)", hint: "Продолжай тренировки" };
 }
 
 // ─── Weekly activity ─────────────────────────────────────────

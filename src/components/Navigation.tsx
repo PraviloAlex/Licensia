@@ -16,12 +16,11 @@ export function Navigation() {
   }, []);
 
   const items = [
-    { to: "/",               label: t("nav.home",       lang), icon: "🏠", end: true  },
-    { to: "/practice",       label: t("nav.practice",   lang), icon: "📝", end: false },
-    { to: "/vocabulary",     label: t("nav.vocabulary", lang), icon: "🗣️", end: false },
-    { to: "/progress",       label: t("nav.progress",   lang), icon: "📊", end: false },
-    { to: "/signs",          label: t("nav.signs",      lang), icon: "🚦", end: false },
-    { to: "/practical-exam", label: t("nav.checklist",  lang), icon: "📋", end: false },
+    { to: "/",           label: t("nav.home",       lang), icon: "ti-home",      end: true  },
+    { to: "/practice",   label: t("nav.practice",   lang), icon: "ti-pencil",    end: false },
+    { to: "/vocabulary", label: t("nav.vocabulary", lang), icon: "ti-language",  end: false },
+    { to: "/progress",   label: t("nav.progress",   lang), icon: "ti-chart-bar", end: false },
+    { to: "/more",       label: t("nav.more",       lang), icon: "ti-dots",      end: false },
   ];
 
   return (
@@ -33,7 +32,7 @@ export function Navigation() {
           end={item.end}
           className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
         >
-          <span className="nav-icon">{item.icon}</span>
+          <span className="nav-icon"><i className={`ti ${item.icon}`} aria-hidden="true" /></span>
           <span className="nav-label">{item.label}</span>
         </NavLink>
       ))}

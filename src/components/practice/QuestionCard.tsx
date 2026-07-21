@@ -55,8 +55,14 @@ export function QuestionCard({
         {question.image?.src && imageBrokenForQId !== question.id && (
           <div className="pv2-image-wrap">
             <img src={resolveImageSrc(question.image.src)} alt="Imagen de la pregunta" className="pv2-image"
+              role="button" tabIndex={0}
               onError={() => onImageError(question.id)}
               onClick={() => question.image?.src && onImageOpen(resolveImageSrc(question.image.src))}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter" && e.key !== " ") return;
+                e.preventDefault();
+                if (question.image?.src) onImageOpen(resolveImageSrc(question.image.src));
+              }}
             />
           </div>
         )}
@@ -90,8 +96,14 @@ export function QuestionCard({
         {question.image?.src && imageBrokenForQId !== question.id && (
           <div className={showAnswerState ? "pv2-image-wrap pv2-image-wrap--frozen" : "pv2-image-wrap"}>
             <img src={resolveImageSrc(question.image.src)} alt="Imagen de la pregunta" className="pv2-image"
+              role="button" tabIndex={0}
               onError={() => onImageError(question.id)}
               onClick={() => question.image?.src && onImageOpen(resolveImageSrc(question.image.src))}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter" && e.key !== " ") return;
+                e.preventDefault();
+                if (question.image?.src) onImageOpen(resolveImageSrc(question.image.src));
+              }}
             />
           </div>
         )}

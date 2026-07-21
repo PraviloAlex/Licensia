@@ -11,6 +11,8 @@ const SignsPage = lazy(() => import("./pages/SignsPage").then((module) => ({ def
 const LegalPage = lazy(() => import("./pages/LegalPage").then((module) => ({ default: module.LegalPage })));
 const SourcesPage = lazy(() => import("./pages/SourcesPage").then((module) => ({ default: module.SourcesPage })));
 const EditorPage = lazy(() => import("./pages/EditorPage").then((module) => ({ default: module.EditorPage })));
+const MorePage = lazy(() => import("./pages/MorePage").then((module) => ({ default: module.MorePage })));
+const MistakesPage = lazy(() => import("./pages/MistakesPage").then((module) => ({ default: module.MistakesPage })));
 
 const ONBOARDING_KEY = "licencia_ar_onboarding_done";
 
@@ -35,6 +37,8 @@ export default function App() {
         <Route path="/legal" element={<LegalPage />} />
         <Route path="/sources" element={<SourcesPage />} />
         <Route path="/editor" element={<EditorPage />} />
+        <Route path="/more" element={<MorePage />} />
+        <Route path="/mistakes" element={<MistakesPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
