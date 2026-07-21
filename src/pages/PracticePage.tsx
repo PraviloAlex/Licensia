@@ -7,7 +7,6 @@ import { addWordToReview } from "../lib/vocabularyStatus";
 import type { VerifiedQuestion } from "../types/question";
 import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
-import { EXAM_PASS_CORRECT } from "../constants/exam";
 import { SessionResultScreen } from "../screens/SessionResultScreen";
 import type { AnsweredQuestion } from "../utils/buildSessionResult";
 import { useExamSession } from "../hooks/useExamSession";
@@ -71,19 +70,6 @@ function getSubtopicLabel(subtopic: string | undefined, lang: UILang): string {
     otros: "General",
   };
   return (lang === "ru" ? ru : es)[key] ?? key.replace(/_/g, " ");
-}
-
-function getTopWrongTopics(questions: VerifiedQuestion[], lang: UILang): Array<{ label: string; count: number; pct: number }> {
-  const map = new Map<string, number>();
-  questions.forEach((q) => {
-    const label = getSubtopicLabel(q.subtopic, lang);
-    map.set(label, (map.get(label) ?? 0) + 1);
-  });
-  const max = Math.max(1, ...Array.from(map.values()));
-  return Array.from(map.entries())
-    .map(([label, count]) => ({ label, count, pct: Math.max(18, Math.round((count / max) * 100)) }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 3);
 }
 
 function buildAnsweredQuestion(params: {
@@ -195,15 +181,11 @@ export function PracticePage() {
   }, [navigate]);
   const {
     examAnswers,
-    examAnsweredCount,
-    examCorrectCount,
-    examElapsed,
     examHistory,
     examIndex,
     examQuestion,
     examQuestionIds,
     examResult,
-    examSelAnswers,
     examStarted,
     examTotal,
     exitExam,
@@ -599,30 +581,7 @@ export function PracticePage() {
               )}
 
               {showPracticeSummary && (() => {
-                const correct = practiceSession.correctCount ?? 0;
-                const wrong   = practiceSession.wrongCount   ?? 0;
-                const isPerfect = wrong === 0 && correct > 0;
                 const mistakeIds = Object.entries(practiceSession.answers ?? {}).filter(([, a]) => !a.isCorrect).map(([id]) => id);
-                const mistakeQuestions = questionsData.filter((q) => mistakeIds.includes(q.id));
-                const topTopics = getTopWrongTopics(mistakeQuestions, uiLang);
-                // In mistakes mode: ring shows completion (always 100% when done); else accuracy
-                const pct = mistakesOnly
-                  ? 100
-                  : practiceTotal > 0 ? Math.round((correct / practiceTotal) * 100) : 0;
-                const scoreColor = mistakesOnly ? "#62f4b4" : pct >= 80 ? "#62f4b4" : pct >= 60 ? "#7db8ff" : "#ffb869";
-                const scoreLabel = mistakesOnly
-                  ? t("pv2.sum.mistakesDone", uiLang)
-                  : pct >= 80 ? t("pv2.sum.excellent", uiLang) : pct >= 60 ? t("pv2.sum.good", uiLang) : t("pv2.sum.retry", uiLang);
-                const isRu = uiLang === "ru";
-                const reviewLead = wrong > 0
-                  ? isRu ? "Ошибки уже собраны в короткую тренировку. Лучше закрепить их сейчас, пока свежо." : "Tus errores ya están listos para una práctica corta. Conviene reforzarlos ahora."
-                  : isRu ? "Серия закрыта чисто. Можно продолжить темп или перейти к новой тренировке." : "Serie limpia. Podés mantener el ritmo o empezar una nueva práctica.";
-                const diagnosisTitle = wrong > 0
-                  ? `${isRu ? "Главная слабая зона" : "Zona débil principal"}: ${topTopics[0]?.label ?? (isRu ? "разбор ошибок" : "repaso")}`
-                  : isRu ? "Ошибок нет: закрепляем темп" : "Sin errores: mantené el ritmo";
-                const diagnosisText = wrong > 0
-                  ? isRu ? "Приложение предлагает следующий лучший шаг, а не просто список ошибок." : "La app propone el siguiente paso útil, no solo una lista de errores."
-                  : isRu ? "Следующий блок поможет не потерять уверенность и добрать стабильность." : "El siguiente bloque ayuda a mantener confianza y estabilidad.";
                 return (
                   <SessionResultScreen
                     result={practiceResult}
@@ -649,150 +608,13 @@ export function PracticePage() {
                     onHome={() => navigate("/")}
                   />
                 );
-                return (
-                  <section className="session-summary session-summary--practice glass result-enter">
-                    <div className="summary-hero">
-                      <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, var(--ring-track-color) 0deg)` }}>
-                        <div className="summary-score-inner">
-                          <span className="summary-pct">{pct}%</span>
-                          <span className="summary-label" style={{ color: scoreColor }}>{scoreLabel}</span>
-                        </div>
-                      </div>
-                      <div className="summary-headline">
-                        <p className="summary-eyebrow">{mistakesOnly ? (isRu ? "Отработка ошибок" : "Repaso de errores") : (isRu ? "Итог тренировки" : "Resultado de práctica")}</p>
-                        <h2>{correct} / {practiceTotal} {isRu ? "верно" : "correctas"}</h2>
-                        <p>{reviewLead}</p>
-                      </div>
-                    </div>
-
-                    <div className="summary-stats-row">
-                      <div className="summary-stat"><span className="summary-stat-val status-green">{correct}</span><span className="meta">{t("pv2.sum.correct", uiLang)}</span></div>
-                      <div className="summary-stat"><span className="summary-stat-val status-warm">{wrong}</span><span className="meta">{t("pv2.sum.wrong", uiLang)}</span></div>
-                      <div className="summary-stat"><span className="summary-stat-val">{practiceTotal}</span><span className="meta">{t("pv2.sum.questions", uiLang)}</span></div>
-                    </div>
-
-                    <div className={wrong > 0 ? "summary-diagnosis" : "summary-diagnosis summary-diagnosis--good"}>
-                      <strong>{diagnosisTitle}</strong>
-                      <span>{diagnosisText}</span>
-                    </div>
-
-                    {topTopics.length > 0 && (
-                      <div className="summary-topic-list" aria-label={isRu ? "Слабые темы" : "Temas débiles"}>
-                        {topTopics.map((topic) => (
-                          <div key={topic.label} className="summary-topic">
-                            <span>{topic.label}</span>
-                            <i><b style={{ width: `${topic.pct}%` }} /></i>
-                            <em>{topic.count}</em>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {isPerfect && !mistakesOnly && <p className="summary-perfect">{t("pv2.sum.perfect", uiLang)}</p>}
-                    {mistakeQuestions.length > 0 && (
-                      <div className="pv2-exam-review">
-                        <p className="pv2-exam-review-head">{t("pv2.exam.sum.review", uiLang)}</p>
-                        {mistakeQuestions.slice(0, 3).map((q) => {
-                          const selOptId = practiceSession.answers?.[q.id]?.selectedOptionId;
-                          const selOpt   = q.options.find((o) => o.id === selOptId);
-                          const corOpt   = q.options.find((o) => o.id === q.correctOptionId);
-                          return (
-                            <div key={q.id} className="pv2-exam-review-item">
-                              <p className="pv2-exam-review-q">{q.question_es}</p>
-                              {q.question_ru && <p className="pv2-exam-review-q-ru">{q.question_ru}</p>}
-                              {selOpt && <p className="pv2-exam-review-wrong">× {selOpt.text_es}</p>}
-                              {corOpt && <p className="pv2-exam-review-correct">✓ {corOpt.text_es}</p>}
-                            </div>
-                          );
-                        })}
-                        {mistakeQuestions.length > 3 && <p className="summary-review-more">{isRu ? `И ещё ${mistakeQuestions.length - 3} в отработке ошибок` : `Y ${mistakeQuestions.length - 3} más en práctica de errores`}</p>}
-                      </div>
-                    )}
-
-                    <div className="summary-actions">
-                      {wrong > 0 ? (
-                        <button type="button" className="cta-primary" onClick={() => { startPracticeSession(false, false, mistakeIds); navigate("/practice?mistakes=1", { replace: true }); }}>
-                          {t("pv2.sum.mistakes", uiLang)} ({wrong})
-                        </button>
-                      ) : (
-                        <button type="button" className="cta-primary" onClick={() => { startPracticeSession(false); navigate("/practice", { replace: true }); }}>{mistakesOnly ? t("pv2.sum.toPractice", uiLang) : t("pv2.sum.newSession", uiLang)}</button>
-                      )}
-                      <button type="button" className="cta-quick" onClick={() => { startPracticeSession(false, true); navigate("/practice?quick=1", { replace: true }); }}>{t("pv2.sum.more5", uiLang)}</button>
-                      {wrong > 0 && <button type="button" className="cta-secondary" onClick={() => { startPracticeSession(false); navigate("/practice", { replace: true }); }}>{t("pv2.sum.newSession", uiLang)}</button>}
-                      <Link to="/" className="cta-secondary">{t("pv2.sum.home", uiLang)}</Link>
-                    </div>
-                  </section>
-                );
-                return (
-                  <section className="session-summary glass result-enter">
-                    <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, var(--ring-track-color) 0deg)` }}>
-                      <div className="summary-score-inner">
-                        <span className="summary-pct">{pct}%</span>
-                        {!mistakesOnly && <span className="summary-label" style={{ color: scoreColor }}>{scoreLabel}</span>}
-                      </div>
-                    </div>
-                    {mistakesOnly && <p className="summary-mistakes-done" style={{ color: scoreColor }}>{scoreLabel}</p>}
-                    <div className="summary-stats-row">
-                      <div className="summary-stat"><span className="summary-stat-val status-green">{"✅"} {correct}</span><span className="meta">{t("pv2.sum.correct", uiLang)}</span></div>
-                      <div className="summary-stat"><span className="summary-stat-val status-warm">{"❌"} {wrong}</span><span className="meta">{t("pv2.sum.wrong", uiLang)}</span></div>
-                      <div className="summary-stat"><span className="summary-stat-val">{practiceTotal}</span><span className="meta">{t("pv2.sum.questions", uiLang)}</span></div>
-                    </div>
-                    {isPerfect && !mistakesOnly && <p className="summary-perfect">{"✨"} {t("pv2.sum.perfect", uiLang)}</p>}
-                    {mistakeQuestions.length > 0 && (
-                      <div className="pv2-exam-review">
-                        <p className="pv2-exam-review-head">{t("pv2.exam.sum.review", uiLang)}</p>
-                        {mistakeQuestions.map((q) => {
-                          const selOptId = practiceSession.answers?.[q.id]?.selectedOptionId;
-                          const selOpt   = q.options.find((o) => o.id === selOptId);
-                          const corOpt   = q.options.find((o) => o.id === q.correctOptionId);
-                          return (
-                            <div key={q.id} className="pv2-exam-review-item">
-                              <p className="pv2-exam-review-q">{q.question_es}</p>
-                              {q.question_ru && <p className="pv2-exam-review-q-ru">{q.question_ru}</p>}
-                              {selOpt && <p className="pv2-exam-review-wrong">{"✗"} {selOpt.text_es}</p>}
-                              {corOpt && <p className="pv2-exam-review-correct">{"✓"} {corOpt.text_es}</p>}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                    <div className="summary-actions">
-                      <button type="button" className="cta-primary" onClick={() => { startPracticeSession(false); navigate("/practice", { replace: true }); }}>{mistakesOnly ? t("pv2.sum.toPractice", uiLang) : t("pv2.sum.newSession", uiLang)}</button>
-                      <button type="button" className="cta-quick" onClick={() => { startPracticeSession(false, true); navigate("/practice?quick=1", { replace: true }); }}>{t("pv2.sum.more5", uiLang)}</button>
-                      {wrong > 0 && (
-                        <button type="button" className="cta-secondary" onClick={() => { startPracticeSession(false, false, mistakeIds); navigate("/practice?mistakes=1", { replace: true }); }}>
-                          {t("pv2.sum.mistakes", uiLang)} ({wrong})
-                        </button>
-                      )}
-                      <Link to="/" className="cta-secondary">{t("pv2.sum.home", uiLang)}</Link>
-                    </div>
-                  </section>
-                );
               })()}
             </>
           )}
 
           {/* EXAM SUMMARY */}
           {showExamSummary && (() => {
-            const pct       = examTotal > 0 ? Math.round((examCorrectCount / examTotal) * 100) : 0;
-            const passed     = examCorrectCount >= EXAM_PASS_CORRECT;
-            const scoreColor = passed ? "#62f4b4" : "#ff9c9c";
-            const scoreLabel = passed ? t("pv2.exam.sum.passed", uiLang) : t("pv2.exam.sum.failed", uiLang);
-            const timeSpent  = `${Math.floor(examElapsed / 60)}:${(examElapsed % 60).toString().padStart(2, "0")}`;
             const wrongQids  = examQuestionIds.filter((qid) => examAnswers[qid] === false);
-            const wrongQs    = questionsData.filter((q) => wrongQids.includes(q.id));
-            const topTopics  = getTopWrongTopics(wrongQs, uiLang);
-            const isRu       = uiLang === "ru";
-            const missingToPass = Math.max(0, EXAM_PASS_CORRECT - examCorrectCount);
-            const examLead = passed
-              ? isRu ? "Уровень уже проходной, но слабые темы лучше закрепить перед реальным экзаменом." : "El nivel ya es aprobatorio, pero conviene reforzar los temas débiles antes del examen real."
-              : isRu ? `До проходного уровня не хватило ${missingToPass} правильных ответов.` : `Faltaron ${missingToPass} respuestas correctas para aprobar.`;
-            const recommendationTitle = passed
-              ? isRu ? "Рекомендация: закрепить слабые темы" : "Recomendación: reforzar temas débiles"
-              : isRu ? "Рекомендация: разобрать ошибки экзамена" : "Recomendación: revisar errores del examen";
-            const recommendationText = wrongQs.length > 0
-              ? isRu ? "Не повторяй весь экзамен сразу: сначала добей вопросы, которые могут стоить попытки." : "No repitas todo enseguida: primero reforzá las preguntas que pueden costar el intento."
-              : isRu ? "Ошибок нет. Можно закрепить результат ещё одной короткой тренировкой." : "Sin errores. Podés consolidar el resultado con una práctica corta.";
             return (
               <SessionResultScreen
                 result={examResult}
@@ -818,123 +640,6 @@ export function PracticePage() {
                 onProgress={() => navigate("/progress")}
                 onHome={() => navigate("/")}
               />
-            );
-            return (
-              <section className="session-summary session-summary--exam glass result-enter">
-                <div className="pv2-exam-summary-toolbar">
-                  <Link to="/" className="pv2-back" aria-label={t("pv2.home", uiLang)}><i className="ti ti-arrow-left" /></Link>
-                </div>
-                <div className="summary-hero">
-                  <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, var(--ring-track-color) 0deg)` }}>
-                    <div className="summary-score-inner">
-                      <span className="summary-pct">{pct}%</span>
-                      <span className="summary-label" style={{ color: scoreColor }}>{scoreLabel}</span>
-                    </div>
-                  </div>
-                  <div className="summary-headline">
-                    <p className="summary-eyebrow">{isRu ? "Экзаменационный протокол" : "Protocolo de examen"}</p>
-                    <h2>{examCorrectCount} / {examTotal} {isRu ? "верно" : "correctas"}</h2>
-                    <p>{examLead}</p>
-                  </div>
-                </div>
-
-                <div className="summary-exam-protocol">
-                  <div className="summary-protocol-row">
-                    <span>{isRu ? "Проходной уровень" : "Nivel de aprobación"}</span>
-                    <i><b style={{ width: `${Math.min(100, Math.round((examCorrectCount / Math.max(1, EXAM_PASS_CORRECT)) * 100))}%`, background: scoreColor }} /></i>
-                    <em>{examCorrectCount}/{EXAM_PASS_CORRECT}</em>
-                  </div>
-                  <div className="summary-stats-row summary-stats-row--exam">
-                    <div className="summary-stat"><span className="summary-stat-val status-green">{examCorrectCount}</span><span className="meta">{t("pv2.sum.correct", uiLang)}</span></div>
-                    <div className="summary-stat"><span className="summary-stat-val status-warm">{examAnsweredCount - examCorrectCount}</span><span className="meta">{t("pv2.sum.wrong", uiLang)}</span></div>
-                    <div className="summary-stat"><span className="summary-stat-val">{timeSpent}</span><span className="meta">{t("pv2.sum.spent", uiLang)}</span></div>
-                  </div>
-                  {topTopics.length > 0 && (
-                    <div className="summary-topic-list">
-                      {topTopics.map((topic) => (
-                        <div key={topic.label} className="summary-topic">
-                          <span>{topic.label}</span>
-                          <i><b style={{ width: `${topic.pct}%` }} /></i>
-                          <em>{topic.count}</em>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className={passed ? "summary-diagnosis summary-diagnosis--good" : "summary-diagnosis"}>
-                  <strong>{recommendationTitle}</strong>
-                  <span>{recommendationText}</span>
-                </div>
-
-                {wrongQs.length > 0 && (
-                  <div className="pv2-exam-review">
-                    <p className="pv2-exam-review-head">{t("pv2.exam.sum.review", uiLang)}</p>
-                    {wrongQs.slice(0, 3).map((q) => {
-                      const selOpt = q.options.find((o) => o.id === examSelAnswers[q.id]);
-                      const corOpt = q.options.find((o) => o.id === q.correctOptionId);
-                      return (
-                        <div key={q.id} className="pv2-exam-review-item">
-                          <p className="pv2-exam-review-q">{q.question_es}</p>
-                          {selOpt && <p className="pv2-exam-review-wrong">× {selOpt.text_es}</p>}
-                          {corOpt && <p className="pv2-exam-review-correct">✓ {corOpt.text_es}</p>}
-                        </div>
-                      );
-                    })}
-                    {wrongQs.length > 3 && <p className="summary-review-more">{isRu ? `И ещё ${wrongQs.length - 3} ошибок в разборе` : `Y ${wrongQs.length - 3} errores más en el repaso`}</p>}
-                  </div>
-                )}
-
-                <div className="summary-actions">
-                  {wrongQs.length > 0 && (
-                    <button type="button" className="cta-primary" onClick={() => { startPracticeSession(false, false, wrongQids); navigate("/practice?mistakes=1", { replace: true }); }}>
-                      {isRu ? "Разобрать ошибки экзамена" : "Revisar errores del examen"} ({wrongQs.length})
-                    </button>
-                  )}
-                  <button type="button" className={wrongQs.length > 0 ? "cta-secondary" : "cta-primary"} onClick={handleStartExam}>{t("pv2.exam.sum.retry", uiLang)}</button>
-                  <button type="button" className="cta-secondary" onClick={() => { startPracticeSession(false); navigate("/practice", { replace: true }); }}>{t("pv2.exam.sum.practice", uiLang)}</button>
-                  <Link to="/" className="cta-secondary">{t("pv2.sum.home", uiLang)}</Link>
-                </div>
-              </section>
-            );
-            return (
-              <section className="session-summary glass result-enter">
-                <div className="pv2-exam-summary-toolbar">
-                  <Link to="/" className="pv2-back" aria-label={t("pv2.home", uiLang)}><i className="ti ti-arrow-left" /></Link>
-                </div>
-                <div className="summary-score-ring" style={{ background: `conic-gradient(${scoreColor} ${pct * 3.6}deg, var(--ring-track-color) 0deg)` }}>
-                  <div className="summary-score-inner">
-                    <span className="summary-pct">{pct}%</span>
-                    <span className="summary-label" style={{ color: scoreColor }}>{scoreLabel}</span>
-                  </div>
-                </div>
-                <div className="summary-stats-row">
-                  <div className="summary-stat"><span className="summary-stat-val status-green">{"✅"} {examCorrectCount}</span><span className="meta">{t("pv2.sum.correct", uiLang)}</span></div>
-                  <div className="summary-stat"><span className="summary-stat-val status-warm">{"❌"} {examAnsweredCount - examCorrectCount}</span><span className="meta">{t("pv2.sum.wrong", uiLang)}</span></div>
-                  <div className="summary-stat"><span className="summary-stat-val">{"⏱"} {timeSpent}</span><span className="meta">{t("pv2.sum.spent", uiLang)}</span></div>
-                </div>
-                {wrongQs.length > 0 && (
-                  <div className="pv2-exam-review">
-                    <p className="pv2-exam-review-head">{t("pv2.exam.sum.review", uiLang)}</p>
-                    {wrongQs.map((q) => {
-                      const selOpt = q.options.find((o) => o.id === examSelAnswers[q.id]);
-                      const corOpt = q.options.find((o) => o.id === q.correctOptionId);
-                      return (
-                        <div key={q.id} className="pv2-exam-review-item">
-                          <p className="pv2-exam-review-q">{q.question_es}</p>
-                          {selOpt && <p className="pv2-exam-review-wrong">{"✗"} {selOpt.text_es}</p>}
-                          {corOpt && <p className="pv2-exam-review-correct">{"✓"} {corOpt.text_es}</p>}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-                <div className="summary-actions">
-                  <button type="button" className="cta-primary" onClick={handleStartExam}>{t("pv2.exam.sum.retry", uiLang)}</button>
-                  <button type="button" className="cta-secondary" onClick={() => { startPracticeSession(false); navigate("/practice", { replace: true }); }}>{t("pv2.exam.sum.practice", uiLang)}</button>
-                  <Link to="/" className="cta-secondary">{t("pv2.sum.home", uiLang)}</Link>
-                </div>
-              </section>
             );
           })()}
 
