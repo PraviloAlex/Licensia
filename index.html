@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0a142e" />
+    <meta name="theme-color" content="#EEF3F8" />
     <meta name="description" content="Podgotovka k ekzamenu na prava v Argentine" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -12,10 +12,11 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
     <title>Licencia AR</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.45.0/dist/tabler-icons.min.css" />
     <!-- Apply saved theme before React mounts to prevent flash and wrong theme on reload -->
     <script>
-      (function(){try{var t=localStorage.getItem('ui_theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();
+      (function(){try{var t=localStorage.getItem('ui_theme');var isDark=t==='dark';if(!isDark)document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',isDark?'#0F161E':'#EEF3F8');}catch(e){}})();
     </script>
   </head>
   <body>
