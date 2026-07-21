@@ -1,0 +1,437 @@
+/* ─── Timer bar (exam mode) ────────────────────────────── */
+.pv2-timer-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  width: 100%;
+  overflow: hidden;
+}
+.pv2-timer-fill {
+  height: 100%;
+  transition: width 1s linear, background 1s;
+}
+
+/* ─── Option selecting animation ───────────────────────── */
+.pv2-option {
+  transition: transform 0.1s, border-color 0.15s, background 0.15s;
+}
+.pv2-option--selecting {
+  transform: scale(1.01);
+  border-color: rgba(95, 168, 232,0.45) !important;
+  background: rgba(95, 168, 232,0.1) !important;
+}
+
+/* ─── Option pending (confirm mode) ────────────────────── */
+.pv2-option--pending {
+  border-color: rgba(232, 180, 48,0.55) !important;
+  background: rgba(232, 180, 48,0.08) !important;
+  box-shadow: 0 0 0 1px rgba(232, 180, 48,0.2) !important;
+}
+.pv2-option-letter--pending {
+  background: rgba(232, 180, 48,0.22);
+  color: #E8B430;
+  border-color: rgba(232, 180, 48,0.4);
+}
+
+/* ─── Next button: confirm variant ─────────────────────── */
+.pv2-next--confirm {
+  background: rgba(232, 180, 48,0.18) !important;
+  border-color: rgba(232, 180, 48,0.5) !important;
+  color: #E8B430 !important;
+}
+.pv2-next--confirm:hover {
+  background: rgba(232, 180, 48,0.26) !important;
+}
+
+/* ─── Gear backdrop (mobile bottom sheet) ──────────────── */
+.pv2-gear-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 99;
+}
+@media (max-width: 479px) {
+  .pv2-gear-backdrop { display: block; }
+  .pv2-gear-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    border-bottom: none;
+    max-height: 70vh;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  .pv2-gear-item { padding: 16px 20px; }
+  .pv2-gear-section-label { padding: 10px 20px 4px; }
+}
+
+/* ─── Gear menu: section labels ────────────────────────── */
+.pv2-gear-section-label {
+  padding: 10px 14px 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(95, 168, 232,0.45);
+  user-select: none;
+}
+
+/* ─── Gear menu: divider ────────────────────────────────── */
+.pv2-gear-divider {
+  height: 1px;
+  background: rgba(95, 168, 232,0.1);
+  margin: 4px 0;
+}
+
+/* ─── Gear menu: UI language row ────────────────────────── */
+.pv2-gear-lang-row {
+  display: flex;
+  gap: 6px;
+  padding: 8px 14px 10px;
+}
+/* Font size pills in gear menu */
+.pv2-gear-font-row {
+  display: flex;
+  gap: 8px;
+  padding: 6px 12px 10px;
+}
+.pv2-font-pill {
+  flex: 1;
+  padding: 6px 0;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border-lo);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-mid);
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+}
+.pv2-font-pill:hover {
+  background: rgba(95, 168, 232,0.10);
+  border-color: rgba(95, 168, 232,0.30);
+  color: var(--text-hi);
+}
+.pv2-font-pill--active {
+  background: rgba(95, 168, 232,0.18);
+  border-color: rgba(95, 168, 232,0.50);
+  color: var(--accent);
+}
+
+.pv2-gear-lang-btn {
+  flex: 1;
+  padding: 7px 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(95, 168, 232,0.18);
+  background: rgba(95, 168, 232,0.06);
+  color: var(--text-mid);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
+  text-align: center;
+}
+.pv2-gear-lang-btn:hover {
+  border-color: rgba(95, 168, 232,0.4);
+  background: rgba(95, 168, 232,0.1);
+  color: var(--text-hi);
+}
+.pv2-gear-lang-btn--active {
+  border-color: var(--accent);
+  background: rgba(95, 168, 232,0.18);
+  color: var(--accent);
+}
+
+/* ─── Gear menu: danger item ────────────────────────────── */
+.pv2-gear-item--danger .pv2-gear-label {
+  color: rgba(224, 128, 114,0.85);
+}
+.pv2-gear-item--danger:hover {
+  background: rgba(224, 128, 114,0.06) !important;
+}
+
+/* ─── Gear ico: blue variant ────────────────────────────── */
+.pv2-gear-ico--blue {
+  background: rgba(95, 168, 232,0.15);
+  color: #5FA8E8;
+}
+
+/* ─── Toggle switch ─────────────────────────────────────── */
+.pv2-toggle {
+  flex-shrink: 0;
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: rgba(95, 168, 232,0.15);
+  border: 1px solid rgba(95, 168, 232,0.2);
+  position: relative;
+  transition: background 0.2s, border-color 0.2s;
+  margin-left: auto;
+}
+.pv2-toggle--on {
+  background: rgba(95, 168, 232,0.45);
+  border-color: rgba(95, 168, 232,0.6);
+}
+.pv2-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(200,220,255,0.5);
+  transition: transform 0.2s, background 0.2s;
+}
+.pv2-toggle--on .pv2-toggle-thumb {
+  transform: translateX(16px);
+  background: #eef4ff;
+}
+
+/* ─── Exam Toolbar center ───────────────────────────────── */
+.pv2-exam-tb-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 1px;
+}
+.pv2-exam-timer {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(95, 168, 232,0.7);
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.5s;
+}
+.pv2-exam-timer--warning  { color: rgba(232, 180, 48,0.9); }
+.pv2-exam-timer--critical {
+  color: rgba(255,120,120,0.95);
+  animation: pv2-timer-pulse 1s ease-in-out infinite;
+}
+@keyframes pv2-timer-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+/* ─── Exam dot: done (neutral, no colour) ───────────────── */
+.pv2-dot--done { background: rgba(95, 168, 232,0.35); }
+
+/* ─── Exit confirm overlay ──────────────────────────────── */
+.pv2-exit-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.pv2-exit-dialog {
+  background: #0f1a2e;
+  border: 1px solid rgba(95, 168, 232,0.22);
+  border-radius: 16px;
+  padding: 28px 24px 24px;
+  max-width: 320px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.55);
+}
+.pv2-exit-icon {
+  font-size: 32px;
+  color: rgba(232, 180, 48,0.8);
+  margin-bottom: 12px;
+}
+.pv2-exit-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--text-hi);
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+.pv2-exit-sub {
+  font-size: 14.5px;
+  color: var(--text-mid);
+  line-height: 1.5;
+  margin: 0 0 22px;
+}
+/* ─── Exit confirm actions ──────────────────────────────── */
+.pv2-exit-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pv2-exit-btn-leave,
+.pv2-exit-btn-stay {
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: var(--r-lg);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+/* Выйти — красный ghost */
+.pv2-exit-btn-leave {
+  border: 1.5px solid rgba(220,70,70,0.65);
+  color: #e07878;
+}
+.pv2-exit-btn-leave:hover {
+  background: rgba(220,70,70,0.10);
+  box-shadow: 0 0 16px rgba(220,70,70,0.28);
+}
+
+/* Продолжать — зелёный ghost */
+.pv2-exit-btn-stay {
+  border: 1.5px solid rgba(78,200,140,0.65);
+  color: #4CC08D;
+}
+.pv2-exit-btn-stay:hover {
+  background: rgba(78,200,140,0.10);
+  box-shadow: 0 0 16px rgba(78,200,140,0.28);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CHECKLIST PAGE  (.cl-*)
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Progress bar at top ───────────────────────────────── */
+.cl-progress-wrap {
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+}
+.cl-progress-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.cl-progress-label {
+  font-size: 13px;
+  color: var(--text-mid);
+}
+.cl-progress-pct {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--s-accent);
+}
+.cl-progress-track {
+  height: 6px;
+  background: var(--s-accent-soft);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.cl-progress-bar {
+  height: 100%;
+  background: var(--s-accent);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+/* ─── Step card ─────────────────────────────────────────── */
+.cl-step {
+  border-radius: var(--r-md);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.cl-step--done {
+  border-color: rgba(62,207,142,0.25) !important;
+  background: rgba(62,207,142,0.04);
+}
+.cl-step--open { border-color: var(--s-accent-border) !important; }
+
+/* ─── Step header row ───────────────────────────────────── */
+.cl-step-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 14px 14px 12px;
+}
+
+/* ─── Checkbox ──────────────────────────────────────────── */
+.cl-check {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid rgba(95, 168, 232,0.3);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  color: var(--green);
+  font-size: 14px;
+}
+.cl-check:hover { border-color: var(--s-accent-border); }
+.cl-check--done {
+  border-color: var(--green);
+  background: rgba(62,207,142,0.12);
+}
+
+/* ─── Title button (expands accordion) ─────────────────── */
+.cl-step-title-btn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+.cl-step-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-mute);
+  width: 16px;
+  flex-shrink: 0;
+}
+.cl-step-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.cl-step-titles {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.cl-step-title-main {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-hi);
+  line-height: 1.3;
+}
+.cl-step--done .cl-step-title-main {
+  color: var(--text-mid);
+  text-decoration: line-through;
+  text-decoration-color: rgba(62,207,142,0.5);
+}
+.cl-step-title-sub {
+  font-size: 11px;
+  color: var(--text-mute);
+  line-height: 1.3;
+}
+.cl-step-chevron {
+  font-size: 15px;
+  color: var(--text-mute);
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+.cl-step--open .cl-step-chevron { color: var(--s-accent); }
+

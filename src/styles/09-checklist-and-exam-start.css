@@ -1,0 +1,508 @@
+/* ─── Expanded body ─────────────────────────────────────── */
+.cl-step-body {
+  padding: 0 14px 16px 14px;
+  border-top: 1px solid var(--s-border);
+}
+.cl-step-desc {
+  font-size: 13px;
+  color: var(--text-mid);
+  margin: 12px 0 10px;
+  line-height: 1.5;
+}
+.cl-step-items {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+  display: grid;
+  gap: 7px;
+}
+.cl-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-hi);
+  line-height: 1.45;
+}
+.cl-step-bullet {
+  font-size: 8px;
+  color: var(--s-accent);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+.cl-item-main {
+  display: block;
+  font-weight: 500;
+}
+.cl-item-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--text-mute);
+  margin-top: 1px;
+}
+.cl-step-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(232, 180, 48,0.07);
+  border: 1px solid rgba(232, 180, 48,0.2);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  font-size: 12px;
+  color: rgba(232, 180, 48,0.85);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+.cl-step-tip .ti { flex-shrink: 0; margin-top: 2px; }
+
+/* ─── Practical exam tip cards ──────────────────────────── */
+.cl-exam-tip-card {
+  border-radius: var(--r-md);
+  padding: 14px;
+  display: grid;
+  gap: 6px;
+}
+.cl-exam-tip-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-hi);
+  margin: 0;
+}
+.cl-exam-tip-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.45;
+}
+.cl-exam-tip-ico {
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 14px;
+}
+.cl-exam-tip-hint {
+  font-size: 12px;
+  color: rgba(232, 180, 48,0.75);
+  margin: 2px 0 0;
+  line-height: 1.45;
+}
+
+/* ─── Reminder banner (HomePage) ───────────────────────── */
+.home-reminder {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(232, 180, 48,0.08);
+  border: 1px solid rgba(232, 180, 48,0.25);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+}
+.home-reminder-icon { font-size: 18px; flex-shrink: 0; }
+.home-reminder-text {
+  flex: 1;
+  font-size: 13px;
+  color: rgba(232, 180, 48,0.9);
+  line-height: 1.4;
+}
+.home-reminder-dismiss {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: rgba(232, 180, 48,0.5);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 14px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.home-reminder-dismiss:hover { color: rgba(232, 180, 48,0.9); }
+
+/* ═══════════════════════════════════════════════════════════
+   DESKTOP TWO-COLUMN QUESTION LAYOUT  (pv2-q-*)
+   Mobile: single column (default)
+   Desktop ≥700px: left = question+image, right = options+sheet
+   ═══════════════════════════════════════════════════════════ */
+.pv2-q-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+.pv2-q-left  { display: flex; flex-direction: column; gap: 0; }
+.pv2-q-right { display: flex; flex-direction: column; gap: 0; }
+
+@media (min-width: 700px) {
+  /* Widen the page container for practice */
+  .page { max-width: 1240px; }
+
+  /* Allow practice article to fill the wider page */
+  .practice-v2 { max-width: 100%; }
+
+  /* Exam mode: narrow, centered, readable */
+  .practice-v2--exam {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Toolbar spans full card width — visually anchors the layout */
+  .pv2-toolbar {
+    padding: 14px 20px 10px;
+  }
+
+  /* Dots bar also full width */
+  .pv2-dots {
+    padding: 0 4px;
+  }
+
+  .pv2-q-layout {
+    grid-template-columns: 55fr 45fr;
+    gap: 0;
+    align-items: start;
+    border: 1px solid rgba(95, 168, 232,0.1);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .pv2-q-left {
+    border-right: 1px solid rgba(95, 168, 232,0.1);
+    padding: 8px 16px 16px;
+    gap: 4px;
+    min-height: 280px;
+  }
+  .pv2-q-right {
+    padding: 16px;
+    gap: 8px;
+  }
+  /* On desktop the options live inside the right col — remove outer margins */
+  .pv2-q-right .pv2-options {
+    margin: 0;
+  }
+  .pv2-q-right .pv2-next {
+    margin-top: 4px;
+  }
+  .pv2-q-right .pv2-sheet {
+    margin: 8px 0 0;
+    border-radius: var(--r-md);
+  }
+  /* Question text slightly larger on desktop */
+  /* font-size handled by base clamp — no desktop override needed */
+  /* Image fills the left column nicely */
+  .pv2-q-left .pv2-image-wrap {
+    margin: 0;
+    border-radius: var(--r-md);
+  }
+  .pv2-q-left .pv2-image {
+    max-height: 260px;
+    width: 100%;
+    object-fit: contain;
+    border-radius: var(--r-md);
+  }
+}
+
+/* ── Exam Start Screen ──────────────────────────────────────────────── */
+.pv2-exam-start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 16px 32px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.pv2-exam-start-back {
+  align-self: flex-start;
+}
+.pv2-exam-start-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+.pv2-exam-start-emblem {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, #3a2406 0%, #221503 100%);
+  border: 1px solid rgba(232, 180, 48,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #d4960f;
+}
+.pv2-exam-start-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--text-hi);
+  letter-spacing: -0.03em;
+}
+.pv2-exam-start-subtitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-mid);
+}
+
+/* Params grid */
+.pv2-exam-start-params {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pv2-esp-row {
+  display: flex;
+  gap: 8px;
+}
+.pv2-esp-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.84rem;
+  color: var(--text-mid);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-lo);
+  border-radius: var(--r-md);
+  padding: 11px 14px;
+  min-height: 52px;
+  transition: background var(--t-fast), border-color var(--t-fast);
+}
+.pv2-esp-item:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: var(--border-mid);
+}
+/* Row 1 icons — blue */
+.pv2-esp-row:nth-child(1) .pv2-esp-item i {
+  font-size: 17px;
+  color: #82BCEF;
+  flex-shrink: 0;
+}
+/* Row 2 icons — teal */
+.pv2-esp-row:nth-child(2) .pv2-esp-item i {
+  font-size: 17px;
+  color: #3ec9a0;
+  flex-shrink: 0;
+}
+/* Row 3 — amber warning */
+.pv2-esp-item--warn {
+  color: #c89a3a;
+  background: rgba(232, 180, 48,0.07);
+  border-color: rgba(232, 180, 48,0.25);
+}
+.pv2-esp-item--warn:hover {
+  background: rgba(232, 180, 48,0.12);
+  border-color: rgba(232, 180, 48,0.40);
+}
+.pv2-esp-item--warn i {
+  font-size: 17px;
+  color: #d4960f;
+  flex-shrink: 0;
+  opacity: 1;
+}
+
+/* History row */
+.pv2-exam-start-history {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-lo);
+  border-radius: var(--r-lg);
+  padding: 12px 16px;
+  gap: 4px;
+}
+.pv2-esh-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.pv2-esh-label {
+  font-size: 0.72rem;
+  color: var(--text-low);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.pv2-esh-val {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-hi);
+}
+.pv2-esh-val--pass { color: #4ec88c; }
+.pv2-esh-val--fail { color: #e05c5c; }
+.pv2-esh-sep {
+  width: 1px;
+  height: 32px;
+  background: var(--border-lo);
+  flex-shrink: 0;
+}
+
+/* Exam start — primary button */
+.pv2-exam-start-btn {
+  width: 100%;
+  padding: 14px 0;
+  border-radius: var(--r-lg);
+  border: 2.5px solid rgba(210,140,30,0.80);
+  background: rgba(232, 180, 48,0.10);
+  color: #d4960f;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: none;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast), color var(--t-fast), background var(--t-fast);
+}
+.pv2-exam-start-btn:hover {
+  border-color: rgba(232, 180, 48,0.70);
+  background: rgba(232, 180, 48,0.17);
+  color: #e8aa25;
+  box-shadow: 0 0 16px rgba(232, 180, 48,0.28);
+}
+
+/* Exam start — secondary "go to practice" button */
+.pv2-exam-start-practice {
+  width: 100%;
+  padding: 12px 0;
+  border-radius: var(--r-lg);
+  border: 1.5px solid rgba(160,180,220,0.22);
+  background: transparent;
+  margin-top: -10px;
+  color: var(--text-mid);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+}
+.pv2-exam-start-practice:hover {
+  background: rgba(95, 168, 232,0.08);
+  border-color: rgba(95, 168, 232,0.35);
+  color: var(--text-hi);
+}
+
+/* ============================================================
+   SIGNS PAGE (signs-*)
+   ============================================================ */
+
+.signs-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 0 16px;
+}
+
+.signs-tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--border-lo);
+  background: transparent;
+  color: var(--text-mid);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all var(--t-fast);
+  white-space: nowrap;
+}
+
+.signs-tab i { font-size: 0.9rem; }
+
+.signs-tab:hover {
+  border-color: var(--border-mid);
+  color: var(--text-hi);
+}
+
+.signs-tab--active {
+  border-color: var(--accent);
+  background: rgba(59,130,246,0.12);
+  color: var(--accent);
+}
+
+.signs-images {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.signs-card {
+  background: var(--surface);
+  border: 1px solid var(--border-lo);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.signs-caption {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.signs-img {
+  width: 65%;
+  display: block;
+  margin: 0 auto;
+  border-radius: var(--r-md);
+  cursor: zoom-in;
+  transition: opacity var(--t-fast);
+}
+
+.signs-img:hover { opacity: 0.9; }
+.signs-img:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.signs-hint { display: none; }
+
+/* Lightbox */
+.signs-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  cursor: zoom-out;
+}
+
+.signs-lb-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2001;
+}
+
+.signs-lb-img {
+  max-width: 100%;
+  max-height: 90vh;
+  border-radius: var(--r-md);
+  object-fit: contain;
+  cursor: default;
+}
+
+/* Desktop */
+@media (min-width: 700px) {
+  .signs-tabs { gap: 8px; }
+  .signs-tab { font-size: 0.82rem; padding: 7px 14px; }
+}
+

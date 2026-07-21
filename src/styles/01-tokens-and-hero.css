@@ -1,0 +1,420 @@
+/* ═══════════════════════════════════════════════════════════
+   LICENCIA AR — Unified Design System
+   Premium dark learning product
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Design Tokens ────────────────────────────────────────── */
+:root {
+  /* Fonts */
+  font-family: "Manrope", "Inter", "Segoe UI", system-ui, sans-serif;
+
+  /* Base colors */
+  --bg:          #0F161E;
+  --bg-2:        #141D28;
+  --bg-3:        #1A2530;
+  --surface:     #17202B;
+  --surface-2:   #1C2733;
+  --border:      #263340;
+  --border-mid:  #344154;
+  --border-hi:   #46586E;
+
+  /* Genuine blue */
+  --blue:        #5FA8E8;
+  --blue-dim:    rgba(95, 168, 232, 0.14);
+  --blue-glow:   rgba(95, 168, 232, 0.25);
+
+  /* Brand accent — Bandera celeste (in dark theme it coincides with --blue) */
+  --accent:      #5FA8E8;
+  --accent-dim:  rgba(95, 168, 232, 0.14);
+  --accent-glow: rgba(95, 168, 232, 0.25);
+
+  /* Accent: gold (streak / repeat / PRO) */
+  --gold:        #E8B430;
+  --gold-dim:    rgba(232, 180, 48, 0.14);
+  --gold-glow:   rgba(232, 180, 48, 0.30);
+
+  /* Accent: green (success) */
+  --green:       #4CC08D;
+  --green-dim:   rgba(76, 192, 141, 0.14);
+  --green-glow:  rgba(76, 192, 141, 0.28);
+
+  /* Accent: red (error) */
+  --red:         #E08072;
+  --red-dim:     rgba(224, 128, 114, 0.14);
+
+  /* Progress-ring track (conic-gradient remainder) */
+  --ring-track-color: rgba(255, 255, 255, 0.09);
+
+  /* Text */
+  --text-hi:     #E8EFF6;
+  --text-mid:    #A5B4C4;
+  --text-low:    #7E8DA0;
+  /* WCAG AA on the darkest common ground (--surface #17202B): 4.60:1 */
+  --text-mute:   #7B8999;
+
+  /* Radius */
+  --r-sm:  10px;
+  --r-md:  14px;
+  --r-lg:  18px;
+  --r-xl:  24px;
+
+  /* Spacing (8px scale) */
+  --sp-1:  8px;
+  --sp-2:  12px;
+  --sp-3:  16px;
+  --sp-4:  24px;
+  --sp-5:  32px;
+  --sp-6:  48px;
+
+  /* Motion */
+  --ease:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --t-fast:  120ms;
+  --t-mid:   220ms;
+  --t-slow:  360ms;
+
+  /* ── Semantic design tokens (dark default = graphite) ────
+     Used by info/legal/settings/progress screens.
+     Map to primitive vars — change here, all screens update. */
+  --s-bg:            #0F161E;
+  --s-surface:       #17202B;
+  --s-surface-hi:    #1C2733;
+  --s-border:        #263340;
+  --s-border-mid:    #344154;
+  --s-text:          #E8EFF6;
+  --s-text-sec:      #A5B4C4;
+  --s-text-muted:    #8091A2;
+  --s-accent:        #5FA8E8;
+  --s-accent-soft:   rgba(95, 168, 232, 0.12);
+  --s-accent-border: rgba(95, 168, 232, 0.45);
+  --s-success:       #4CC08D;
+  --s-success-soft:  rgba(76, 192, 141, 0.10);
+  --s-warn:          #E8B430;
+  --s-warn-soft:     rgba(232, 180, 48, 0.10);
+  --s-danger:        #E08072;
+  --s-danger-soft:   rgba(224, 128, 114, 0.10);
+
+  color: var(--text-hi);
+  background: var(--bg);
+}
+
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Font size preference classes — scales ALL rem values globally */
+html.font-large { font-size: 110%; }
+html.font-huge  { font-size: 120%; }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: var(--s-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font-family: inherit; cursor: pointer; }
+a { color: inherit; }
+
+/* ─── Glass surface ────────────────────────────────────────── */
+.glass {
+  background: linear-gradient(145deg, rgba(14, 22, 44, 0.80), rgba(8, 14, 28, 0.80));
+  border: 1px solid var(--border-mid);
+  box-shadow:
+    0 4px 24px rgba(5, 12, 30, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(8px);
+}.page-header { margin-bottom: 4px; }
+.page-header h1 {
+  margin: 6px 0 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text-hi);
+}
+
+/* ─── Page header with controls (homepage) ─────────────────── */
+.page-header--with-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.page-header--with-controls h1 { margin: 0; flex-shrink: 0; }
+
+.page-header-controls { flex-shrink: 0; }
+
+.home-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── Typography ───────────────────────────────────────────── */
+.t-hero    { font-size: 2rem;   font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: var(--text-hi); }
+.t-title   { font-size: 1.2rem; font-weight: 700; line-height: 1.2; color: var(--text-hi); }
+.t-body    { font-size: 0.9rem; line-height: 1.55; color: var(--text-mid); }
+.t-caption { font-size: 0.75rem; line-height: 1.4; color: var(--text-low); }
+.t-label   { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-mute); }
+.meta      { margin: 0; font-size: 0.85rem; color: var(--text-low); }
+
+/* Legal pages */
+.legal-page {
+  display: grid;
+  gap: 14px;
+}
+
+.legal-card,
+.legal-source-card {
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.legal-card h2,
+.legal-source-card h2 {
+  margin: 0 0 10px;
+  color: var(--text-hi);
+  font-size: 1.05rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.legal-card p,
+.legal-source-card p {
+  margin: 0 0 12px;
+  color: var(--text-mid);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.legal-card p:last-child,
+.legal-source-card p:last-child {
+  margin-bottom: 0;
+}
+
+.legal-eyebrow {
+  margin: 0 0 8px !important;
+  color: var(--accent);
+  font-size: 0.72rem !important;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.legal-verification-date {
+  margin-top: 14px !important;
+  color: var(--text-low) !important;
+  font-size: 0.82rem !important;
+  font-weight: 700;
+}
+
+.legal-link-list,
+.legal-source-list {
+  display: grid;
+  gap: 10px;
+}
+
+.legal-link-row {
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-hi);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.legal-link-row span:first-child {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.legal-link-row strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.legal-source-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.legal-source-card small {
+  display: block;
+  color: var(--text-low);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.legal-source-url {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 8px 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.legal-source-url {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #dbeafe;
+  background: rgba(95, 168, 232, 0.14);
+  border: 1px solid rgba(95, 168, 232, 0.24);
+}
+
+.legal-source-pending {
+  max-width: 220px;
+  color: var(--text-low);
+  font-size: 0.76rem;
+  line-height: 1.35;
+  text-align: right;
+}
+
+@media (max-width: 520px) {
+  .legal-card,
+  .legal-source-card {
+    padding: 15px;
+    border-radius: 16px;
+  }
+
+  .legal-source-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .legal-source-pending {
+    max-width: none;
+    text-align: left;
+  }
+}
+
+/* ─── CTA Buttons ──────────────────────────────────────────── */
+.cta-primary, .cta-secondary, .next-btn, .cta-quick {
+  border-radius: var(--r-md);
+  padding: 11px 16px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: block;
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), opacity var(--t-fast);
+  border: none;
+}
+.cta-primary {
+  background: linear-gradient(135deg, #5FA8E8 0%, #82BCEF 100%);
+  color: #0A1622;
+  box-shadow: 0 0 0 0 var(--accent-glow);
+}
+.cta-primary:hover  { transform: translateY(-1px); box-shadow: 0 4px 20px var(--accent-glow); }
+.cta-primary:active { transform: scale(0.98); }
+
+.cta-secondary {
+  border: 1px solid var(--border-mid);
+  color: var(--text-mid);
+  background: transparent;
+}
+.cta-secondary:hover  { border-color: var(--border-hi); color: var(--text-hi); background: rgba(255,255,255,0.04); }
+.cta-secondary:active { transform: scale(0.98); }
+
+.next-btn {
+  border: 1px solid var(--border-mid);
+  color: var(--text-hi);
+  background: rgba(20, 34, 62, 0.72);
+  width: 100%;
+  margin-top: 8px;
+}
+.next-btn:hover { border-color: var(--border-hi); }
+
+.cta-quick {
+  border: 1px solid rgba(232, 180, 48, 0.35);
+  color: var(--gold);
+  background: rgba(232, 180, 48, 0.06);
+  text-decoration: none;
+}
+.cta-quick:hover { background: rgba(232, 180, 48, 0.12); }
+
+/* cta-danger kept for potential reuse */
+.cta-danger {
+  border: 1px solid rgba(220, 80, 80, 0.35);
+  color: var(--red);
+  background: rgba(220, 80, 80, 0.06);
+}
+.cta-danger:hover  { background: rgba(220, 80, 80, 0.12); border-color: rgba(220, 80, 80, 0.6); }
+.cta-danger:active { transform: scale(0.98); }
+
+/* Reset button — matches secondary shape, red text only */
+@keyframes reset-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(220, 80, 80, 0.5); }
+  60%  { box-shadow: 0 0 0 7px rgba(220, 80, 80, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(220, 80, 80, 0); }
+}
+
+.cta-reset {
+  /* Та же форма что у cta-secondary */
+  border-radius: var(--r-md);
+  padding: 11px 16px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  /* Красные цвета */
+  color: var(--red);
+  border: 1px solid rgba(220, 80, 80, 0.4);
+  background: transparent;
+  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+}
+.cta-reset:hover  { background: rgba(220, 80, 80, 0.06); border-color: rgba(220, 80, 80, 0.7); }
+.cta-reset:active { transform: scale(0.98); }
+.cta-reset--confirm {
+  border-color: rgba(220, 80, 80, 0.85);
+  background: rgba(220, 80, 80, 0.12);
+  animation: reset-pulse 0.5s ease-out;
+}
+
+/* ─── Progress bar ─────────────────────────────────────────── */
+.progress-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(95, 168, 232, 0.15);
+  overflow: hidden;
+}
+.progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent) 0%, #8CCBF2 100%);
+  transition: width 0.5s var(--ease);
+}
+.progress-track.thin { height: 3px; margin: 0; background: rgba(95, 168, 232,0.12); }
+.progress-track.glow span { box-shadow: 0 0 10px var(--accent-glow); }
+

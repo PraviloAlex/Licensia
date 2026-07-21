@@ -1,0 +1,445 @@
+/* ═════════════════════════════════════════════════════════════
+   LIGHT THEME — semantic tokens (info/legal/settings/progress)
+   Primitive palette (--bg/--blue/--text-hi/etc.) now lives only in
+   the «Premium Educational 2026» block below. This block keeps
+   just the --s-* family read by Legal/Sources/Progress/settings UI.
+   ═════════════════════════════════════════════════════════════ */
+
+[data-theme="light"] {
+  --s-bg:            #EEF3F8;
+  --s-surface:       #FFFFFF;
+  --s-surface-hi:    #F4F8FC;
+  --s-border:        #E2E9F0;
+  --s-border-mid:    #CBD6E1;
+  --s-text:          #17222E;
+  --s-text-sec:      #475467;
+  --s-text-muted:    #5F6E8A;
+  --s-accent:        #2563A8;
+  --s-accent-soft:   #DCEAF6;
+  --s-accent-border: rgba(37, 99, 168, 0.30);
+  --s-success:       #1E7A55;
+  --s-success-soft:  rgba(30, 122, 85, 0.08);
+  --s-warn:          #8A6207;
+  --s-warn-soft:     rgba(138, 98, 7, 0.08);
+  --s-danger:        #B04434;
+  --s-danger-soft:   rgba(176, 68, 52, 0.08);
+}/* ── Results ─────────────────────────────────────────────── */
+[data-theme="light"] .result.ok {
+  border: 1px solid rgba(30, 122, 85, 0.30);
+  background: rgba(30, 122, 85, 0.06);
+}
+[data-theme="light"] .result.fail {
+  border: 1px solid rgba(176, 68, 52, 0.30);
+  background: rgba(176, 68, 52, 0.06);
+}[data-theme="light"] .cta-secondary:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.30);
+  color: #17222E;
+}[data-theme="light"] .pv2-gear-btn--open {
+  background: rgba(37, 99, 168, 0.10);
+  border-color: rgba(37, 99, 168, 0.35);
+  color: #2563A8;
+}[data-theme="light"] .pv2-gear-lang-btn--active {
+  background: #2563A8;
+  border-color: #2563A8;
+  color: #FFFFFF;
+}[data-theme="light"] .pv2-toggle--on {
+  background: #2563A8;
+}/* ── Exam screen ─────────────────────────────────────────── */
+[data-theme="light"] .pv2-exam-start {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.09);
+}
+/* ── Home action buttons ─────────────────────────────────── */
+/* Only declaration from the retired first light layer that is never re-declared. */
+[data-theme="light"] .home-action-btn { color: var(--text-hi); }[data-theme="light"] .cl-step--done {
+  background: rgba(30, 122, 85, 0.05);
+  border-color: rgba(30, 122, 85, 0.20);
+}[data-theme="light"] .ob-lang-toggle-btn--active {
+  background: #17222E;
+  color: #FFFFFF;
+}[data-theme="light"] .ob-lang-pick-btn:hover,
+[data-theme="light"] .ob-lang-pick-btn--active {
+  border-color: #2563A8;
+  background: rgba(37, 99, 168, 0.06);
+}[data-theme="light"] .ob-roadmap-title--dim{ color: var(--text-mute); }[data-theme="light"] .pv2-sheet--correct .pv2-sheet-result {
+  background: rgba(30, 122, 85, 0.05);
+}
+[data-theme="light"] .pv2-sheet--wrong .pv2-sheet-result {
+  background: rgba(176, 68, 52, 0.05);
+}
+[data-theme="light"] .pv2-sheet--correct .pv2-sheet-label { color: #1E7A55; }
+[data-theme="light"] .pv2-sheet--wrong   .pv2-sheet-label { color: #B04434; }[data-theme="light"] .pv2-acc-icon--teal   { background: rgba(30, 122, 85, 0.12);  color: #1E7A55; }
+[data-theme="light"] .pv2-acc-icon--amber  { background: rgba(138, 98, 7, 0.12); color: #8A6207; }
+[data-theme="light"] .pv2-acc-icon--purple { background: rgba(80, 60, 160, 0.10);  color: #5035A0; }[data-theme="light"] .answer-result-card--correct {
+  border-color: rgba(30, 122, 85, 0.25);
+  border-left-color: #1E7A55;
+  background: rgba(30, 122, 85, 0.05);
+}
+[data-theme="light"] .answer-result-card--wrong {
+  border-color: rgba(176, 68, 52, 0.25);
+  border-left-color: #B04434;
+  background: rgba(176, 68, 52, 0.05);
+}
+[data-theme="light"] .answer-result-card--correct .answer-result-label { color: #1E7A55; }
+[data-theme="light"] .answer-result-card--wrong   .answer-result-label { color: #B04434; }[data-theme="light"] .answer-acc-icon--teal   { background: rgba(30, 122, 85, 0.12);  color: #1E7A55; }
+[data-theme="light"] .answer-acc-icon--amber  { background: rgba(138, 98, 7, 0.12); color: #8A6207; }
+[data-theme="light"] .answer-acc-icon--purple { background: rgba(80, 60, 160, 0.10);  color: #5035A0; }
+
+/* ── Progress bar in practice toolbar ───────────────────── */
+[data-theme="light"] .pv2-progress-bar {
+  background: rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] .pv2-progress-fill {
+  background: #2563A8;
+}
+/* ── Exam result screen ──────────────────────────────────── */
+[data-theme="light"] .pv2-exam-result {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.09);
+}
+[data-theme="light"] .pv2-exam-score-pass { color: #1E7A55; }
+[data-theme="light"] .pv2-exam-score-fail { color: #B04434; }
+
+/* ── Confirm button ──────────────────────────────────────── */
+[data-theme="light"] .pv2-confirm-btn {
+  background: #2563A8;
+  border-color: #2563A8;
+  color: #FFFFFF;
+}
+[data-theme="light"] .pv2-confirm-btn:hover {
+  background: #1D4F86;
+}
+
+/* ── Next button ─────────────────────────────────────────── */
+[data-theme="light"] .pv2-next-btn {
+  background: #F4F8FC;
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #17222E;
+}
+[data-theme="light"] .pv2-next-btn:hover {
+  background: #E4EBF2;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT THEME — Premium Educational 2026
+   ═══════════════════════════════════════════════════════════ */
+
+[data-theme="light"] {
+  /* ── Backgrounds (Bandera: cool paper) ──────────────────── */
+  --bg:           #EEF3F8;
+  --bg-2:         #E4EBF2;
+  --bg-3:         #D9E3EC;
+  --surface:      #FFFFFF;
+  --surface-2:    #F4F8FC;
+
+  /* ── New semantic tokens ─────────────────────────────────── */
+  --surface-soft:    #F4F8FC;
+  --surface-muted:   #E4EBF2;
+  --surface-orange:  #DCEAF6;
+  --surface-green:   #EAF6F0;
+  --surface-red:     #FBEEEC;
+  --surface-blue:    #F3F7FF;
+
+  /* ── Borders ─────────────────────────────────────────────── */
+  --border:         #E2E9F0;
+  --border-lo:      #EAF0F5;
+  --border-mid:     #CBD6E1;
+  --border-hi:      #B3C2D1;
+  --border-orange:  #B5D0E8;
+  --border-green:   #A8D8C2;
+  --border-red:     #EDBBB3;
+  --border-blue:    #BFD8FF;
+
+  /* ── Brand accent — Bandera celeste ───────────────────────── */
+  --accent:         #2563A8;
+  --accent-dim:     rgba(37, 99, 168, 0.10);
+  --accent-glow:    rgba(37, 99, 168, 0.18);
+
+  /* --blue: genuine blue (paired with --border-blue above) */
+  --blue:           #2563EB;
+  --blue-dim:       rgba(37, 99, 235, 0.10);
+  --blue-glow:      rgba(37, 99, 235, 0.18);
+
+  /* ── Gold / streak ───────────────────────────────────────── */
+  --gold:           #8A6207;
+  --gold-dim:       rgba(138, 98, 7, 0.10);
+  --gold-glow:      rgba(138, 98, 7, 0.18);
+
+  /* ── Success ─────────────────────────────────────────────── */
+  --green:          #1E7A55;
+  --green-dim:      rgba(30, 122, 85, 0.10);
+  --green-glow:     rgba(30, 122, 85, 0.16);
+
+  /* ── Danger ──────────────────────────────────────────────── */
+  --red:            #B04434;
+  --red-dim:        rgba(176, 68, 52, 0.10);
+
+  /* Ring track must stay visible on a light ground */
+  --ring-track-color: #DCE5EE;
+
+  /* ── Text ────────────────────────────────────────────────── */
+  /* WCAG AA measured against the PAGE background (--bg #EEF3F8), which is
+     stricter than the white cards. Ramp stays ordered: 5.61 / 4.99 / 4.58. */
+  --text-hi:    #17222E;
+  --text-mid:   #536271;
+  --text-low:   #586A7C;
+  --text-mute:  #5D7082;
+
+  /* ── Shadows ─────────────────────────────────────────────── */
+  --shadow-xs: 0 1px 2px rgba(25, 28, 33, 0.05);
+  --shadow-sm: 0 2px 12px rgba(25, 28, 33, 0.07);
+  --shadow-md: 0 8px 28px rgba(25, 28, 33, 0.10);
+
+  color: #17222E;
+  background: #EEF3F8;
+}
+
+/* ── Body ────────────────────────────────────────────────── */
+[data-theme="light"] body {
+  background:
+    radial-gradient(ellipse 700px 300px at 10% 0%,   rgba(37, 99, 168, 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 250px at 90%   2%, rgba(138, 98, 7, 0.03)  0%, transparent 65%),
+    #EEF3F8;
+}
+
+/* ── Glass → warm white card ─────────────────────────────── */
+[data-theme="light"] .glass {
+  background:  #FFFFFF;
+  border:      1px solid #E2E9F0;
+  box-shadow:  0 2px 16px rgba(25, 28, 33, 0.07);
+  backdrop-filter: none;
+}
+
+/* ── Bottom navigation ───────────────────────────────────── */
+[data-theme="light"] .bottom-nav {
+  background:   rgba(255, 255, 255, 0.98);
+  border-top:   1px solid #E2E9F0;
+  border-left:  1px solid #EAF0F5;
+  border-right: 1px solid #EAF0F5;
+  box-shadow:   0 -2px 12px rgba(25, 28, 33, 0.07);
+  backdrop-filter: none;
+}
+[data-theme="light"] .nav-item            { color: var(--text-mute); }
+[data-theme="light"] .nav-item.active     { color: #2563A8; }
+[data-theme="light"] .nav-item.active::before {
+  background:  #2563A8;
+  box-shadow:  none;
+}
+
+/* ── Page background dot pattern off ────────────────────── */
+[data-theme="light"] .page-wrap { background-image: none; }
+
+/* ══════════════════════════════════════════════════════════
+   HOME PAGE
+   ══════════════════════════════════════════════════════════ */
+
+/* Pills: lang + theme — base colors live in the current layer further below.
+   Only the hover state is declared once, here. */
+[data-theme="light"] .home-lang-btn:hover:not(.home-lang-btn--active),
+[data-theme="light"] .home-theme-btn:hover:not(.home-theme-btn--active) { color: var(--text-mid); }
+
+/* Gear */
+[data-theme="light"] .home-gear-btn:hover { background: var(--border); }
+
+/* CTA continue button */
+[data-theme="light"] .home-action-btn {
+  background:   var(--surface);
+  border:       1px solid var(--border);
+  box-shadow:   0 2px 8px rgba(25,28,33,0.06);
+}
+[data-theme="light"] .home-action-btn:hover {
+  background:   var(--surface-2);
+  border-color: var(--border-hi);
+  box-shadow:   0 4px 14px rgba(25,28,33,0.09);
+  transform:    translateY(-1px);
+}
+[data-theme="light"] .home-action-title { color: var(--text-hi); }
+[data-theme="light"] .home-action-sub   { color: #7A8899; }
+[data-theme="light"] .home-action-ico-wrap--blue   { background: rgba(37,99,235,0.08);  border-color: rgba(37,99,235,0.18);  color: #2563EB; }
+[data-theme="light"] .home-action-ico-wrap--orange { background: rgba(37, 99, 168,0.08); border-color: rgba(37, 99, 168,0.18); color: #2563A8; }
+[data-theme="light"] .home-action-ico-wrap--violet { background: rgba(109,40,217,0.07); border-color: rgba(109,40,217,0.16); color: #7C3AED; }
+[data-theme="light"] .home-action-ico-wrap--amber  { background: rgba(138, 98, 7,0.08);  border-color: rgba(138, 98, 7,0.18);  color: #8A6207; }
+[data-theme="light"] .home-action-btn--words { border-color: #DDD5F0; }
+[data-theme="light"] .home-action-btn--words:hover { border-color: #C4B8E8; }
+[data-theme="light"] .home-action-btn--exam  { border-color: var(--border-orange); }
+[data-theme="light"] .home-action-btn--exam:hover  { border-color: #6FA3D4; }
+
+/* Home reminder */
+[data-theme="light"] .home-reminder {
+  background:   var(--surface-orange);
+  border-color: var(--border-orange);
+}
+
+/* Gear menu */
+[data-theme="light"] .pv2-gear-menu,
+[data-theme="light"] .home-gear-menu {
+  background:   var(--surface);
+  border:       1px solid var(--border);
+  box-shadow:   0 8px 32px rgba(25, 28, 33, 0.13);
+}
+[data-theme="light"] .pv2-gear-item:hover { background: #F4F8FC; }
+[data-theme="light"] .pv2-gear-section-label { color: var(--text-mute); }
+[data-theme="light"] .pv2-gear-label        { color: #17222E; }
+[data-theme="light"] .pv2-gear-sub          { color: var(--text-low); }
+[data-theme="light"] .pv2-gear-divider      { border-color: #E2E9F0; }
+[data-theme="light"] .pv2-gear-lang-btn {
+  background:   #E4EBF2;
+  border-color: #CBD6E1;
+  color:        #5B6B7B;
+}
+[data-theme="light"] .pv2-gear-lang-btn--active {
+  background:   #2563A8;
+  border-color: #2563A8;
+  color:        #FFFFFF;
+}
+[data-theme="light"] .pv2-gear-lang-btn:hover:not(.pv2-gear-lang-btn--active) { background: #E2E9F0; }
+[data-theme="light"] .pv2-gear-ico--teal   { background: rgba(30, 122, 85,0.12);  color: #1E7A55; }
+[data-theme="light"] .pv2-gear-ico--amber  { background: rgba(138, 98, 7,0.12);  color: #8A6207; }
+[data-theme="light"] .pv2-gear-ico--red    { background: rgba(176, 68, 52,0.10);  color: #B04434; }
+[data-theme="light"] .pv2-gear-ico--blue   { background: rgba(37,99,235,0.10);  color: #2563EB; }[data-theme="light"] .pv2-toggle--on       { background: #2563A8; }
+
+/* ══════════════════════════════════════════════════════════
+   PRACTICE PAGE
+   ══════════════════════════════════════════════════════════ */
+
+/* Toolbar */
+[data-theme="light"] .pv2-back {
+  background:   #E4EBF2;
+  border-color: #CBD6E1;
+  color:        #5B6B7B;
+}
+[data-theme="light"] .pv2-back:hover    { background: #E2E9F0; color: #17222E; }
+[data-theme="light"] .pv2-gear-btn {
+  background:   #E4EBF2;
+  border-color: #CBD6E1;
+  color:        #5B6B7B;
+}
+[data-theme="light"] .pv2-gear-btn:hover   { background: #E2E9F0; }
+[data-theme="light"] .pv2-gear-btn--open   {
+  background:   #DCEAF6;
+  border-color: #B5D0E8;
+  color:        #2563A8;
+}
+
+/* Lang buttons in toolbar */
+[data-theme="light"] .pv2-lang-btn {
+  background:   transparent;
+  border-color: #CBD6E1;
+  color:        var(--text-low);
+}
+[data-theme="light"] .pv2-lang-btn:hover  { background: #E4EBF2; color: #5B6B7B; }
+[data-theme="light"] .pv2-lang-btn--active {
+  background:   #17222E;
+  border-color: #17222E;
+  color:        #FFFFFF;
+}[data-theme="light"] .pv2-timer-bar    { background: #E2E9F0; }
+[data-theme="light"] .pv2-timer-fill   { background: #2563A8; }[data-theme="light"] .progress-track span { background: #2563A8; box-shadow: none; }
+[data-theme="light"] .progress-track.thin { background: #E2E9F0; }
+
+/* Question card */
+[data-theme="light"] .pv2-q-card,
+[data-theme="light"] .pv2-question-wrap {
+  background:   #FFFFFF;
+  border:       1px solid #E2E9F0;
+  box-shadow:   var(--shadow-sm);
+}/* Topic tag */
+[data-theme="light"] .pv2-topic-tag,
+[data-theme="light"] .pv2-subtopic-tag {
+  background:   #E4EBF2;
+  border-color: #CBD6E1;
+  color:        #5B6B7B;
+}[data-theme="light"] .option-es { color: #17222E; }
+[data-theme="light"] .option-ru { color: var(--text-low); }[data-theme="light"] .option-btn.is-selected .pv2-option-letter {
+  background:   #FFEDD5;
+  border-color: #B5D0E8;
+  color:        #2563A8;
+}
+
+/* Pending / confirm state */
+[data-theme="light"] .pv2-option--pending {
+  border-color: #B5D0E8 !important;
+  background:   #DCEAF6 !important;
+  box-shadow:   none !important;
+}
+[data-theme="light"] .pv2-option-letter--pending {
+  background: #FFEDD5;
+  color:      #2563A8;
+  border-color: #B5D0E8;
+}[data-theme="light"] .pv2-next--active {
+  background:   #17222E;
+  border-color: #17222E;
+  color:        #FFFFFF;
+  box-shadow:   var(--shadow-sm);
+}
+[data-theme="light"] .pv2-next--active:hover {
+  background:   #2F3542;
+}
+[data-theme="light"] .pv2-next--confirm {
+  background:   #DCEAF6 !important;
+  border-color: #B5D0E8 !important;
+  color:        #2563A8 !important;
+}
+[data-theme="light"] .pv2-next--confirm:hover {
+  background:   #FFEDD5 !important;
+}
+[data-theme="light"] .pv2-next--disabled { opacity: 0.40; }
+
+/* ── Result sheet ─────────────────────────────────────────── */
+[data-theme="light"] .pv2-sheet {
+  background:   #FFFFFF;
+  border:       1px solid #E2E9F0;
+  box-shadow:   var(--shadow-sm);
+}
+[data-theme="light"] .pv2-sheet-result { border-bottom-color: #E2E9F0; }
+[data-theme="light"] .pv2-sheet--correct .pv2-sheet-result {
+  background:   #EAF6F0;
+  border-bottom-color: #A8D8C2;
+}
+[data-theme="light"] .pv2-sheet--wrong .pv2-sheet-result {
+  background:   #FBEEEC;
+  border-bottom-color: #EDBBB3;
+}
+[data-theme="light"] .pv2-sheet--correct .pv2-sheet-label { color: #1E7A55; }
+[data-theme="light"] .pv2-sheet--wrong   .pv2-sheet-label { color: #B04434; }
+[data-theme="light"] .pv2-sheet-answer   { color: #17222E; }
+[data-theme="light"] .pv2-sheet-sub      { color: var(--text-low); }
+
+/* ── Accordion ───────────────────────────────────────────── */
+[data-theme="light"] .pv2-acc-item        { border-bottom-color: #EAF0F5; }
+[data-theme="light"] .pv2-acc-header:hover { background: #F4F8FC; }
+[data-theme="light"] .pv2-acc-title        { color: #17222E; }
+[data-theme="light"] .pv2-acc-chev         { color: #B3C2D1; }
+[data-theme="light"] .pv2-acc-badge {
+  background: #EAF0F5;
+  color:      #5B6B7B;
+}
+[data-theme="light"] .pv2-acc-body        { color: #5B6B7B; }
+[data-theme="light"] .pv2-acc-note        { color: #B04434; }
+[data-theme="light"] .pv2-acc-icon--teal   { background: rgba(30, 122, 85,0.12);  color: #1E7A55; }
+[data-theme="light"] .pv2-acc-icon--amber  { background: rgba(138, 98, 7,0.12);  color: #8A6207; }
+[data-theme="light"] .pv2-acc-icon--purple { background: rgba(124,58,237,0.10); color: #7C3AED; }
+
+/* Chips */
+[data-theme="light"] .pv2-chip-term  { color: #17222E; }
+[data-theme="light"] .pv2-chip-def   { color: #5B6B7B; }
+
+/* answer-result-card (desktop) */
+[data-theme="light"] .answer-result-card            { background: #FFFFFF; border-color: #E2E9F0; }
+[data-theme="light"] .answer-result-card--correct   { background: #EAF6F0; border-left-color: #1E7A55; border-color: #A8D8C2; }
+[data-theme="light"] .answer-result-card--wrong     { background: #FBEEEC; border-left-color: #B04434; border-color: #EDBBB3; }
+[data-theme="light"] .answer-result-card--correct .answer-result-label { color: #1E7A55; }
+[data-theme="light"] .answer-result-card--wrong   .answer-result-label { color: #B04434; }
+[data-theme="light"] .answer-result-text  { color: #17222E; }
+[data-theme="light"] .answer-result-sub   { color: var(--text-low); }
+[data-theme="light"] .answer-accordion    { background: #FFFFFF; border-color: #E2E9F0; }
+[data-theme="light"] .answer-acc-item     { border-bottom-color: #EAF0F5; }
+[data-theme="light"] .answer-acc-header:hover { background: #F4F8FC; }
+[data-theme="light"] .answer-acc-title    { color: #17222E; }
+[data-theme="light"] .answer-acc-chev     { color: #B3C2D1; }
+[data-theme="light"] .answer-acc-badge    { background: #EAF0F5; color: #5B6B7B; }
+[data-theme="light"] .answer-acc-body     { color: #5B6B7B; }
+[data-theme="light"] .answer-acc-icon--teal   { background: rgba(30, 122, 85,0.12);  color: #1E7A55; }
+[data-theme="light"] .answer-acc-icon--amber  { background: rgba(138, 98, 7,0.12);  color: #8A6207; }
+[data-theme="light"] .answer-acc-icon--purple { background: rgba(124,58,237,0.10); color: #7C3AED; }
+

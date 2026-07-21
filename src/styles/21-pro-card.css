@@ -1,0 +1,221 @@
+/* ═══════════════════════════════════════════════════════════
+   LICENCIA PRO — announcement card + "coming soon" modal (T20)
+   Shown on HomePage and at the bottom of MorePage. No payment,
+   no external scripts. Tokens only — no [data-theme] overrides.
+
+   Gradient uses the accent→gold wash over --s-surface instead of
+   a solid accent fill: --accent is dark in light theme and light
+   in dark theme, so white-on-accent would fail contrast in one
+   of them. Text stays --s-text, which flips with the theme.
+   ═══════════════════════════════════════════════════════════ */
+
+.pro-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 66px;
+  padding: 13px 14px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--gold);
+  background:
+    linear-gradient(135deg, var(--s-accent-soft) 0%, transparent 55%),
+    linear-gradient(315deg, var(--gold-dim) 0%, transparent 60%),
+    var(--s-surface);
+  color: var(--s-text);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+}
+.pro-card:hover { box-shadow: 0 4px 16px var(--gold-glow); }
+.pro-card:active { transform: scale(0.99); }
+.pro-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.pro-card-ico {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+
+.pro-card-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pro-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.pro-card-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--s-bg);
+  white-space: nowrap;
+}
+
+.pro-card-sub {
+  font-size: 0.78rem;
+  color: var(--s-text-muted);
+  line-height: 1.35;
+}
+
+.pro-card-chev {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  color: var(--s-text-muted);
+}
+
+/* MorePage places the card after the settings card — .page is a
+   grid with its own gap, so only the extra breathing room here. */
+.more-pro-slot { margin-top: 4px; }
+
+/* ── Modal ────────────────────────────────────────────────── */
+.pro-modal-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.pro-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  background: rgba(9, 14, 20, 0.62);
+  cursor: pointer;
+}
+
+.pro-modal {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: 22px 20px 18px;
+  border-radius: var(--r-xl);
+  border: 1px solid var(--gold);
+  background:
+    linear-gradient(160deg, var(--gold-dim) 0%, transparent 45%),
+    var(--s-surface);
+  color: var(--s-text);
+  box-shadow: 0 18px 48px rgba(9, 14, 20, 0.32);
+}
+
+.pro-modal-ico {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.pro-modal-title {
+  margin: 0 0 6px;
+  font-size: 1.12rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.pro-modal-lead {
+  margin: 0 0 16px;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--s-text-sec, var(--s-text-muted));
+}
+
+.pro-feat-list {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.pro-feat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--s-surface-hi);
+  border: 1px solid var(--s-border);
+}
+
+.pro-feat-ico {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  background: var(--s-accent-soft);
+  border: 1px solid var(--s-accent-border);
+  color: var(--s-accent);
+}
+
+.pro-feat-text {
+  font-size: 0.83rem;
+  font-weight: 600;
+  line-height: 1.35;
+  min-width: 0;
+}
+
+.pro-modal-note {
+  margin: 0 0 14px;
+  font-size: 0.74rem;
+  color: var(--s-text-muted);
+  line-height: 1.4;
+}
+
+.pro-modal-close {
+  width: 100%;
+  height: 46px;
+  border: none;
+  border-radius: var(--r-md);
+  background: var(--accent);
+  color: var(--s-bg);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity var(--t-fast);
+}
+.pro-modal-close:hover { opacity: 0.88; }
+.pro-modal-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

@@ -1,0 +1,468 @@
+/* ── Developer card ──────────────────────────────────────── */
+.about-dev-card {
+  border-radius: var(--r-xl);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.about-dev-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.about-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--s-accent-soft);
+  border: 2px solid var(--s-accent-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--s-accent);
+  letter-spacing: -0.02em;
+}
+.about-dev-name {
+  margin: 0 0 2px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--s-text);
+}
+.about-dev-role {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--s-text-muted);
+}
+.about-dev-body {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--s-text-sec);
+  line-height: 1.62;
+}
+.about-dev-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--s-accent-border);
+  background: var(--s-accent-soft);
+  color: var(--s-accent);
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.14s;
+  align-self: flex-start;
+}
+.about-dev-email:hover { opacity: 0.8; }
+
+/* ── Warning / disclaimer block ──────────────────────────────── */
+.about-warn {
+  border-radius: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--s-border);
+  background: var(--s-surface);
+  font-size: 0.84rem;
+  color: var(--s-text-sec);
+  line-height: 1.55;
+}
+
+/* =============================================================
+   HOME LAYOUT — canonical breakpoints (last rule wins)
+   ============================================================= */
+
+/* Quick Start grid: >= 1100px -> 4 cols */
+@media (min-width: 1100px) {
+  .home-action-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+/* Quick Start grid: 700-1099px -> 2 cols */
+@media (max-width: 1099px) and (min-width: 700px) {
+  .home-action-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+
+/* Quick Start grid: < 700px -> 1 col */
+@media (max-width: 699px) {
+  .home-action-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+/* =========================================================
+   HOME DASHBOARD FINAL LAYOUT OVERRIDES
+   Purpose: resolve cascade conflicts for HomePage dashboard.
+   These rules are intentionally placed last so they win
+   over all earlier definitions in this file.
+   ========================================================= */
+
+/* ── 1. Page wrapper ─────────────────────────────────────── */
+.page-wrap {
+  min-height: 100dvh;
+  padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px));
+}
+
+/* ── 2. Content container ────────────────────────────────── */
+.page {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 12px 16px 32px;
+  box-sizing: border-box;
+}
+@media (min-width: 700px) {
+  .page {
+    padding: 14px 20px 40px;
+  }
+}
+@media (min-width: 900px) {
+  .page {
+    max-width: 1240px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* ── 3. Hero ─────────────────────────────────────────────── */
+.hd-hero {
+  display: grid;
+  grid-template-columns: minmax(360px, 1fr) 340px;
+  column-gap: 36px;
+  row-gap: 16px;
+  align-items: center;
+  min-height: 160px;
+  padding: 24px;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+@media (max-width: 699px) {
+  .hd-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 18px;
+    column-gap: 0;
+    row-gap: 14px;
+  }
+}
+
+.hd-hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  align-self: center;
+}
+
+.hd-hero-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  min-width: 0;
+}
+@media (max-width: 699px) {
+  .hd-hero-right {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 16px;
+  }
+}
+
+/* CTA button */
+.hd-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  height: 54px;
+  min-width: 280px;
+  max-width: 380px;
+  padding: 0 24px;
+  background: linear-gradient(135deg, #5FA8E8 0%, #E8B430 100%);
+  color: #fff;
+  font-size: 0.96rem;
+  font-weight: 700;
+  border-radius: 14px;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(95, 168, 232, 0.30);
+  transition: opacity 0.15s, transform 0.15s;
+  align-self: flex-start;
+  white-space: nowrap;
+}
+.hd-cta-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+.hd-cta-btn:active { transform: scale(0.98); opacity: 0.95; }
+@media (max-width: 699px) {
+  .hd-cta-btn {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    height: 50px;
+    font-size: 0.9rem;
+    align-self: stretch;
+  }
+}
+
+.hd-daily-fraction {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--s-text);
+  margin: 0;
+  line-height: 1.2;
+}
+/* ── 4. Quick Start grid ─────────────────────────────────── */
+.home-action-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+@media (max-width: 1099px) and (min-width: 700px) {
+  .home-action-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+@media (max-width: 699px) {
+  .home-action-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+/* ── 5. Quick Start card layout ──────────────────────────── */
+/* Use 3-column grid: icon | text | badge
+   This prevents badge from ever overlapping text. */
+.home-action-btn.main-action-card {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 12px;
+  min-height: 74px;
+  padding: 14px 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.home-action-btn.main-action-card .home-action-ico-wrap {
+  grid-column: 1;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  flex: none;
+}
+
+.home-action-btn.main-action-card .home-action-body {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  align-self: center;
+}
+
+.home-action-btn.main-action-card .home-action-title {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  line-height: 1.2;
+  max-width: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.home-action-btn.main-action-card .home-action-sub {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  line-height: 1.25;
+  font-size: 11.5px;
+}
+
+.home-action-btn.main-action-card .home-action-right {
+  grid-column: 3;
+  justify-self: end;
+  align-self: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ── 6. Words block ──────────────────────────────────────── */
+.home-words-panel {
+  padding: 12px 14px !important;
+}
+.home-words-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.home-word-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin-bottom: 6px;
+}
+@media (max-width: 480px) {
+  .home-word-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   HOME DASHBOARD UI POLISH  (appended after FINAL OVERRIDES)
+   ========================================================= */
+
+/* 1. Hero: tighter proportional columns, less void */
+.hd-hero {
+  grid-template-columns: 5fr 3fr;
+  column-gap: 28px;
+}
+
+/* 2. CTA: grow to fill left column naturally (up to 440px) */
+.hd-cta-btn {
+  width: min(440px, 100%);
+  max-width: 440px;
+  align-self: flex-start;
+}
+
+/* 3. Today block: lift muted label brightness */
+.hd-daily-label {
+  color: #8B96AA;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+.hd-daily-pct-label {
+  color: #A5ADBB;
+  font-size: 0.80rem;
+  margin: 0;
+}
+
+/* 4. Quick Start: tighter title to fit in one line on wide screen */
+.home-action-btn.main-action-card .home-action-title {
+  font-size: 13px;
+  letter-spacing: -0.01em;
+}
+.home-action-btn.main-action-card .home-action-sub {
+  font-size: 11px;
+}.home-word-cards--single .home-word-card:only-child {
+  grid-column: 1 / -1;
+  max-width: 480px;
+}
+
+/* 6. Bottom stats: lift label readability */
+.home-stat-label {
+  color: var(--s-text-sec);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.home-stat-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--s-text);
+}
+
+.mobile-today-card {
+  display: none;
+}
+
+@media (min-width: 700px) {
+  .hd-hero {
+    grid-template-columns: minmax(0, 460px) auto;
+    justify-content: space-between;
+  }
+
+  .hd-hero-left {
+    width: 100%;
+    max-width: 460px;
+  }
+
+  .hd-hero-right {
+    width: min(420px, 100%);
+    justify-self: end;
+    align-items: stretch;
+    gap: 0;
+    display: grid;
+    grid-template-rows: auto auto auto;
+    padding: 16px 18px;
+    border: 1px solid var(--s-border-mid);
+    border-radius: 16px;
+    background: var(--s-surface);
+    box-shadow: none;
+  }
+
+  .hd-daily-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .hd-daily-label {
+    margin: 0;
+  }
+
+  .hd-daily-fraction {
+    display: block;
+    width: 100%;
+    margin: 8px 0 0;
+    font-size: 1.45rem;
+    line-height: 1.15;
+    font-weight: 850;
+    letter-spacing: -0.02em;
+  }
+
+  .hd-daily-pct-label {
+    color: #E8B430;
+    font-size: 1.65rem;
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+
+  .hd-daily-progress {
+    display: block;
+    width: 100%;
+    height: 9px;
+    margin-top: 14px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(127, 140, 168, 0.24);
+  }
+
+  .hd-daily-progress span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #5FA8E8 0%, #E8B430 100%);
+  }
+
+  [data-theme="light"] .hd-hero-right {
+    background: #FDFEFF;
+    border-color: #E2E9F0;
+  }
+
+  [data-theme="light"] .hd-daily-progress {
+    background: #DCE5EE;
+  }
+}

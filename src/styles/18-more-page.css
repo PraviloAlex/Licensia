@@ -1,0 +1,158 @@
+/* ═══════════════════════════════════════════════════════════
+   MORE PAGE  (/more)  —  Bandera nav 6→5: Signs / Checklist /
+   Mistakes / Sources rows + Settings (lang, theme, font size).
+   Tokens only — no [data-theme] overrides needed.
+   ═══════════════════════════════════════════════════════════ */
+
+.more-list {
+  display: grid;
+  gap: 8px;
+}
+
+.more-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 12px 14px;
+  border-radius: var(--r-lg);
+  background: var(--s-surface);
+  border: 1px solid var(--s-border);
+  text-decoration: none;
+  color: var(--s-text);
+  transition: border-color var(--t-fast), background var(--t-fast), transform var(--t-fast);
+}
+.more-row:hover { border-color: var(--s-border-mid); }
+.more-row:active { transform: scale(0.985); }
+
+.more-row-ico {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  background: var(--s-accent-soft);
+  border: 1px solid var(--s-accent-border);
+  color: var(--s-accent);
+}
+
+.more-row-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.more-row-value {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--s-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.more-row-chev {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  color: var(--s-text-muted);
+}
+
+.more-section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--s-text-muted);
+  margin: 12px 0 6px;
+}
+
+.more-set-card {
+  border-radius: var(--r-lg);
+  background: var(--s-surface);
+  border: 1px solid var(--s-border);
+  padding: 2px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.more-set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 50px;
+  padding: 8px 0;
+  border-top: 1px solid var(--s-border);
+}
+.more-set-row:first-child { border-top: none; }
+
+.more-set-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--s-text);
+}
+
+.more-seg {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  background: var(--s-surface-hi);
+  border: 1px solid var(--s-border);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.more-seg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  background: transparent;
+  color: var(--s-text-muted);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.more-seg-btn:hover:not(.more-seg-btn--active) { color: var(--s-text-sec); }
+.more-seg-btn--active {
+  background: var(--s-accent);
+  /* --s-accent is dark blue in light theme but LIGHT celeste in dark theme, so a
+     fixed white label failed AA there (2.54:1). --s-bg tracks the theme and stays
+     legible on both: ~5.5:1 light, ~7:1 dark. */
+  color: var(--s-bg);
+}
+.more-seg-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ═══════════════════════════════════════════════════════════
+   TOUCH TARGETS — home header controls
+   The lang/theme pills render 41×22 and the gear 28×28, well under the
+   44px guideline. They sit 3px apart horizontally, so widening the hit
+   area sideways would make neighbouring pills overlap and cause mis-taps.
+   Expanding VERTICALLY is free: nothing else is interactive in that band.
+   Visual size is untouched — only the tappable region grows.
+   ═══════════════════════════════════════════════════════════ */
+
+.home-lang-btn,
+.home-theme-btn,
+.home-gear-btn { position: relative; }
+
+.home-lang-btn::after,
+.home-theme-btn::after,
+.home-gear-btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 44px;
+}

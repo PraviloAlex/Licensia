@@ -1,0 +1,522 @@
+
+.mobile-today-card.glass {
+  background: var(--s-surface);
+  border: 1px solid var(--s-border);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.16);
+  backdrop-filter: none;
+}
+
+[data-theme="light"] .mobile-today-card.glass {
+  background: #FFFFFF;
+  border-color: #E2E9F0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+.mobile-today-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.mobile-today-title,
+.mobile-today-main,
+.mobile-today-sub {
+  margin: 0;
+}
+
+.mobile-today-title {
+  color: #8B96AA;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.mobile-today-main {
+  min-width: 0;
+  color: var(--s-text);
+  font-size: 0.94rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.mobile-today-sub {
+  margin-top: 2px;
+  color: var(--s-text-sec);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.mobile-today-track {
+  height: 7px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(130, 160, 210, 0.16);
+}
+
+.mobile-today-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #5FA8E8 0%, #E8B430 100%);
+}
+
+[data-theme="light"] .mobile-today-title {
+  color: #5B6B7B;
+}
+
+[data-theme="light"] .mobile-today-track {
+  background: #DCE5EE;
+}
+
+@media (max-width: 699px) {
+  .hd-hero {
+    grid-template-columns: 1fr;
+    padding: 18px;
+    gap: 14px;
+  }
+
+  .hd-hero-right {
+    display: none;
+  }
+
+  .hd-cta-btn {
+    width: 100%;
+    max-width: none;
+    height: 50px;
+  }
+
+  .mobile-today-card {
+    display: block;
+    min-height: 72px;
+    max-height: 88px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+}
+
+@media (min-width: 700px) {
+  .mobile-today-card {
+    display: none;
+  }
+}
+
+/* =========================================================
+   QA FIXES  (P2.1 light-theme contrast, P2.2 words grid)
+   ========================================================= */
+
+/* P2.1 — Light theme: raise contrast for muted labels
+   Dark theme keeps #8B96AA / #A5ADBB.
+   Light theme uses proper secondary/muted from light palette. */
+[data-theme="light"] .hd-daily-label {
+  color: #5B6B7B;
+}
+[data-theme="light"] .hd-daily-pct-label {
+  color: #475467;
+}
+/* P2.2 — Words grid: stable 3-col max, no runaway auto-fill
+   3 cols on wide, 2 on medium, 1 on mobile.
+   1-word case: already handled by .home-word-cards--single. */
+.home-word-cards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin-bottom: 6px;
+}
+@media (max-width: 700px) {
+  .home-word-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 440px) {
+  .home-word-cards {
+    grid-template-columns: 1fr;
+  }
+}
+/* 1-word: first cell spans all 3 columns, capped width */
+.home-word-cards--single .home-word-card:only-child {
+  grid-column: 1 / -1;
+  max-width: 420px;
+}
+
+/* =========================================================
+   LIGHT THEME CONTRAST PATCH
+   Fixes: ring track, week dots/line, readiness, stats labels
+   Dark theme NOT touched.
+   ========================================================= */
+
+/* 2. Week progress track & dots ─────────────────────────── */
+[data-theme="light"] .week-progress-track {
+  background: #DCE5EE;
+}
+[data-theme="light"] .week-progress-track-fill {
+  background: linear-gradient(90deg, #2563A8 0%, #2563A8 100%);
+  box-shadow: none;
+}
+[data-theme="light"] .week-progress-meta {
+  color: #5B6B7B;
+}
+/* Inactive dot */
+[data-theme="light"] .week-dot {
+  background: #F2F6FA;
+  border: 2px solid #B3C2D1;
+  box-shadow: none;
+}
+/* Active/completed dot */
+[data-theme="light"] .week-dot--active {
+  background: #2563A8;
+  border-color: #1D4F86;
+  box-shadow: 0 0 0 3px rgba(37, 99, 168, 0.18);
+  transform: translateY(-1px);
+}
+/* Today not-yet-done */
+[data-theme="light"] .week-dot--today {
+  background: #FFF7F2;
+  border-color: #2563A8;
+  box-shadow: 0 0 0 3px rgba(37, 99, 168, 0.14);
+}
+/* Today AND completed */
+[data-theme="light"] .week-dot--active.week-dot--today {
+  background: #2563A8;
+  border-color: #1D4F86;
+  box-shadow: 0 0 0 4px rgba(37, 99, 168, 0.20);
+  transform: translateY(-1px);
+}
+
+/* 3. Readiness progress bar ─────────────────────────────── */
+[data-theme="light"] .progress-track {
+  background: #DCE5EE;
+}
+[data-theme="light"] .readiness-track {
+  background: #DCE5EE;
+}
+/* Readiness section labels */
+[data-theme="light"] .home-section-meta {
+  color: #5B6B7B;
+}
+[data-theme="light"] .readiness-pct {
+  /* inline style from JS overrides color — can't change here;
+     readiness colors (green/orange) are readable on light bg */
+  opacity: 1;
+}
+
+/* 4. Bottom stats ───────────────────────────────────────── */
+[data-theme="light"] .home-stats-row {
+  border-color: #DCE5EE;
+  background: rgba(255,255,255,0.7);
+}
+[data-theme="light"] .home-stat {
+  background: transparent;
+  border-right-color: #DCE5EE;
+}
+
+@media (min-width: 700px) {
+  .hd-hero-right .hd-daily-pct-label,
+  [data-theme="light"] .hd-hero-right .hd-daily-pct-label {
+    color: #E8B430;
+  }
+}
+
+/* =========================================================
+   PRACTICE TYPOGRAPHY FINAL OVERRIDES
+   CSS-only: question, answers, explanation, and practice grid.
+   ========================================================= */
+
+.practice-v2-page,
+.practice-v2 {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+@media (min-width: 700px) {
+  .practice-v2 {
+    --pv2-question-es-size: 30px;
+    --pv2-question-ru-size: 21px;
+    --pv2-answer-es-size: 20px;
+    --pv2-answer-ru-size: 18px;
+    --pv2-sheet-answer-size: 18px;
+    --pv2-explanation-size: 20px;
+    --pv2-acc-title-size: 17px;
+    --pv2-acc-note-size: 17px;
+    --pv2-option-pad-y: 20px;
+    --pv2-option-pad-x: 22px;
+    --pv2-option-gap: 15px;
+    --pv2-option-letter-size: 32px;
+    --pv2-option-letter-font-size: 14px;
+    --pv2-answer-separator-space: 11px;
+    --pv2-answer-es-line: 1.35;
+    --pv2-answer-ru-line: 1.45;
+    --pv2-option-min-height: 118px;
+  }
+
+  html.font-large .practice-v2 {
+    --pv2-question-es-size: 33px;
+    --pv2-question-ru-size: 23px;
+    --pv2-answer-es-size: 24px;
+    --pv2-answer-ru-size: 22px;
+    --pv2-sheet-answer-size: 21px;
+    --pv2-explanation-size: 22px;
+    --pv2-acc-title-size: 19px;
+    --pv2-acc-note-size: 18px;
+    --pv2-option-pad-y: 22px;
+    --pv2-option-pad-x: 24px;
+    --pv2-option-gap: 16px;
+    --pv2-option-letter-size: 34px;
+    --pv2-option-letter-font-size: 15px;
+    --pv2-answer-separator-space: 12px;
+    --pv2-answer-es-line: 1.38;
+    --pv2-answer-ru-line: 1.5;
+    --pv2-option-min-height: 136px;
+  }
+
+  html.font-huge .practice-v2 {
+    --pv2-question-es-size: 36px;
+    --pv2-question-ru-size: 25px;
+    --pv2-answer-es-size: 28px;
+    --pv2-answer-ru-size: 25px;
+    --pv2-sheet-answer-size: 24px;
+    --pv2-explanation-size: 24px;
+    --pv2-acc-title-size: 21px;
+    --pv2-acc-note-size: 20px;
+    --pv2-option-pad-y: 24px;
+    --pv2-option-pad-x: 26px;
+    --pv2-option-gap: 17px;
+    --pv2-option-letter-size: 36px;
+    --pv2-option-letter-font-size: 16px;
+    --pv2-answer-separator-space: 13px;
+    --pv2-answer-es-line: 1.4;
+    --pv2-answer-ru-line: 1.52;
+    --pv2-option-min-height: 156px;
+  }
+
+  .pv2-title,
+  .pv2-counter,
+  .pv2-badge,
+  .pv2-exam-tag,
+  .pv2-lang-btn,
+  .pv2-gear-label,
+  .pv2-gear-sub,
+  .pv2-gear-badge,
+  .pv2-sheet-label {
+    font-size: max(12px, 0.75rem);
+  }
+
+  .pv2-title {
+    color: #F4F7FB;
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .pv2-question-es {
+    color: #F4F7FB;
+    font-size: var(--pv2-question-es-size);
+    line-height: 1.38;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .pv2-question-ru {
+    color: #AAB6CF;
+    font-size: var(--pv2-question-ru-size);
+    line-height: 1.55;
+    font-weight: 500;
+    margin-top: 18px;
+    margin-bottom: 18px;
+    letter-spacing: 0;
+  }
+
+  .pv2-options {
+    gap: 14px;
+  }
+
+  .pv2-option {
+    align-items: flex-start;
+    gap: var(--pv2-option-gap);
+    min-height: var(--pv2-option-min-height);
+    padding: var(--pv2-option-pad-y) var(--pv2-option-pad-x);
+    border-radius: 14px;
+  }
+
+  .pv2-option-letter {
+    flex: 0 0 var(--pv2-option-letter-size);
+    width: var(--pv2-option-letter-size);
+    height: var(--pv2-option-letter-size);
+    margin-top: 1px;
+    font-size: var(--pv2-option-letter-font-size);
+  }
+
+  .pv2-option-content {
+    min-width: 0;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .pv2-option-es {
+    color: #F4F7FB;
+    font-size: var(--pv2-answer-es-size);
+    line-height: var(--pv2-answer-es-line);
+    font-weight: 750;
+    letter-spacing: 0;
+  }
+
+  .pv2-option-ru {
+    color: #AAB6CF;
+    font-size: var(--pv2-answer-ru-size);
+    line-height: var(--pv2-answer-ru-line);
+    font-weight: 500;
+    margin-top: var(--pv2-answer-separator-space);
+    padding-top: var(--pv2-answer-separator-space);
+    border-top: 1px solid rgba(127, 140, 168, 0.24);
+    letter-spacing: 0;
+  }
+
+  .pv2-option-content > .pv2-option-ru:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .pv2-sheet-answer {
+    color: #F4F7FB;
+    font-size: var(--pv2-sheet-answer-size);
+    line-height: 1.4;
+    font-weight: 750;
+  }
+
+  .pv2-sheet-sub,
+  .pv2-acc-body {
+    color: #AAB6CF;
+    font-size: var(--pv2-explanation-size);
+    line-height: 1.55;
+    font-weight: 500;
+  }
+
+  .pv2-acc-title {
+    color: #F4F7FB;
+    font-size: var(--pv2-acc-title-size);
+    line-height: 1.35;
+    font-weight: 750;
+  }
+
+  .pv2-acc-note {
+    color: #E8A198;
+    font-size: var(--pv2-acc-note-size);
+    line-height: 1.45;
+    font-weight: 650;
+  }
+
+  .pv2-badge,
+  .pv2-counter,
+  .pv2-lang-btn,
+  .pv2-sheet-label,
+  .pv2-acc-chev,
+  .pv2-gear-sub {
+    color: var(--s-text-muted);
+  }
+
+  .pv2-q-layout {
+    grid-template-columns: minmax(0, 1.15fr) minmax(420px, 0.85fr);
+  }
+
+  .pv2-q-right {
+    min-width: 420px;
+  }
+
+  [data-theme="dark"] .pv2-image-wrap {
+    background: #111820;
+    border: 1px solid #354052;
+    border-radius: 16px;
+    padding: 12px;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: none;
+  }
+
+  [data-theme="dark"] .pv2-image {
+    border-radius: 10px;
+    max-height: 360px;
+    width: 100%;
+    object-fit: contain;
+  }
+
+  [data-theme="light"] .pv2-question-es,
+  [data-theme="light"] .pv2-option-es,
+  [data-theme="light"] .pv2-sheet-answer,
+  [data-theme="light"] .pv2-acc-title {
+    color: #17222E;
+  }
+
+  [data-theme="light"] .pv2-question-ru,
+  [data-theme="light"] .pv2-option-ru,
+  [data-theme="light"] .pv2-sheet-sub,
+  [data-theme="light"] .pv2-acc-body {
+    color: #475467;
+  }
+
+  [data-theme="light"] .pv2-option-ru {
+    border-top-color: #E2E9F0;
+  }
+
+  [data-theme="light"] .pv2-badge,
+  [data-theme="light"] .pv2-counter,
+  [data-theme="light"] .pv2-lang-btn,
+  [data-theme="light"] .pv2-sheet-label,
+  [data-theme="light"] .pv2-acc-chev,
+  [data-theme="light"] .pv2-gear-sub {
+    color: #5B6B7B;
+  }
+
+  [data-theme="light"] .pv2-title {
+    color: #17222E;
+  }
+}
+
+/* Exam images: keep the full symbol/photo visible instead of cropping. */
+.practice-v2--exam .pv2-dots {
+  padding-bottom: 10px;
+}
+
+.practice-v2--exam .pv2-badge-row {
+  padding-top: 2px;
+  padding-bottom: 10px;
+}
+
+.practice-v2--exam .pv2-question-es {
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+
+.practice-v2--exam .pv2-image-wrap {
+  margin-top: 0;
+}
+
+.practice-v2--exam .pv2-image-wrap {
+  max-height: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.practice-v2--exam .pv2-image {
+  width: 100%;
+  height: auto;
+  max-height: 280px;
+  object-fit: contain;
+}
+
+@media (max-width: 699px) {
+  .practice-v2--exam .pv2-image {
+    max-height: 220px;
+  }
+}
