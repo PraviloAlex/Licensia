@@ -49,10 +49,7 @@
 [data-theme="light"] .pv2-exam-start {
   background: #FFFFFF;
   border-color: rgba(0, 0, 0, 0.09);
-}
-/* ── Home action buttons ─────────────────────────────────── */
-/* Only declaration from the retired first light layer that is never re-declared. */
-[data-theme="light"] .home-action-btn { color: var(--text-hi); }[data-theme="light"] .cl-step--done {
+}[data-theme="light"] .cl-step--done {
   background: rgba(30, 122, 85, 0.05);
   border-color: rgba(30, 122, 85, 0.20);
 }[data-theme="light"] .ob-lang-toggle-btn--active {
@@ -242,29 +239,6 @@
 /* Gear */
 [data-theme="light"] .home-gear-btn:hover { background: var(--border); }
 
-/* CTA continue button */
-[data-theme="light"] .home-action-btn {
-  background:   var(--surface);
-  border:       1px solid var(--border);
-  box-shadow:   0 2px 8px rgba(25,28,33,0.06);
-}
-[data-theme="light"] .home-action-btn:hover {
-  background:   var(--surface-2);
-  border-color: var(--border-hi);
-  box-shadow:   0 4px 14px rgba(25,28,33,0.09);
-  transform:    translateY(-1px);
-}
-[data-theme="light"] .home-action-title { color: var(--text-hi); }
-[data-theme="light"] .home-action-sub   { color: #7A8899; }
-[data-theme="light"] .home-action-ico-wrap--blue   { background: rgba(37,99,235,0.08);  border-color: rgba(37,99,235,0.18);  color: #2563EB; }
-[data-theme="light"] .home-action-ico-wrap--orange { background: rgba(37, 99, 168,0.08); border-color: rgba(37, 99, 168,0.18); color: #2563A8; }
-[data-theme="light"] .home-action-ico-wrap--violet { background: rgba(109,40,217,0.07); border-color: rgba(109,40,217,0.16); color: #7C3AED; }
-[data-theme="light"] .home-action-ico-wrap--amber  { background: rgba(138, 98, 7,0.08);  border-color: rgba(138, 98, 7,0.18);  color: #8A6207; }
-[data-theme="light"] .home-action-btn--words { border-color: #DDD5F0; }
-[data-theme="light"] .home-action-btn--words:hover { border-color: #C4B8E8; }
-[data-theme="light"] .home-action-btn--exam  { border-color: var(--border-orange); }
-[data-theme="light"] .home-action-btn--exam:hover  { border-color: #6FA3D4; }
-
 /* Home reminder */
 [data-theme="light"] .home-reminder {
   background:   var(--surface-orange);
@@ -442,4 +416,3 @@
 [data-theme="light"] .answer-acc-icon--teal   { background: rgba(30, 122, 85,0.12);  color: #1E7A55; }
 [data-theme="light"] .answer-acc-icon--amber  { background: rgba(138, 98, 7,0.12);  color: #8A6207; }
 [data-theme="light"] .answer-acc-icon--purple { background: rgba(124,58,237,0.10); color: #7C3AED; }
-

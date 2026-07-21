@@ -213,8 +213,7 @@
 
 @media (max-width: 700px) {
   .editor-body { grid-template-columns: 1fr; }
-  .editor-col--es { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
-}
+  .editor-col--es { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }}
 
 .editor-btn--csv {
   background: rgba(168,85,247,0.18);
@@ -353,7 +352,7 @@
   background: var(--s-surface);
   border-color: var(--s-border);
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-}[data-theme="light"] .hd-daily-fraction { color: var(--s-text); }/* ── Section title ────────────────────────────────────────── */
+}/* ── Section title ────────────────────────────────────────── */
 .hd-section-title {
   font-size: 0.74rem; font-weight: 700;
   letter-spacing: 0.04em; text-transform: uppercase;
@@ -367,7 +366,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
-@media (max-width: 480px) { .hd-focus-grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .hd-focus-grid { grid-template-columns: 1fr; }}
 
 .hd-focus-card {
   border-radius: var(--r-lg);
@@ -384,7 +383,6 @@
 
 .hd-focus-card--blue   { border-left-color: #5FA8E8; }
 .hd-focus-card--orange { border-left-color: var(--s-accent); }
-.hd-focus-card--red    { border-left-color: var(--red); }
 
 .hd-focus-icon {
   width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
@@ -392,7 +390,6 @@
 }
 .hd-focus-icon--blue   { background: rgba(95, 168, 232,0.12); color: #5FA8E8; }
 .hd-focus-icon--orange { background: var(--s-accent-soft); color: var(--s-accent); }
-.hd-focus-icon--red    { background: var(--red-dim); color: var(--red); }
 
 .hd-focus-body { flex: 1; min-width: 0; }
 .hd-focus-title {
@@ -406,14 +403,7 @@
 }
 [data-theme="light"] .hd-focus-meta { color: var(--s-text-sec); }
 .hd-focus-chev { font-size: 0.85rem; color: var(--s-text-muted); flex-shrink: 0; }
-
-/* ── Bottom row: Readiness + Week ─────────────────────────── */
-.hd-bottom-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-@media (max-width: 520px) { .hd-bottom-row { grid-template-columns: 1fr; } }
+@media (max-width: 520px) {}
 
 /* ── Hero mobile ──────────────────────────────────────────── */
 @media (max-width: 699px) {
@@ -422,7 +412,4 @@
   .hd-cta-btn { font-size: 0.88rem; height: 48px; padding: 0 16px; align-self: stretch; min-width: 0; width: 100%; max-width: 100%; }
 }
 @media (max-width: 699px) {
-  .hd-focus-grid { grid-template-columns: 1fr; }
-  .hd-bottom-row  { grid-template-columns: 1fr; }
-}
-
+  .hd-focus-grid { grid-template-columns: 1fr; }}

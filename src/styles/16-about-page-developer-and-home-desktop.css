@@ -124,15 +124,13 @@
 @media (min-width: 700px) {
   .page {
     padding: 14px 20px 40px;
-  }
-}
+  }}
 @media (min-width: 900px) {
   .page {
     max-width: 1240px;
     padding-left: 32px;
     padding-right: 32px;
-  }
-}
+  }}
 
 /* ── 3. Hero ─────────────────────────────────────────────── */
 .hd-hero {
@@ -153,8 +151,7 @@
     padding: 18px;
     column-gap: 0;
     row-gap: 14px;
-  }
-}
+  }}
 
 .hd-hero-left {
   display: flex;
@@ -163,22 +160,7 @@
   min-width: 0;
   align-self: center;
 }
-
-.hd-hero-right {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 20px;
-  min-width: 0;
-}
-@media (max-width: 699px) {
-  .hd-hero-right {
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 16px;
-  }
-}
+@media (max-width: 699px) {}
 
 /* CTA button */
 .hd-cta-btn {
@@ -211,94 +193,9 @@
     height: 50px;
     font-size: 0.9rem;
     align-self: stretch;
-  }
-}
-
-.hd-daily-fraction {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--s-text);
-  margin: 0;
-  line-height: 1.2;
-}
-/* ── 4. Quick Start grid ─────────────────────────────────── */
-.home-action-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  width: 100%;
-}
-@media (max-width: 1099px) and (min-width: 700px) {
-  .home-action-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-  }
-}
-@media (max-width: 699px) {
-  .home-action-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-}
-
-/* ── 5. Quick Start card layout ──────────────────────────── */
-/* Use 3-column grid: icon | text | badge
-   This prevents badge from ever overlapping text. */
-.home-action-btn.main-action-card {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) auto;
-  align-items: center;
-  column-gap: 12px;
-  min-height: 74px;
-  padding: 14px 16px;
-  box-sizing: border-box;
-  overflow: hidden;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.home-action-btn.main-action-card .home-action-ico-wrap {
-  grid-column: 1;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  flex: none;
-}
-
-.home-action-btn.main-action-card .home-action-body {
-  grid-column: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-  align-self: center;
-}
-
-.home-action-btn.main-action-card .home-action-title {
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-  line-height: 1.2;
-  max-width: none;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.home-action-btn.main-action-card .home-action-sub {
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-  line-height: 1.25;
-  font-size: 11.5px;
-}
-
-.home-action-btn.main-action-card .home-action-right {
-  grid-column: 3;
-  justify-self: end;
-  align-self: center;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
+  }}
+@media (max-width: 1099px) and (min-width: 700px) {}
+@media (max-width: 699px) {}
 
 /* ── 6. Words block ──────────────────────────────────────── */
 .home-words-panel {
@@ -320,8 +217,7 @@
 @media (max-width: 480px) {
   .home-word-cards {
     grid-template-columns: 1fr;
-  }
-}
+  }}
 
 /* =========================================================
    HOME DASHBOARD UI POLISH  (appended after FINAL OVERRIDES)
@@ -338,30 +234,6 @@
   width: min(440px, 100%);
   max-width: 440px;
   align-self: flex-start;
-}
-
-/* 3. Today block: lift muted label brightness */
-.hd-daily-label {
-  color: #8B96AA;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  margin: 0 0 6px;
-}
-.hd-daily-pct-label {
-  color: #A5ADBB;
-  font-size: 0.80rem;
-  margin: 0;
-}
-
-/* 4. Quick Start: tighter title to fit in one line on wide screen */
-.home-action-btn.main-action-card .home-action-title {
-  font-size: 13px;
-  letter-spacing: -0.01em;
-}
-.home-action-btn.main-action-card .home-action-sub {
-  font-size: 11px;
 }.home-word-cards--single .home-word-card:only-child {
   grid-column: 1 / -1;
   max-width: 480px;
@@ -380,10 +252,6 @@
   color: var(--s-text);
 }
 
-.mobile-today-card {
-  display: none;
-}
-
 @media (min-width: 700px) {
   .hd-hero {
     grid-template-columns: minmax(0, 460px) auto;
@@ -395,20 +263,6 @@
     max-width: 460px;
   }
 
-  .hd-hero-right {
-    width: min(420px, 100%);
-    justify-self: end;
-    align-items: stretch;
-    gap: 0;
-    display: grid;
-    grid-template-rows: auto auto auto;
-    padding: 16px 18px;
-    border: 1px solid var(--s-border-mid);
-    border-radius: 16px;
-    background: var(--s-surface);
-    box-shadow: none;
-  }
-
   .hd-daily-card-head {
     display: flex;
     align-items: baseline;
@@ -416,28 +270,6 @@
     gap: 12px;
     min-width: 0;
     width: 100%;
-  }
-
-  .hd-daily-label {
-    margin: 0;
-  }
-
-  .hd-daily-fraction {
-    display: block;
-    width: 100%;
-    margin: 8px 0 0;
-    font-size: 1.45rem;
-    line-height: 1.15;
-    font-weight: 850;
-    letter-spacing: -0.02em;
-  }
-
-  .hd-daily-pct-label {
-    color: #E8B430;
-    font-size: 1.65rem;
-    line-height: 1;
-    font-weight: 900;
-    letter-spacing: -0.03em;
   }
 
   .hd-daily-progress {
@@ -457,12 +289,6 @@
     background: linear-gradient(90deg, #5FA8E8 0%, #E8B430 100%);
   }
 
-  [data-theme="light"] .hd-hero-right {
-    background: #FDFEFF;
-    border-color: #E2E9F0;
-  }
-
   [data-theme="light"] .hd-daily-progress {
     background: #DCE5EE;
-  }
-}
+  }}

@@ -1,78 +1,4 @@
 
-.mobile-today-card.glass {
-  background: var(--s-surface);
-  border: 1px solid var(--s-border);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.16);
-  backdrop-filter: none;
-}
-
-[data-theme="light"] .mobile-today-card.glass {
-  background: #FFFFFF;
-  border-color: #E2E9F0;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-}
-
-.mobile-today-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  min-width: 0;
-}
-
-.mobile-today-title,
-.mobile-today-main,
-.mobile-today-sub {
-  margin: 0;
-}
-
-.mobile-today-title {
-  color: #8B96AA;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-.mobile-today-main {
-  min-width: 0;
-  color: var(--s-text);
-  font-size: 0.94rem;
-  font-weight: 800;
-  line-height: 1.2;
-  text-align: right;
-  overflow-wrap: anywhere;
-}
-
-.mobile-today-sub {
-  margin-top: 2px;
-  color: var(--s-text-sec);
-  font-size: 0.78rem;
-  font-weight: 700;
-}
-
-.mobile-today-track {
-  height: 7px;
-  margin-top: 10px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgba(130, 160, 210, 0.16);
-}
-
-.mobile-today-track span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #5FA8E8 0%, #E8B430 100%);
-}
-
-[data-theme="light"] .mobile-today-title {
-  color: #5B6B7B;
-}
-
-[data-theme="light"] .mobile-today-track {
-  background: #DCE5EE;
-}
 
 @media (max-width: 699px) {
   .hd-hero {
@@ -81,45 +7,13 @@
     gap: 14px;
   }
 
-  .hd-hero-right {
-    display: none;
-  }
-
   .hd-cta-btn {
     width: 100%;
     max-width: none;
     height: 50px;
-  }
+  }}
 
-  .mobile-today-card {
-    display: block;
-    min-height: 72px;
-    max-height: 88px;
-    padding: 14px 16px;
-    border-radius: 18px;
-    overflow: hidden;
-  }
-}
-
-@media (min-width: 700px) {
-  .mobile-today-card {
-    display: none;
-  }
-}
-
-/* =========================================================
-   QA FIXES  (P2.1 light-theme contrast, P2.2 words grid)
-   ========================================================= */
-
-/* P2.1 — Light theme: raise contrast for muted labels
-   Dark theme keeps #8B96AA / #A5ADBB.
-   Light theme uses proper secondary/muted from light palette. */
-[data-theme="light"] .hd-daily-label {
-  color: #5B6B7B;
-}
-[data-theme="light"] .hd-daily-pct-label {
-  color: #475467;
-}
+@media (min-width: 700px) {}
 /* P2.2 — Words grid: stable 3-col max, no runaway auto-fill
    3 cols on wide, 2 on medium, 1 on mobile.
    1-word case: already handled by .home-word-cards--single. */
@@ -131,13 +25,11 @@
 @media (max-width: 700px) {
   .home-word-cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
+  }}
 @media (max-width: 440px) {
   .home-word-cards {
     grid-template-columns: 1fr;
-  }
-}
+  }}
 /* 1-word: first cell spans all 3 columns, capped width */
 .home-word-cards--single .home-word-card:only-child {
   grid-column: 1 / -1;
@@ -192,17 +84,9 @@
 [data-theme="light"] .progress-track {
   background: #DCE5EE;
 }
-[data-theme="light"] .readiness-track {
-  background: #DCE5EE;
-}
 /* Readiness section labels */
 [data-theme="light"] .home-section-meta {
   color: #5B6B7B;
-}
-[data-theme="light"] .readiness-pct {
-  /* inline style from JS overrides color — can't change here;
-     readiness colors (green/orange) are readable on light bg */
-  opacity: 1;
 }
 
 /* 4. Bottom stats ───────────────────────────────────────── */
@@ -215,12 +99,7 @@
   border-right-color: #DCE5EE;
 }
 
-@media (min-width: 700px) {
-  .hd-hero-right .hd-daily-pct-label,
-  [data-theme="light"] .hd-hero-right .hd-daily-pct-label {
-    color: #E8B430;
-  }
-}
+@media (min-width: 700px) {}
 
 /* =========================================================
    PRACTICE TYPOGRAPHY FINAL OVERRIDES
@@ -478,8 +357,7 @@
 
   [data-theme="light"] .pv2-title {
     color: #17222E;
-  }
-}
+  }}
 
 /* Exam images: keep the full symbol/photo visible instead of cropping. */
 .practice-v2--exam .pv2-dots {
@@ -518,5 +396,4 @@
 @media (max-width: 699px) {
   .practice-v2--exam .pv2-image {
     max-height: 220px;
-  }
-}
+  }}

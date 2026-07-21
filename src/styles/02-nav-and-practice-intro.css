@@ -18,12 +18,11 @@
 .summary-grid, .stack { display: grid; gap: var(--sp-2); }
 .flashcards { display: grid; gap: var(--sp-2); grid-template-columns: 1fr; }
 @media (min-width: 700px) {
-  .flashcards { grid-template-columns: 1fr 1fr; }
-}
-.stat-card, .question-card, .coach-checkpoint, .flashcard, .mini-card { border-radius: var(--r-lg); padding: var(--sp-3); }
-.stat-head { display: flex; gap: var(--sp-1); align-items: center; }
-.stat-head p { margin: 0; font-size: 0.82rem; color: var(--s-text-muted); }
-.stat-value { margin: 8px 0 4px; font-size: 1.55rem; font-weight: 800; color: var(--s-text); }
+  .flashcards { grid-template-columns: 1fr 1fr; }}
+.question-card,
+.coach-checkpoint,
+.flashcard,
+.mini-card{ border-radius: var(--r-lg); padding: var(--sp-3); }
 
 /* ring */
 .ring { width: 88px; height: 88px; border-radius: 50%; display: grid; place-items: center; margin-top: 8px; }
