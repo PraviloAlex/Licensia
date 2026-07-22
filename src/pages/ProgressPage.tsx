@@ -22,6 +22,7 @@ const PROGRESS_KEYS_TO_CLEAR = [
   "licencia_ar_seen_questions",
   "licencia_ar_mistakes",
   "exam_history_v1",
+  "exam_attempts_v1",
   "licencia_ar_exam_today",
   "licencia_ar_streak",
   "licencia_ar_word_status",

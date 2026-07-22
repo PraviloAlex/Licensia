@@ -47,6 +47,13 @@
 - SRS-механика `vocabularyStatus.ts` — покрыта тестами `vocabularyStatus.test.ts`.
 - `useExamSession` / `usePracticeSession` / `buildSessionResult`.
 - Bootstrap-скрипт темы в `index.html` (строка ~18) — он рабочий, нужен против FOUC.
+- **Точка записи истории экзамена** в `useExamSession.ts`: `saveExamHistory(pct)` + `recordExamAttempt(...)`
+  идут парой. `exam_history_v1` (агрегат) и `exam_attempts_v1` (серия попыток) живут параллельно
+  и НЕ мигрируются друг в друга — прогноз сдачи и график эволюции кормятся серией.
+- **Тир доступа не гейтит контент вширь.** `entitlement.ts` — только глубина: полные объяснения
+  и 2-й мок-экзамен в неделю для free. Вопросы, верные ответы, `keyRule_ru`, все режимы
+  тренировки и прогноз сдачи остаются бесплатными. Реальной оплаты в проекте нет и не должно
+  появиться без отдельной задачи (`pro` — только локальный dev-оверрайд).
 
 ---
 
@@ -359,3 +366,42 @@ TSX/TS/HTML: полные токены + динамические префикс
 **−296 строк** (954 → 658, под лимит 800). tsc + vite build чисты; практика грузится и
 проходится (проверено на живом сервере). Границы удаления защищены assert-проверками по
 содержимому строк перед правкой.
+
+
+---
+
+# Фаза 6 — Killer features & монетизация (2026-07-22) — ✅ ЗАВЕРШЕНА
+
+План: `.claude/PRPs/plans/archive/killer-features-and-monetization.plan.md` (архив).
+Отчёт: `.claude/PRPs/reports/killer-features-and-monetization-report.md`.
+Реализовано двумя волнами: Wave 1 — логическое ядро с юнит-тестами, Wave 2 — UI-интеграция.
+Проверка на закрытии: `npx tsc --noEmit` чист, `npx vitest run` — 8 файлов / 39 тестов зелёные.
+
+| Фаза | Что появилось | Где |
+|---|---|---|
+| P0 | Серия попыток экзамена (`exam_attempts_v1`) | `src/lib/examHistory.ts`, +1 строка в `useExamSession` |
+| P1 | Режим «Самые заваленные» (`/practice?hard=1`) + сетка именованных режимов на главной | `questionProgress.ts`, `HomePage.tsx` |
+| P2 | Дата экзамена в онбординге (5-й шаг, пресеты 1/2/4 недели или «не знаю») + план-баннер | `src/lib/studyPlan.ts`, `OnboardingPage.tsx`, `HomePage.tsx` |
+| P3 | Вероятность сдать вместо покрытия в кольце (Home + Прогресс) | `src/lib/readiness.ts` |
+| P4 | Режим слабой темы (`/practice?weak=1`), «Умная тренировка» как явный режим | `questionProgress.ts`, `usePracticeSession.ts` |
+| P5 | График эволюции мок-баллов | `src/components/EvolutionChart.tsx`, `ProgressPage.tsx` |
+| P6 | Банк ошибок держит вопрос до 2 верных подряд (`correctStreak`) | `questionProgress.ts` |
+| P7 | Тир доступа trial(7д)/free/pro, гейт глубины объяснений, лимит 1 мок-экзамен/нед для free | `src/lib/entitlement.ts`, `src/components/ProGate.tsx` |
+
+**Новые CSS-модули (только токены, ноль `[data-theme]`):** `23-exam-plan.css`, `24-home-modes.css`,
+`25-progress-evolution.css`, `26-progate.css`.
+
+**Новые localStorage-ключи:** `exam_attempts_v1`, `licencia_ar_exam_date`,
+`licencia_ar_trial_started`, `licencia_ar_pro`. Список в `AUTO/CLAUDE.md` обновлён.
+
+**Починено при закрытии:** «Сбросить прогресс» (`PROGRESS_KEYS_TO_CLEAR`) не чистил
+`exam_attempts_v1` — после сброса кольцо прогноза и график жили на старых попытках. Ключ добавлен.
+
+**Осознанные отступления от плана** (обоснования — в отчёте): прогноз сдачи и режим
+«самые заваленные» НЕ спрятаны под гейт (удержание важнее конверсии); гейт объяснений стоит
+в аккордеоне практики, а не в `SessionResultScreen` (там читаются сами поля, и не задет
+защищённый `buildSessionResult`).
+
+**Не сделано, ждёт отдельной задачи:** реальная оплата/анлок PRO (платёжных SDK в коде нет);
+автотесты на новые экраны (покрыта только логика — 39 юнит-тестов, UI проверялся глазами
+через `run.bat`).
