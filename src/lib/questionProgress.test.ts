@@ -3,12 +3,17 @@ import { EXAM_TOTAL_QUESTIONS } from "../constants/exam";
 import type { VerifiedQuestion } from "../types/question";
 import {
   CURRENT_PRACTICE_SESSION_KEY,
+  MASTERY_STREAK,
   PRACTICE_SESSION_SIZE,
   QUESTION_PROGRESS_KEY,
   buildExamQuestionIds,
+  buildHardestQuestionIds,
   buildPracticeQuestionIds,
+  buildWeakTopicQuestionIds,
   getCurrentPracticeSession,
   getQuestionProgressMap,
+  getSubtopicAccuracy,
+  getUnmasteredMistakeIds,
   saveCurrentPracticeSession,
   updateQuestionProgress,
 } from "./questionProgress";
@@ -96,6 +101,7 @@ describe("questionProgress", () => {
         wrongCount: 0,
         lastSeenAt: "",
         lastAnswerCorrect: true,
+        correctStreak: 0,
       },
     });
   });
@@ -165,5 +171,61 @@ describe("questionProgress", () => {
       correctCount: 0,
       wrongCount: 0,
     });
+  });
+
+  it("tracks a correct streak that resets on a wrong answer", () => {
+    updateQuestionProgress("q1", false);
+    expect(getQuestionProgressMap().q1?.correctStreak).toBe(0);
+    updateQuestionProgress("q1", true);
+    expect(getQuestionProgressMap().q1?.correctStreak).toBe(1);
+    updateQuestionProgress("q1", true);
+    expect(getQuestionProgressMap().q1?.correctStreak).toBe(2);
+    updateQuestionProgress("q1", false);
+    expect(getQuestionProgressMap().q1?.correctStreak).toBe(0);
+  });
+
+  it("keeps a mistake unmastered until answered correctly MASTERY_STREAK times in a row", () => {
+    const questions = [makeQuestion("q1")];
+    updateQuestionProgress("q1", false);
+    expect(getUnmasteredMistakeIds(questions)).toEqual(["q1"]);
+
+    updateQuestionProgress("q1", true); // streak 1, still below MASTERY_STREAK (2)
+    expect(getUnmasteredMistakeIds(questions)).toEqual(["q1"]);
+
+    updateQuestionProgress("q1", true); // streak 2 → mastered
+    expect(getUnmasteredMistakeIds(questions)).toEqual([]);
+    expect(MASTERY_STREAK).toBe(2);
+  });
+
+  it("ranks hardest questions by wrong-rate", () => {
+    const questions = [makeQuestion("easy"), makeQuestion("hard"), makeQuestion("unseen")];
+    // easy: 1 wrong of 4 seen (0.25); hard: 3 wrong of 4 seen (0.75)
+    updateQuestionProgress("easy", false);
+    updateQuestionProgress("easy", true);
+    updateQuestionProgress("easy", true);
+    updateQuestionProgress("easy", true);
+    updateQuestionProgress("hard", false);
+    updateQuestionProgress("hard", false);
+    updateQuestionProgress("hard", false);
+    updateQuestionProgress("hard", true);
+
+    const hardest = buildHardestQuestionIds(questions, 2);
+    expect(hardest[0]).toBe("hard");
+    expect(hardest).toContain("easy");
+    expect(hardest).not.toContain("unseen");
+  });
+
+  it("computes subtopic accuracy and targets the weakest topics", () => {
+    const strong = { ...makeQuestion("s1"), subtopic: "senales" };
+    const weak = { ...makeQuestion("w1"), subtopic: "velocidad" };
+    updateQuestionProgress("s1", true); // senales 100%
+    updateQuestionProgress("w1", false); // velocidad 0%
+
+    const accuracy = getSubtopicAccuracy([strong, weak]);
+    expect(accuracy[0]?.subtopic).toBe("velocidad"); // weakest first
+
+    const ids = buildWeakTopicQuestionIds([strong, weak]);
+    expect(ids).toContain("w1"); // pool is the weak subtopic
+    expect(ids).not.toContain("s1");
   });
 });

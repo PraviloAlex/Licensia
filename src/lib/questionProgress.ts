@@ -15,7 +15,12 @@ export type QuestionProgressItem = {
   wrongCount: number;
   lastSeenAt: string;
   lastAnswerCorrect: boolean;
+  /** Consecutive correct answers; resets to 0 on a wrong answer. Drives mistakes-to-mastery. */
+  correctStreak: number;
 };
+
+/** Consecutive correct answers required to clear a question from the mistakes bank. */
+export const MASTERY_STREAK = 2;
 
 export type QuestionProgressMap = Record<string, QuestionProgressItem>;
 
@@ -55,6 +60,7 @@ export function getQuestionProgressMap(): QuestionProgressMap {
       wrongCount: Number.isFinite(rec.wrongCount) ? Number(rec.wrongCount) : 0,
       lastSeenAt: typeof rec.lastSeenAt === "string" ? rec.lastSeenAt : "",
       lastAnswerCorrect: Boolean(rec.lastAnswerCorrect),
+      correctStreak: Number.isFinite(rec.correctStreak) ? Number(rec.correctStreak) : 0,
     };
   }
 
@@ -73,6 +79,7 @@ export function updateQuestionProgress(questionId: string, isCorrect: boolean): 
     wrongCount: 0,
     lastSeenAt: "",
     lastAnswerCorrect: false,
+    correctStreak: 0,
   };
 
   const next: QuestionProgressItem = {
@@ -81,6 +88,7 @@ export function updateQuestionProgress(questionId: string, isCorrect: boolean): 
     wrongCount: prev.wrongCount + (isCorrect ? 0 : 1),
     lastSeenAt: new Date().toISOString(),
     lastAnswerCorrect: isCorrect,
+    correctStreak: isCorrect ? prev.correctStreak + 1 : 0,
   };
 
   saveQuestionProgressMap({
@@ -116,6 +124,18 @@ export function getActiveMistakeIds(questions: VerifiedQuestion[]): string[] {
     .filter((id) => {
       const p = map[id];
       return p && p.wrongCount > 0 && !p.lastAnswerCorrect;
+    });
+}
+
+// Unmastered mistakes: wrongCount > 0 AND not yet answered correctly MASTERY_STREAK times in a row.
+// A question stays in the bank until it is truly mastered, not just answered right once.
+export function getUnmasteredMistakeIds(questions: VerifiedQuestion[]): string[] {
+  const map = getQuestionProgressMap();
+  return questions
+    .map((q) => q.id)
+    .filter((id) => {
+      const p = map[id];
+      return p !== undefined && p.wrongCount > 0 && p.correctStreak < MASTERY_STREAK;
     });
 }
 
@@ -178,6 +198,89 @@ export function buildPracticeQuestionIds(questions: VerifiedQuestion[]): string[
 export function buildMistakesPracticeQuestionIds(questions: VerifiedQuestion[]): string[] {
   const activeIds = getActiveMistakeIds(questions);
   return shuffle(activeIds).slice(0, MISTAKES_SESSION_CAP);
+}
+
+/**
+ * "Los imposibles" — the questions this user fails most often, ranked by wrong-rate
+ * (wrongCount / seenCount), ties broken by absolute wrongCount. Tops up with a normal
+ * practice mix when there are not enough failed questions yet.
+ */
+export function buildHardestQuestionIds(
+  questions: VerifiedQuestion[],
+  size: number = PRACTICE_SESSION_SIZE,
+): string[] {
+  const map = getQuestionProgressMap();
+  const ranked = questions
+    .map((q) => q.id)
+    .filter((id) => (map[id]?.seenCount ?? 0) > 0 && (map[id]?.wrongCount ?? 0) > 0)
+    .map((id) => {
+      const p = map[id];
+      const wrongRate = p.wrongCount / Math.max(1, p.seenCount);
+      return { id, wrongRate, wrongCount: p.wrongCount };
+    })
+    .sort((a, b) => b.wrongRate - a.wrongRate || b.wrongCount - a.wrongCount)
+    .map((entry) => entry.id);
+
+  const target = Math.min(size, questions.length);
+  if (ranked.length >= target) {
+    return ranked.slice(0, target);
+  }
+
+  const selected = new Set(ranked);
+  const filler = buildPracticeQuestionIds(questions).filter((id) => !selected.has(id));
+  return [...ranked, ...filler].slice(0, target);
+}
+
+/**
+ * Accuracy per subtopic among answered questions. Subtopics with no answers are omitted.
+ */
+export function getSubtopicAccuracy(
+  questions: VerifiedQuestion[],
+): Array<{ subtopic: string; accuracy: number; answered: number }> {
+  const map = getQuestionProgressMap();
+  const totals = new Map<string, { correct: number; wrong: number }>();
+
+  for (const q of questions) {
+    const p = map[q.id];
+    if (!p || p.seenCount === 0) continue;
+    const key = q.subtopic ?? "otros";
+    const acc = totals.get(key) ?? { correct: 0, wrong: 0 };
+    acc.correct += p.correctCount;
+    acc.wrong += p.wrongCount;
+    totals.set(key, acc);
+  }
+
+  return Array.from(totals.entries())
+    .map(([subtopic, { correct, wrong }]) => {
+      const answered = correct + wrong;
+      return { subtopic, answered, accuracy: answered > 0 ? correct / answered : 0 };
+    })
+    .filter((entry) => entry.answered > 0)
+    .sort((a, b) => a.accuracy - b.accuracy);
+}
+
+/**
+ * Adaptive "smart" session focused on the weakest subtopics (lowest accuracy, below
+ * WEAK_TOPIC_THRESHOLD). Falls back to the standard practice mix when nothing qualifies.
+ */
+export const WEAK_TOPIC_THRESHOLD = 0.8;
+
+export function buildWeakTopicQuestionIds(
+  questions: VerifiedQuestion[],
+  size: number = PRACTICE_SESSION_SIZE,
+): string[] {
+  const weak = getSubtopicAccuracy(questions)
+    .filter((entry) => entry.accuracy < WEAK_TOPIC_THRESHOLD)
+    .slice(0, 2)
+    .map((entry) => entry.subtopic);
+
+  if (weak.length === 0) {
+    return buildPracticeQuestionIds(questions);
+  }
+
+  const weakSet = new Set(weak);
+  const pool = questions.filter((q) => weakSet.has(q.subtopic ?? "otros"));
+  return buildPracticeQuestionIds(pool).slice(0, Math.min(size, pool.length));
 }
 
 export function buildExamQuestionIds(questions: VerifiedQuestion[]): string[] {

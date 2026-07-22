@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { questionsData } from "../lib/data";
 import { markExamCompletedToday } from "../lib/homeStats";
 import { buildExamQuestionIds, updateQuestionProgress } from "../lib/questionProgress";
+import { recordExamAttempt } from "../lib/examHistory";
 import type { UILang } from "../lib/i18n";
 import type { VerifiedQuestion } from "../types/question";
 import { buildSessionResult, type AnsweredQuestion } from "../utils/buildSessionResult";
@@ -134,6 +135,7 @@ export function useExamSession({
       markExamCompletedToday();
       const pct = examTotal > 0 ? Math.round((examCorrectCount / examTotal) * 100) : 0;
       saveExamHistory(pct);
+      recordExamAttempt(examCorrectCount, examTotal);
       setExamHistory(getExamHistory());
     }
   }, [examCorrectCount, examTotal, showExamSummary]);
