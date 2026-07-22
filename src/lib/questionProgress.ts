@@ -141,7 +141,7 @@ export function getUnmasteredMistakeIds(questions: VerifiedQuestion[]): string[]
 
 // Count of active (uncorrected) mistakes — used for home card
 export function getMistakeQuestionCount(questions: VerifiedQuestion[]): number {
-  return getActiveMistakeIds(questions).length;
+  return getUnmasteredMistakeIds(questions).length;
 }
 
 // Questions that had mistakes but last answer was correct — "corrected"
@@ -196,8 +196,8 @@ export function buildPracticeQuestionIds(questions: VerifiedQuestion[]): string[
 }
 
 export function buildMistakesPracticeQuestionIds(questions: VerifiedQuestion[]): string[] {
-  const activeIds = getActiveMistakeIds(questions);
-  return shuffle(activeIds).slice(0, MISTAKES_SESSION_CAP);
+  const unmasteredIds = getUnmasteredMistakeIds(questions);
+  return shuffle(unmasteredIds).slice(0, MISTAKES_SESSION_CAP);
 }
 
 /**
