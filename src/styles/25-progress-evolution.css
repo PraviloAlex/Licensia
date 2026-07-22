@@ -1,0 +1,51 @@
+/* ── P5: mock-exam evolution chart (ProgressPage) ─────────────────
+   Token-only module (Bandera). No [data-theme] overrides. */
+
+.pg-evolution {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.pg-chart {
+  padding: var(--sp-3);
+  border: 1px solid var(--s-border);
+  border-radius: var(--r-lg);
+  background: var(--s-surface);
+}
+
+.pg-chart-svg {
+  width: 100%;
+  height: auto;
+  max-height: 140px;
+  display: block;
+  overflow: visible;
+}
+
+.pg-chart-pass {
+  stroke: var(--s-text-muted);
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.pg-chart-line {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.pg-chart-dot {
+  fill: var(--accent);
+}
+
+.pg-chart-dot--pass {
+  fill: var(--green);
+}
+
+.pg-chart-legend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--s-text-muted);
+}

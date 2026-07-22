@@ -2,6 +2,9 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../components/PageShell";
 import { ReadinessRing } from "../components/ReadinessRing";
+import { EvolutionChart } from "../components/EvolutionChart";
+import { getExamAttempts } from "../lib/examHistory";
+import { EXAM_PASS_PERCENT } from "../constants/exam";
 import { questionsData, glossaryData } from "../lib/data";
 import {
   getQuestionProgressMap,
@@ -102,6 +105,7 @@ export function ProgressPage() {
   const masteredWords = getMasteredWordIds();
   const reviewWords   = getReviewWordIds();
   const examHistory   = useMemo(readExamHistory, []);
+  const examAttempts  = useMemo(getExamAttempts, []);
 
   const seenPercent   = total > 0 ? Math.round((seen / total) * 100) : 0;
   const totalCorrect  = useMemo(
@@ -201,6 +205,13 @@ export function ProgressPage() {
             : t("progress.t.exams.none", lang)}
           subColor={examHistory.attempts > 0 ? accuracyColor(examHistory.bestPct) : undefined} />
       </div>
+
+      {examAttempts.length > 0 && (
+        <section className="pg-evolution">
+          <p className="progress-section-title">{t("progress.evolution.title", lang)}</p>
+          <EvolutionChart attempts={examAttempts} passPercent={EXAM_PASS_PERCENT} lang={lang} />
+        </section>
+      )}
 
       {seen === 0 && (
         <section className="glass" style={{ borderRadius: "var(--r-lg)", padding: "var(--sp-3)", textAlign: "center" }}>
