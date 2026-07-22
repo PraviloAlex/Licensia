@@ -5,6 +5,7 @@ import { PageShell } from "../components/PageShell";
 import { ProCard } from "../components/ProCard";
 import { ReadinessRing } from "../components/ReadinessRing";
 import { getPassProbability } from "../lib/readiness";
+import { getDailyPlan } from "../lib/studyPlan";
 import { glossaryData, questionsData } from "../lib/data";
 import { getQuestionProgressMap, getUniqueSeenCount, getTotalWrongAnswersCount, getMistakeQuestionCount, getCorrectedMistakeCount } from "../lib/questionProgress";
 import { getMasteredWordIds, getReviewedTodayCount, markWordKnown } from "../lib/vocabularyStatus";
@@ -251,6 +252,7 @@ export function HomePage() {
   const wordsDone       = dueWordsCount === 0;
   const toExamRecommend = Math.max(0, EXAM_RECOMMEND_THRESHOLD - seenCount);
   const seenPercent     = total > 0 ? Math.round((seenCount / total) * 100) : 0;
+  const plan            = getDailyPlan(total, seenCount);
 
   const continueLabel = activeSession
     ? `${t("home.continue", lang)} ${activeSession.currentIndex + 1}/${activeSession.totalQuestions}`
@@ -378,6 +380,15 @@ export function HomePage() {
       )}
 
       {/* ── 1. Hero: кольцо готовности + одна CTA ─────────────── */}
+      {plan.daysLeft !== null && (
+        <div className="hb-plan-banner">
+          <span className="hb-plan-icon" aria-hidden="true"><i className="ti ti-calendar-event" /></span>
+          <span className="hb-plan-text">
+            {t("home.plan.left", lang)} {plan.daysLeft} {t("home.plan.days", lang)} · {t("home.plan.today", lang)} {plan.targetQuestions} {t("home.plan.questions", lang)}
+          </span>
+        </div>
+      )}
+
       <section className="hd-hero glass">
         <div className="hd-hero-left">
           <p className="hd-hero-label">{isRu ? "Лучшее действие сейчас" : "La mejor acción ahora"}</p>

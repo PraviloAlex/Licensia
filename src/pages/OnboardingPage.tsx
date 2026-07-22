@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { type UILang, getUILang, setUILang, t } from "../lib/i18n";
+import { setExamDate } from "../lib/studyPlan";
 
 const ONBOARDING_KEY = "licencia_ar_onboarding_done";
 
@@ -13,6 +14,7 @@ function markOnboardingDone(): void {
 export function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [lang, setLang] = useState<UILang>(getUILang);
+  const [examChoice, setExamChoice] = useState<string | null>(null);
   const navigate = useNavigate();
 
   function pickLang(l: UILang) {
@@ -20,13 +22,27 @@ export function OnboardingPage() {
     setLang(l);
     window.dispatchEvent(new Event("ui-lang-changed"));
   }
-  function next()     { setStep((s) => Math.min(s + 1, 3)); }
+  function next()     { setStep((s) => Math.min(s + 1, 4)); }
   function back()     { if (step > 0) setStep(step - 1); }
   function startNow() { markOnboardingDone(); navigate("/practice?quick=1", { replace: true }); }
   function goHome()   { markOnboardingDone(); navigate("/",                  { replace: true }); }
   function skip()     { markOnboardingDone(); navigate("/",                  { replace: true }); }
 
-  const isLast = step === 3;
+  const isLast = step === 4;
+
+  const EXAM_PRESETS = [
+    { key: "w1", days: 7,  labelKey: "ob.date.w1" as const },
+    { key: "w2", days: 14, labelKey: "ob.date.w2" as const },
+    { key: "w4", days: 28, labelKey: "ob.date.w4" as const },
+    { key: "dunno", days: null, labelKey: "ob.date.dunno" as const },
+  ];
+  function pickExamPreset(key: string, days: number | null) {
+    setExamChoice(key);
+    if (days === null) { setExamDate(null); return; }
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    setExamDate(d.toISOString().slice(0, 10));
+  }
 
   const STEPS = [
     {
@@ -62,13 +78,19 @@ export function OnboardingPage() {
       ],
     },
     {
+      badge: t("ob.date.badge", lang),
+      title: t("ob.date.title", lang),
+      subtitle: t("ob.date.subtitle", lang),
+      datePicker: true,
+    },
+    {
       badge: t("ob.step4.badge", lang),
       title: t("ob.step4.title", lang),
       subtitle: t("ob.step4.subtitle", lang),
     },
   ] as const;
 
-  const s = STEPS[step as 0 | 1 | 2 | 3];
+  const s = STEPS[step as 0 | 1 | 2 | 3 | 4];
 
   return (
     <main className="onboarding-wrap">
@@ -134,6 +156,21 @@ export function OnboardingPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {"datePicker" in s && (
+            <div className="ob-date">
+              <div className="ob-date-presets">
+                {EXAM_PRESETS.map((p) => (
+                  <button
+                    key={p.key}
+                    type="button"
+                    className={examChoice === p.key ? "ob-date-chip ob-date-chip--active" : "ob-date-chip"}
+                    onClick={() => pickExamPreset(p.key, p.days)}
+                  >{t(p.labelKey, lang)}</button>
+                ))}
+              </div>
             </div>
           )}
 
