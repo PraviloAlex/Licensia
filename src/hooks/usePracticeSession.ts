@@ -2,10 +2,12 @@ import { useMemo, useState } from "react";
 import { questionsData } from "../lib/data";
 import { resolveQuestionGlossaryIds } from "../lib/glossaryLinkage";
 import {
+  buildHardestQuestionIds,
   buildMistakesPracticeQuestionIds,
   buildPracticeQuestionIds,
   buildQuickSessionQuestionIds,
   buildSubtopicSessionQuestionIds,
+  buildWeakTopicQuestionIds,
   createPracticeSession,
   getCurrentPracticeSession,
   PRACTICE_SESSION_SIZE,
@@ -31,6 +33,8 @@ type BuildAnsweredQuestion = (params: {
 type UsePracticeSessionParams = {
   useMistakesOnly: boolean;
   useQuick: boolean;
+  useHardest: boolean;
+  useWeak: boolean;
   subtopicFilter?: string;
   uiLang: UILang;
   buildAnsweredQuestion: BuildAnsweredQuestion;
@@ -41,11 +45,13 @@ type UsePracticeSessionParams = {
   onSessionStartReset: () => void;
 };
 
-function getInitialPracticeSession(useMistakesOnly: boolean, useQuick: boolean, subtopicFilter?: string): PracticeSession {
+function getInitialPracticeSession(useMistakesOnly: boolean, useQuick: boolean, useHardest: boolean, useWeak: boolean, subtopicFilter?: string): PracticeSession {
   const persisted = getCurrentPracticeSession();
   const expectedSize = useQuick ? QUICK_SESSION_SIZE : PRACTICE_SESSION_SIZE;
   if (
     !useMistakesOnly &&
+    !useHardest &&
+    !useWeak &&
     !subtopicFilter &&
     persisted &&
     !persisted.completedAt &&
@@ -58,6 +64,8 @@ function getInitialPracticeSession(useMistakesOnly: boolean, useQuick: boolean, 
   const questionIds = useQuick
     ? buildQuickSessionQuestionIds(questionsData)
     : useMistakesOnly ? buildMistakesPracticeQuestionIds(questionsData)
+    : useHardest ? buildHardestQuestionIds(questionsData)
+    : useWeak ? buildWeakTopicQuestionIds(questionsData)
     : subtopicFilter ? buildSubtopicSessionQuestionIds(questionsData, subtopicFilter)
     : buildPracticeQuestionIds(questionsData);
   const session = createPracticeSession(questionIds);
@@ -68,6 +76,8 @@ function getInitialPracticeSession(useMistakesOnly: boolean, useQuick: boolean, 
 export function usePracticeSession({
   useMistakesOnly,
   useQuick,
+  useHardest,
+  useWeak,
   subtopicFilter,
   uiLang,
   buildAnsweredQuestion,
@@ -78,7 +88,7 @@ export function usePracticeSession({
   onSessionStartReset,
 }: UsePracticeSessionParams) {
   const [practiceSession, setPracticeSession] = useState<PracticeSession>(() =>
-    getInitialPracticeSession(useMistakesOnly, useQuick, subtopicFilter),
+    getInitialPracticeSession(useMistakesOnly, useQuick, useHardest, useWeak, subtopicFilter),
   );
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(() => {
     const qid = practiceSession.questionIds[practiceSession.currentIndex];

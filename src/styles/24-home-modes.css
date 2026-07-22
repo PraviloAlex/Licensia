@@ -1,0 +1,34 @@
+/* ── P1/P4: named training modes grid on Home ─────────────────────
+   Token-only module (Bandera). No [data-theme] overrides. */
+
+.hm-modes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.hm-mode {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--s-border);
+  border-radius: var(--r-md);
+  background: var(--s-surface);
+  color: var(--s-text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: border-color var(--t-fast);
+}
+
+.hm-mode:hover {
+  border-color: var(--accent);
+}
+
+.hm-mode-ico {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--accent);
+  font-size: 1.2rem;
+}

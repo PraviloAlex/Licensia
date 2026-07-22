@@ -102,6 +102,8 @@ export function PracticePage() {
   const quickMode      = searchParams.get("quick")    === "1";
   const topicMode      = searchParams.get("topics")   === "1";
   const subtopicFilter = searchParams.get("subtopic") ?? undefined;
+  const hardestMode    = searchParams.get("hard")     === "1";
+  const weakMode       = searchParams.get("weak")     === "1";
 
   // ── ALL useState ──────────────────────────────────────────────────────
   const [uiLang,           setUILang_]          = useState<UILang>(getUILang);
@@ -156,6 +158,8 @@ export function PracticePage() {
   } = usePracticeSession({
     useMistakesOnly: mistakesOnly,
     useQuick: quickMode,
+    useHardest: hardestMode,
+    useWeak: weakMode,
     subtopicFilter,
     uiLang,
     buildAnsweredQuestion,
@@ -238,7 +242,7 @@ export function PracticePage() {
   const showSpanish   = languageMode === "both" || languageMode === "es" || isExam;
   const showRussian   = !isExam && (languageMode === "both" || languageMode === "ru");
   const resultLang: UILang = isExam || languageMode === "es" ? "es" : languageMode === "ru" ? "ru" : uiLang;
-  const practiceTitleKey = mistakesOnly ? "pv2.title.mistakes" : topicMode ? "pv2.title.topics" : "pv2.title.practice";
+  const practiceTitleKey = mistakesOnly ? "pv2.title.mistakes" : hardestMode ? "pv2.title.hard" : weakMode ? "pv2.title.weak" : topicMode ? "pv2.title.topics" : "pv2.title.practice";
   const practiceDots  = practiceSession.questionIds.map((qid, i) => {
     if (i < practiceSession.currentIndex) return practiceSession.answers?.[qid]?.isCorrect ? "ok" : "err";
     if (i === practiceSession.currentIndex) return "cur";

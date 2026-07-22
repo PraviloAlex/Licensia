@@ -243,6 +243,14 @@ export function HomePage() {
   };
   const weakTopicIcon = weakTopic ? (TOPIC_ICONS[weakTopic.key] ?? "ti-alert-circle") : "ti-alert-circle";
 
+  const TRAINING_MODES = [
+    { key: "smart",    to: "/practice",           icon: "ti-bulb",            labelKey: "home.mode.smart" as const },
+    { key: "weak",     to: "/practice?weak=1",    icon: "ti-target",          labelKey: "home.mode.weak" as const },
+    { key: "hard",     to: "/practice?hard=1",    icon: "ti-flame",           labelKey: "home.mode.hard" as const },
+    { key: "mistakes", to: "/practice?mistakes=1", icon: "ti-refresh",        labelKey: "home.mode.mistakes" as const },
+    { key: "exam",     to: "/practice?exam=1",    icon: "ti-clipboard-check", labelKey: "home.mode.exam" as const },
+  ];
+
   const daysSince = getDaysSinceLastPractice();
   const showReminder = !reminderDismissed && seenCount > 0 && daysSince !== null && daysSince >= 1;
   function handleDismissReminder() { dismissReminderToday(); setReminderDismissed(true); }
@@ -480,6 +488,19 @@ export function HomePage() {
                 </span>
                 <i className="ti ti-chevron-right hm-chev" aria-hidden="true" />
               </Link>
+            </div>
+          </section>
+
+          {/* Training modes */}
+          <section>
+            <p className="hd-section-title">{isRu ? "Режимы" : "Modos"}</p>
+            <div className="hm-modes">
+              {TRAINING_MODES.map((m) => (
+                <Link key={m.key} to={m.to} className="hm-mode">
+                  <span className="hm-mode-ico" aria-hidden="true"><i className={`ti ${m.icon}`} /></span>
+                  <span className="hm-mode-label">{t(m.labelKey, lang)}</span>
+                </Link>
+              ))}
             </div>
           </section>
 
