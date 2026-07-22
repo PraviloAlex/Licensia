@@ -1,0 +1,43 @@
+/* ── P7: depth gate (locked explanation upsell) ───────────────────
+   Token-only module (Bandera). No [data-theme] overrides.
+   Reuses .pro-modal-* from 21-pro-card.css for the modal. */
+
+.pro-gate {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px dashed var(--s-border);
+  border-radius: var(--r-md);
+  background: var(--accent-dim);
+  color: var(--s-text);
+  font-family: inherit;
+  font-size: 0.88rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--t-fast);
+}
+
+.pro-gate:hover {
+  border-color: var(--accent);
+}
+
+.pro-gate-ico {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+
+.pro-gate-text {
+  flex: 1;
+  font-weight: 600;
+}
+
+.pro-gate-cta {
+  flex-shrink: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.82rem;
+}

@@ -8,6 +8,7 @@ import type { VerifiedQuestion } from "../types/question";
 import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
 import { SessionResultScreen } from "../screens/SessionResultScreen";
+import { ProGate } from "../components/ProGate";
 import type { AnsweredQuestion } from "../utils/buildSessionResult";
 import { useExamSession } from "../hooks/useExamSession";
 import { usePracticeSession } from "../hooks/usePracticeSession";
@@ -522,6 +523,8 @@ export function PracticePage() {
                   {showAnswerState && hasSheetContent && (
                     <div className="pv2-sheet result-enter">
                       <div className="pv2-accordion">
+                        {(hasExplainContent || hasMemoContent) && (
+                        <ProGate lang={uiLang}>
                         {((question as unknown as { whyCorrect_ru?: string }).whyCorrect_ru || (question.image?.src && visualAnalysisRu)) && (
                           <div className="pv2-acc-item">
                             <button type="button" className="pv2-acc-header" onClick={() => toggleAccordion("explain")}>
@@ -546,6 +549,8 @@ export function PracticePage() {
                             </button>
                             {accordionOpen.memo && <div className="pv2-acc-body"><p>{question.memoryHint_ru}</p></div>}
                           </div>
+                        )}
+                        </ProGate>
                         )}
                         {relatedWords.length > 0 && (
                           <div className="pv2-acc-item">

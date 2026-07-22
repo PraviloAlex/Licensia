@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../components/PageShell";
 import { ProCard } from "../components/ProCard";
+import { getAccessTier, setProOverride } from "../lib/entitlement";
 import { questionsData } from "../lib/data";
 import { getMistakeQuestionCount } from "../lib/questionProgress";
 import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
@@ -32,6 +33,9 @@ export function MorePage() {
   const [fontPref, setFontPref] = useState<FontSizePref>(getFontSizePref);
   const [checklistDone] = useState(readChecklistDoneCount);
   const [mistakeCount] = useState(() => getMistakeQuestionCount(questionsData));
+  const [proOn, setProOn] = useState(() => getAccessTier() === "pro");
+  const isDev = typeof window !== "undefined" && ["localhost", "127.0.0.1"].includes(window.location.hostname);
+  function toggleProDev() { const next = !proOn; setProOverride(next); setProOn(next); }
 
   useEffect(() => {
     const handler = () => setLang(getUILang());
@@ -116,6 +120,14 @@ export function MorePage() {
             ))}
           </div>
         </div>
+        {isDev && (
+          <div className="more-set-row">
+            <span className="more-set-label">PRO (dev)</span>
+            <button type="button" className={proOn ? "more-seg-btn more-seg-btn--active" : "more-seg-btn"} onClick={toggleProDev}>
+              {proOn ? "ON" : "OFF"}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="more-pro-slot">
