@@ -376,7 +376,7 @@
 .onboarding-wrap {
   min-height: 100dvh;
   display: grid;
-  place-items: center;
+  place-items: stretch center;
   padding: 24px 16px 48px;
   background:
     radial-gradient(ellipse 800px 400px at 20% -10%, rgba(60, 120, 255, 0.18) 0%, transparent 65%),
@@ -453,6 +453,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--sp-4);
+  flex: 1 0 auto;
   animation: obFadeUp 0.35s var(--ease) both;
 }
 @keyframes obFadeUp {

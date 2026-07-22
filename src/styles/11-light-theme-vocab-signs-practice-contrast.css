@@ -89,6 +89,13 @@
 }
 [data-theme="light"] .ob-motive-title { color: #2563A8; }
 [data-theme="light"] .ob-motive-body  { color: #5B6B7B; }
+[data-theme="light"] .ob-feature {
+  background:   #FFFFFF;
+  border-color: #E2E9F0;
+  box-shadow:   var(--shadow-xs);
+}
+[data-theme="light"] .ob-feature-title { color: #17222E; }
+[data-theme="light"] .ob-feature-body  { color: #5B6B7B; }
 [data-theme="light"] .ob-feature-icon { color: #2563A8; }
 [data-theme="light"] .ob-start-title  { color: #17222E; }
 [data-theme="light"] .ob-start-sub    { color: #5B6B7B; }
