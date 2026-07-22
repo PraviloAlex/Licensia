@@ -4,6 +4,7 @@ import { useMemo, useCallback, useEffect, useState, useRef, type CSSProperties }
 import { PageShell } from "../components/PageShell";
 import { ProCard } from "../components/ProCard";
 import { ReadinessRing } from "../components/ReadinessRing";
+import { getPassProbability } from "../lib/readiness";
 import { glossaryData, questionsData } from "../lib/data";
 import { getQuestionProgressMap, getUniqueSeenCount, getTotalWrongAnswersCount, getMistakeQuestionCount, getCorrectedMistakeCount } from "../lib/questionProgress";
 import { getMasteredWordIds, getReviewedTodayCount, markWordKnown } from "../lib/vocabularyStatus";
@@ -113,6 +114,7 @@ function readHomeData() {
   const mistakeQuestionCount = getMistakeQuestionCount(questionsData);
   const correctedMistakeCount = getCorrectedMistakeCount(questionsData);
   const readiness      = getReadinessLevel(seenCount, total, totalCorrect, mistakesCount);
+  const passProb       = getPassProbability();
   const todayAnswered  = getTodayAnsweredCount();
   const activeSession  = getActivePracticeSessionSummary();
   const dueWordsCount  = getDueWordsCount();
@@ -122,7 +124,7 @@ function readHomeData() {
   const examDoneToday  = getExamCompletedToday();
   const reviewedTodayCount = getReviewedTodayCount();
   return {
-    seenCount, mistakesCount, total, readiness,
+    seenCount, mistakesCount, total, readiness, passProb,
     todayAnswered, activeSession, dueWordsCount, duePreview,
     weekActivity, masteredWords, examDoneToday, reviewedTodayCount,
     weakTopic, mistakeQuestionCount, correctedMistakeCount, freshTopic,
@@ -219,7 +221,7 @@ export function HomePage() {
   function handleWordKnown(wordId: string) { markWordKnown(wordId); setDismissedWords((prev) => new Set([...prev, wordId])); setData(readHomeData()); }
 
   const {
-    seenCount, mistakesCount, total, readiness, todayAnswered,
+    seenCount, mistakesCount, total, readiness, passProb, todayAnswered,
     activeSession, dueWordsCount, duePreview, weekActivity,
     masteredWords, examDoneToday, reviewedTodayCount,
     weakTopic, mistakeQuestionCount, correctedMistakeCount, freshTopic,
@@ -389,14 +391,16 @@ export function HomePage() {
           </Link>
         </div>
         <div className="hb-hero-ring">
-          <ReadinessRing score={readiness.score} color={readiness.color} caption={t("progress.ready.word", lang)} />
+          <ReadinessRing score={passProb.pct} color={passProb.color} caption={t("home.prob.word", lang)} />
           <div className="hb-ring-caption">
-            <span className="hb-ring-title" style={{ color: readiness.color }}>{t(readiness.labelKey, lang)}</span>
+            <span className="hb-ring-title" style={{ color: passProb.color }}>{t(passProb.labelKey, lang)}</span>
             <span className="hb-ring-meta">{seenCount} / {total} {t("home.ready.seen", lang)}</span>
             <span className="hb-ring-meta">
-              {toExamRecommend > 0
-                ? `${t("home.ready.more", lang)} ${toExamRecommend} ${t("home.ready.questions", lang)}`
-                : t("home.ready.go", lang)}
+              {passProb.basis === "none"
+                ? (toExamRecommend > 0
+                    ? `${t("home.ready.more", lang)} ${toExamRecommend} ${t("home.ready.questions", lang)}`
+                    : t("home.ready.go", lang))
+                : t(passProb.basis === "exams" ? "home.prob.byExams" : "home.prob.byPractice", lang)}
             </span>
           </div>
         </div>

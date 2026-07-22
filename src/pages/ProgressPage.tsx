@@ -10,7 +10,7 @@ import {
   type QuestionProgressItem,
 } from "../lib/questionProgress";
 import { getMasteredWordIds, getReviewWordIds } from "../lib/vocabularyStatus";
-import { getReadinessLevel } from "../lib/homeStats";
+import { getPassProbability } from "../lib/readiness";
 import { getUILang, t, type UILang } from "../lib/i18n";
 
 const PROGRESS_KEYS_TO_CLEAR = [
@@ -110,7 +110,7 @@ export function ProgressPage() {
   );
   const totalAnswered = totalCorrect + totalWrong;
   const accuracyPercent = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
-  const readiness = getReadinessLevel(seen, total, totalCorrect, totalWrong);
+  const passProb = getPassProbability();
 
   const hardQuestions = useMemo(
     () =>
@@ -169,10 +169,10 @@ export function ProgressPage() {
     <PageShell title={t("progress.title", lang)}>
       {/* ── Hero: готовность ───────────────────────────────────── */}
       <section className="pg-hero glass">
-        <ReadinessRing score={readiness.score} color={readiness.color} caption={t("progress.ready.word", lang)} />
+        <ReadinessRing score={passProb.pct} color={passProb.color} caption={t("progress.ready.word", lang)} />
         <div className="pg-hero-text">
           <p className="pg-hero-label">{t("progress.ready", lang)}</p>
-          <p className="pg-hero-title" style={{ color: readiness.color }}>{t(readiness.labelKey, lang)}</p>
+          <p className="pg-hero-title" style={{ color: passProb.color }}>{t(passProb.labelKey, lang)}</p>
           <p className="pg-hero-meta">
             {seen} / {total} {t("progress.s.questions", lang).toLowerCase()}
             {totalAnswered > 0 && <> · {accuracyPercent}% {t("progress.t.accuracy", lang).toLowerCase()}</>}
