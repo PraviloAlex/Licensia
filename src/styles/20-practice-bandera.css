@@ -87,8 +87,8 @@
    order lets these win in both themes. */
 .practice-v2 .pv2-next {
   background: var(--s-surface-hi);
-  border: 1px solid var(--s-border);
-  color: var(--s-text-muted);
+  border: 1px solid var(--s-border-mid);
+  color: var(--text-mid);
   opacity: 1;
 }
 .practice-v2 .pv2-next--disabled { cursor: default; }

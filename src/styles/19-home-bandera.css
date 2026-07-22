@@ -150,7 +150,7 @@
 /* ── Hero CTA: solid Bandera accent ───────────────────────────
    Replaces the legacy blue→orange gradient (pre-Bandera palette).
    color: var(--s-bg) flips with the theme, keeping contrast high
-   on both #2563A8 (light) and #5FA8E8 (dark) without [data-theme]. */
+   on both #2563A8 (light) and #6FB4F0 (dark) without [data-theme]. */
 .hd-cta-btn {
   background: var(--accent);
   color: var(--s-bg);

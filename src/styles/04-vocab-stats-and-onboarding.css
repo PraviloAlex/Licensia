@@ -18,13 +18,13 @@
 .sr-primary {
   border: 0;
   color: #fff;
-  background: linear-gradient(135deg, #5FA8E8, #82BCEF);
-  box-shadow: 0 14px 32px rgba(95, 168, 232, 0.24);
+  background: linear-gradient(135deg, #6FB4F0, #8AC4F5);
+  box-shadow: 0 14px 32px rgba(111, 180, 240, 0.24);
 }
 
 .sr-primary--success {
-  background: linear-gradient(135deg, #2FA470, #4CC08D);
-  box-shadow: 0 14px 32px rgba(76, 192, 141, 0.18);
+  background: linear-gradient(135deg, #2FB57F, #46CE92);
+  box-shadow: 0 14px 32px rgba(70, 206, 146, 0.18);
 }
 
 .sr-primary:disabled {
@@ -68,7 +68,7 @@
 .sr-mistakes-head button {
   border: 0;
   background: transparent;
-  color: #5FA8E8;
+  color: #6FB4F0;
   font: inherit;
   font-size: 13px;
   font-weight: 850;
@@ -101,7 +101,7 @@
   display: grid;
   place-items: center;
   border-radius: 999px;
-  background: rgba(95, 168, 232, 0.16);
+  background: rgba(111, 180, 240, 0.16);
   color: #9CC7F0;
   font-weight: 900;
 }
@@ -163,8 +163,8 @@
 
 .sr-mistake-chip--wrong {
   color: #E8A198;
-  background: rgba(224, 128, 114, 0.13);
-  border-color: rgba(224, 128, 114, 0.32);
+  background: rgba(240, 137, 122, 0.13);
+  border-color: rgba(240, 137, 122, 0.32);
 }
 
 .sr-mistake-chip--correct {
@@ -325,7 +325,7 @@
 }
 .tab-btn.active {
   background: var(--accent-dim);
-  border-color: rgba(95, 168, 232, 0.45);
+  border-color: rgba(111, 180, 240, 0.45);
   color: var(--text-hi);
 }
 .tab-count-badge {
@@ -394,8 +394,8 @@
 
 /* Argentine flag color for onboarding CTA */
 .onboarding-wrap .cta-primary {
-  background: linear-gradient(135deg, #74ACDF 0%, #5FA8E8 100%);
-  box-shadow: 0 4px 20px rgba(95, 168, 232, 0.35);
+  background: linear-gradient(135deg, #7FBEF5 0%, #6FB4F0 100%);
+  box-shadow: 0 4px 20px rgba(111, 180, 240, 0.35);
 }
 
 /* Language pill toggle */
@@ -481,11 +481,11 @@
   gap: 6px;
   padding: 5px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(95, 168, 232, 0.4);
-  background: rgba(95, 168, 232, 0.14);
+  border: 1px solid rgba(111, 180, 240, 0.4);
+  background: rgba(111, 180, 240, 0.14);
   font-size: 0.78rem;
   font-weight: 700;
-  color: #74ACDF;
+  color: #7FBEF5;
   letter-spacing: 0.04em;
   width: fit-content;
 }
@@ -499,8 +499,8 @@
   padding: 12px 14px;
   border-radius: var(--r-md);
   background: #111b30;
-  border: 1px solid rgba(95, 168, 232, 0.18);
-  border-left: 2.5px solid #74ACDF;
+  border: 1px solid rgba(111, 180, 240, 0.18);
+  border-left: 2.5px solid #7FBEF5;
 }
 .ob-feature-icon {
   font-size: 1.4rem;
@@ -530,12 +530,12 @@
   padding: 10px 14px;
   border-radius: var(--r-md);
   background: #111b30;
-  border: 1px solid rgba(95, 168, 232, 0.18);
-  border-left: 2.5px solid #74ACDF;
+  border: 1px solid rgba(111, 180, 240, 0.18);
+  border-left: 2.5px solid #7FBEF5;
 }
 .ob-roadmap-step--inactive {
-  border-left: 2px dashed rgba(95, 168, 232, 0.30);
-  border-color: rgba(95, 168, 232, 0.12);
+  border-left: 2px dashed rgba(111, 180, 240, 0.30);
+  border-color: rgba(111, 180, 240, 0.12);
 }
 .ob-roadmap-num {
   width: 28px; height: 28px;
@@ -545,14 +545,14 @@
   flex-shrink: 0;
 }
 .ob-roadmap-num--active {
-  background: rgba(95, 168, 232, 0.18);
-  border: 1px solid rgba(95, 168, 232, 0.45);
-  color: #74ACDF;
+  background: rgba(111, 180, 240, 0.18);
+  border: 1px solid rgba(111, 180, 240, 0.45);
+  color: #7FBEF5;
 }
 .ob-roadmap-num--inactive {
-  background: rgba(95, 168, 232, 0.07);
-  border: 1px solid rgba(95, 168, 232, 0.18);
-  color: rgba(95, 168, 232, 0.38);
+  background: rgba(111, 180, 240, 0.07);
+  border: 1px solid rgba(111, 180, 240, 0.18);
+  color: rgba(111, 180, 240, 0.38);
 }
 .ob-roadmap-title         { font-weight: 700; font-size: 0.93rem; color: #d8eaff; margin: 0 0 2px; }
 .ob-roadmap-title--dim    { color: rgba(180, 210, 255, 0.42); }
@@ -564,7 +564,7 @@
   padding: 12px 14px;
   border-radius: var(--r-md);
   background: #111b30;
-  border: 1px solid rgba(95, 168, 232, 0.18);
+  border: 1px solid rgba(111, 180, 240, 0.18);
   border-left: 2.5px solid #F6B40E;
 }
 .ob-motive-title { font-size: 0.9rem; font-weight: 700; color: #F6B40E; margin: 0 0 4px; }

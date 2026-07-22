@@ -36,18 +36,18 @@
   width: 32px;
   height: 32px;
   border-radius: 9px;
-  border: 1px solid rgba(95, 168, 232,0.2);
-  background: rgba(95, 168, 232,0.06);
+  border: 1px solid rgba(111, 180, 240,0.2);
+  background: rgba(111, 180, 240,0.06);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(180,210,255,0.75);
+  color: var(--text-mid);
   font-size: 16px;
   text-decoration: none;
   flex-shrink: 0;
   transition: background 0.15s;
 }
-.pv2-back:hover { background: rgba(95, 168, 232,0.12); }
+.pv2-back:hover { background: rgba(111, 180, 240,0.12); }
 .pv2-title {
   font-size: 14px;
   font-weight: 500;
@@ -59,7 +59,7 @@
 .pv2-counter {
   font-size: 13px;
   font-weight: 500;
-  color: rgba(180,210,255,0.5);
+  color: var(--text-low);
   white-space: nowrap;
 }
 
@@ -67,26 +67,26 @@
 .pv2-lang-group {
   display: flex;
   border-radius: 8px;
-  border: 1px solid rgba(95, 168, 232,0.2);
+  border: 1px solid rgba(111, 180, 240,0.2);
   overflow: hidden;
 }
 .pv2-lang-btn {
   padding: 5px 8px;
   font-size: 11px;
   font-weight: 600;
-  color: rgba(160,190,255,0.5);
-  background: rgba(95, 168, 232,0.04);
+  color: var(--text-low);
+  background: rgba(111, 180, 240,0.04);
   border: none;
-  border-right: 1px solid rgba(95, 168, 232,0.15);
+  border-right: 1px solid rgba(111, 180, 240,0.15);
   cursor: pointer;
   font-family: inherit;
   line-height: 1;
   transition: background 0.15s, color 0.15s;
 }
 .pv2-lang-btn:last-child { border-right: none; }
-.pv2-lang-btn:hover { background: rgba(95, 168, 232,0.1); color: rgba(180,210,255,0.75); }
+.pv2-lang-btn:hover { background: rgba(111, 180, 240,0.1); color: rgba(180,210,255,0.75); }
 .pv2-lang-btn--active {
-  background: rgba(95, 168, 232,0.18);
+  background: rgba(111, 180, 240,0.18);
   color: #a8ccff;
 }
 
@@ -98,21 +98,21 @@
   width: 32px;
   height: 32px;
   border-radius: 9px;
-  border: 1px solid rgba(95, 168, 232,0.2);
-  background: rgba(95, 168, 232,0.06);
+  border: 1px solid rgba(111, 180, 240,0.2);
+  background: rgba(111, 180, 240,0.06);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(160,190,255,0.6);
+  color: var(--text-mid);
   font-size: 16px;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
   font-family: inherit;
 }
-.pv2-gear-btn:hover { background: rgba(95, 168, 232,0.12); }
+.pv2-gear-btn:hover { background: rgba(111, 180, 240,0.12); }
 .pv2-gear-btn--open {
-  background: rgba(95, 168, 232,0.15);
-  border-color: rgba(95, 168, 232,0.4);
+  background: rgba(111, 180, 240,0.15);
+  border-color: rgba(111, 180, 240,0.4);
   color: #a8ccff;
 }
 @keyframes pv2-gear-drop {
@@ -125,11 +125,11 @@
   right: 0;
   width: 248px;
   background: #0f1a2e;
-  border: 1px solid rgba(95, 168, 232,0.22);
+  border: 1px solid rgba(111, 180, 240,0.22);
   border-radius: 12px;
   overflow: hidden;
   z-index: 1000;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(95, 168, 232,0.06);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(111, 180, 240,0.06);
   animation: pv2-gear-drop 0.14s ease;
 }
 .pv2-gear-item {
@@ -138,7 +138,7 @@
   gap: 10px;
   padding: 11px 14px;
   border: none;
-  border-bottom: 1px solid rgba(95, 168, 232,0.07);
+  border-bottom: 1px solid rgba(111, 180, 240,0.07);
   background: none;
   cursor: pointer;
   width: 100%;
@@ -147,7 +147,7 @@
   transition: background 0.12s;
 }
 .pv2-gear-item:last-child { border-bottom: none; }
-.pv2-gear-item:hover { background: rgba(95, 168, 232,0.06); }
+.pv2-gear-item:hover { background: rgba(111, 180, 240,0.06); }
 .pv2-gear-ico {
   width: 28px;
   height: 28px;
@@ -159,8 +159,8 @@
   flex-shrink: 0;
 }
 .pv2-gear-ico--teal   { background: rgba(62,207,142,0.15);  color: #3ecf8e; }
-.pv2-gear-ico--amber  { background: rgba(232, 180, 48,0.15);  color: #E8B430; }
-.pv2-gear-ico--red    { background: rgba(224, 128, 114,0.15); color: #ff8f8f; }
+.pv2-gear-ico--amber  { background: rgba(240, 194, 78,0.15);  color: #F0C24E; }
+.pv2-gear-ico--red    { background: rgba(240, 137, 122,0.15); color: #ff8f8f; }
 .pv2-gear-text {
   display: flex;
   flex-direction: column;
@@ -170,24 +170,24 @@
 .pv2-gear-label {
   font-size: 13px;
   font-weight: 500;
-  color: rgba(200,220,255,0.85);
+  color: var(--text-hi);
 }
 .pv2-gear-sub {
   font-size: 11px;
-  color: rgba(160,190,255,0.4);
+  color: var(--text-low);
   margin-top: 1px;
 }
 .pv2-gear-badge {
   font-size: 11px;
   padding: 2px 7px;
   border-radius: 20px;
-  background: rgba(95, 168, 232,0.1);
-  color: rgba(160,190,255,0.55);
+  background: rgba(111, 180, 240,0.1);
+  color: var(--text-low);
   flex-shrink: 0;
 }
 .pv2-gear-badge--on {
   background: rgba(59,109,17,0.2);
-  color: #4CC08D;
+  color: #46CE92;
 }
 
 /* Exam tag in badge row */
@@ -198,9 +198,9 @@
   font-size: 11px;
   padding: 3px 10px;
   border-radius: 20px;
-  border: 1px solid rgba(232, 180, 48,0.25);
-  color: rgba(232, 180, 48,0.75);
-  background: rgba(232, 180, 48,0.07);
+  border: 1px solid rgba(240, 194, 78,0.25);
+  color: rgba(240, 194, 78,0.75);
+  background: rgba(240, 194, 78,0.07);
 }
 
 /* Progress dots */
@@ -217,7 +217,7 @@
 }
 .pv2-dot--ok   { background: #3B6D11; }
 .pv2-dot--err  { background: #A32D2D; }
-.pv2-dot--cur  { background: rgba(95, 168, 232,0.5); }
+.pv2-dot--cur  { background: rgba(111, 180, 240,0.5); }
 .pv2-dot--clickable { cursor: pointer; transition: transform 0.1s, filter 0.1s; }
 .pv2-dot--clickable:hover { transform: scaleY(1.8); filter: brightness(1.4); }
 
@@ -228,9 +228,9 @@
   font-size: 11px;
   padding: 3px 10px;
   border-radius: 20px;
-  border: 1px solid rgba(95, 168, 232,0.2);
-  color: rgba(160,190,255,0.6);
-  background: rgba(95, 168, 232,0.06);
+  border: 1px solid rgba(111, 180, 240,0.2);
+  color: var(--text-low);
+  background: rgba(111, 180, 240,0.06);
 }
 
 /* Question text */
@@ -255,7 +255,7 @@
   margin: 0 20px 16px;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid rgba(95, 168, 232,0.1);
+  border: 1px solid rgba(111, 180, 240,0.1);
   cursor: pointer;
   transition: opacity 0.15s;
 }
@@ -290,7 +290,7 @@
   gap: 12px;
   padding: 12px 14px;
   border-radius: 10px;
-  border: 1px solid rgba(95, 168, 232,0.15);
+  border: 1px solid rgba(111, 180, 240,0.15);
   background: rgba(255,255,255,0.03);
   cursor: pointer;
   text-align: left;
@@ -299,8 +299,8 @@
   transition: border-color 0.15s, background 0.15s;
 }
 .pv2-option:hover:not(:disabled) {
-  border-color: rgba(95, 168, 232,0.35);
-  background: rgba(95, 168, 232,0.07);
+  border-color: rgba(111, 180, 240,0.35);
+  background: rgba(111, 180, 240,0.07);
 }
 .pv2-option:disabled { cursor: default; }
 .pv2-option--correct {
@@ -317,8 +317,8 @@
   width: 26px;
   height: 26px;
   border-radius: 6px;
-  border: 1px solid rgba(95, 168, 232,0.2);
-  background: rgba(95, 168, 232,0.08);
+  border: 1px solid rgba(111, 180, 240,0.2);
+  background: rgba(111, 180, 240,0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -330,7 +330,7 @@
 .pv2-option-letter--correct {
   border-color: rgba(59,109,17,0.7);
   background: rgba(59,109,17,0.25);
-  color: #4CC08D;
+  color: #46CE92;
 }
 .pv2-option-letter--wrong {
   border-color: rgba(163,45,45,0.7);
@@ -338,14 +338,14 @@
   color: #ff8888;
 }
 .pv2-option-content { display: flex; flex-direction: column; flex: 1; }
-.pv2-option-es { font-size: clamp(0.9375rem, 1vw, 1rem); font-weight: 700; color: rgba(200,220,255,0.85); line-height: 1.42; }
-.pv2-option-ru { font-size: clamp(0.844rem, 0.9vw, 0.906rem); color: rgba(160,190,255,0.4); margin-top: 3px; line-height: 1.45; }
+.pv2-option-es { font-size: clamp(0.9375rem, 1vw, 1rem); font-weight: 700; color: var(--text-hi); line-height: 1.42; }
+.pv2-option-ru { font-size: clamp(0.844rem, 0.9vw, 0.906rem); color: var(--text-mid); margin-top: 3px; line-height: 1.45; }
 
 /* Bottom sheet */
 .pv2-sheet {
   margin: 0 20px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(95, 168, 232,0.12);
+  border: 1px solid rgba(111, 180, 240,0.12);
   background: rgba(14,22,42,0.95);
   overflow: hidden;
 }
@@ -353,7 +353,7 @@
 .pv2-sheet--wrong   .pv2-sheet-result { border-left: 3px solid #A32D2D; }
 .pv2-sheet-result {
   padding: 14px 16px;
-  border-bottom: 1px solid rgba(95, 168, 232,0.08);
+  border-bottom: 1px solid rgba(111, 180, 240,0.08);
 }
 .pv2-sheet-label {
   display: block;
@@ -363,7 +363,7 @@
   text-transform: uppercase;
   margin-bottom: 4px;
 }
-.pv2-sheet--correct .pv2-sheet-label { color: #4CC08D; }
+.pv2-sheet--correct .pv2-sheet-label { color: #46CE92; }
 .pv2-sheet--wrong   .pv2-sheet-label { color: #ff8080; }
 .pv2-sheet-answer {
   font-size: 14px;
@@ -379,7 +379,7 @@
 
 /* Accordion inside sheet */
 .pv2-accordion { padding: 0; }
-.pv2-acc-item { border-bottom: 1px solid rgba(95, 168, 232,0.06); }
+.pv2-acc-item { border-bottom: 1px solid rgba(111, 180, 240,0.06); }
 .pv2-acc-item:last-child { border-bottom: none; }
 .pv2-acc-header {
   width: 100%;
@@ -403,7 +403,7 @@
   flex-shrink: 0;
 }
 .pv2-acc-icon--teal   { background: rgba(29,158,117,0.15); }
-.pv2-acc-icon--amber  { background: rgba(232, 180, 48,0.15); }
+.pv2-acc-icon--amber  { background: rgba(240, 194, 78,0.15); }
 .pv2-acc-icon--purple { background: rgba(83,74,183,0.15); }
 .pv2-acc-title {
   font-size: 13px;
@@ -423,7 +423,7 @@
   font-size: 11px;
   padding: 2px 7px;
   border-radius: 20px;
-  background: rgba(95, 168, 232,0.1);
+  background: rgba(111, 180, 240,0.1);
   color: rgba(160,190,255,0.6);
 }
 .pv2-acc-body {
@@ -455,8 +455,8 @@
   width: 22px;
   height: 22px;
   border-radius: 6px;
-  border: 1px solid rgba(95, 168, 232,0.25);
-  background: rgba(95, 168, 232,0.08);
+  border: 1px solid rgba(111, 180, 240,0.25);
+  background: rgba(111, 180, 240,0.08);
   color: rgba(160,190,255,0.6);
   font-size: 13px;
   cursor: pointer;
@@ -469,14 +469,14 @@
   line-height: 1;
 }
 .pv2-chip-btn:hover:not(.pv2-chip-btn--added) {
-  border-color: rgba(76, 192, 141,0.4);
-  color: #4CC08D;
-  background: rgba(76, 192, 141,0.08);
+  border-color: rgba(70, 206, 146,0.4);
+  color: #46CE92;
+  background: rgba(70, 206, 146,0.08);
 }
 .pv2-chip-btn--added {
-  border-color: rgba(76, 192, 141,0.35);
-  color: #4CC08D;
-  background: rgba(76, 192, 141,0.08);
+  border-color: rgba(70, 206, 146,0.35);
+  color: #46CE92;
+  background: rgba(70, 206, 146,0.08);
   cursor: default;
 }
 
@@ -492,18 +492,18 @@
   text-align: center;
   font-family: inherit;
   cursor: pointer;
-  border: 1px solid rgba(95, 168, 232,0.25);
-  background: rgba(95, 168, 232,0.12);
+  border: 1px solid rgba(111, 180, 240,0.25);
+  background: rgba(111, 180, 240,0.12);
   color: rgba(200,220,255,0.9);
   transition: background 0.15s, border-color 0.15s, opacity 0.15s;
 }
 .pv2-next--active {
-  background: rgba(95, 168, 232,0.2);
-  border-color: rgba(95, 168, 232,0.5);
+  background: rgba(111, 180, 240,0.2);
+  border-color: rgba(111, 180, 240,0.5);
   color: #a8ccff;
 }
 .pv2-next--active:hover {
-  background: rgba(95, 168, 232,0.28);
+  background: rgba(111, 180, 240,0.28);
 }
 .pv2-next--disabled {
   opacity: 0.35;

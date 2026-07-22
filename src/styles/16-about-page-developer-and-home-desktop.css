@@ -172,13 +172,13 @@
   min-width: 280px;
   max-width: 380px;
   padding: 0 24px;
-  background: linear-gradient(135deg, #5FA8E8 0%, #E8B430 100%);
+  background: linear-gradient(135deg, #6FB4F0 0%, #F0C24E 100%);
   color: #fff;
   font-size: 0.96rem;
   font-weight: 700;
   border-radius: 14px;
   text-decoration: none;
-  box-shadow: 0 4px 20px rgba(95, 168, 232, 0.30);
+  box-shadow: 0 4px 20px rgba(111, 180, 240, 0.30);
   transition: opacity 0.15s, transform 0.15s;
   align-self: flex-start;
   white-space: nowrap;
@@ -286,7 +286,7 @@
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, #5FA8E8 0%, #E8B430 100%);
+    background: linear-gradient(90deg, #6FB4F0 0%, #F0C24E 100%);
   }
 
   [data-theme="light"] .hd-daily-progress {

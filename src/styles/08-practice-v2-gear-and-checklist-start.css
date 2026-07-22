@@ -16,30 +16,30 @@
 }
 .pv2-option--selecting {
   transform: scale(1.01);
-  border-color: rgba(95, 168, 232,0.45) !important;
-  background: rgba(95, 168, 232,0.1) !important;
+  border-color: rgba(111, 180, 240,0.45) !important;
+  background: rgba(111, 180, 240,0.1) !important;
 }
 
 /* ─── Option pending (confirm mode) ────────────────────── */
 .pv2-option--pending {
-  border-color: rgba(232, 180, 48,0.55) !important;
-  background: rgba(232, 180, 48,0.08) !important;
-  box-shadow: 0 0 0 1px rgba(232, 180, 48,0.2) !important;
+  border-color: rgba(240, 194, 78,0.55) !important;
+  background: rgba(240, 194, 78,0.08) !important;
+  box-shadow: 0 0 0 1px rgba(240, 194, 78,0.2) !important;
 }
 .pv2-option-letter--pending {
-  background: rgba(232, 180, 48,0.22);
-  color: #E8B430;
-  border-color: rgba(232, 180, 48,0.4);
+  background: rgba(240, 194, 78,0.22);
+  color: #F0C24E;
+  border-color: rgba(240, 194, 78,0.4);
 }
 
 /* ─── Next button: confirm variant ─────────────────────── */
 .pv2-next--confirm {
-  background: rgba(232, 180, 48,0.18) !important;
-  border-color: rgba(232, 180, 48,0.5) !important;
-  color: #E8B430 !important;
+  background: rgba(240, 194, 78,0.18) !important;
+  border-color: rgba(240, 194, 78,0.5) !important;
+  color: #F0C24E !important;
 }
 .pv2-next--confirm:hover {
-  background: rgba(232, 180, 48,0.26) !important;
+  background: rgba(240, 194, 78,0.26) !important;
 }
 
 /* ─── Gear backdrop (mobile bottom sheet) ──────────────── */
@@ -76,14 +76,14 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(95, 168, 232,0.45);
+  color: rgba(111, 180, 240,0.45);
   user-select: none;
 }
 
 /* ─── Gear menu: divider ────────────────────────────────── */
 .pv2-gear-divider {
   height: 1px;
-  background: rgba(95, 168, 232,0.1);
+  background: rgba(111, 180, 240,0.1);
   margin: 4px 0;
 }
 
@@ -112,13 +112,13 @@
   transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
 }
 .pv2-font-pill:hover {
-  background: rgba(95, 168, 232,0.10);
-  border-color: rgba(95, 168, 232,0.30);
+  background: rgba(111, 180, 240,0.10);
+  border-color: rgba(111, 180, 240,0.30);
   color: var(--text-hi);
 }
 .pv2-font-pill--active {
-  background: rgba(95, 168, 232,0.18);
-  border-color: rgba(95, 168, 232,0.50);
+  background: rgba(111, 180, 240,0.18);
+  border-color: rgba(111, 180, 240,0.50);
   color: var(--accent);
 }
 
@@ -126,8 +126,8 @@
   flex: 1;
   padding: 7px 4px;
   border-radius: 8px;
-  border: 1px solid rgba(95, 168, 232,0.18);
-  background: rgba(95, 168, 232,0.06);
+  border: 1px solid rgba(111, 180, 240,0.18);
+  background: rgba(111, 180, 240,0.06);
   color: var(--text-mid);
   font-size: 0.8rem;
   font-weight: 600;
@@ -137,28 +137,28 @@
   text-align: center;
 }
 .pv2-gear-lang-btn:hover {
-  border-color: rgba(95, 168, 232,0.4);
-  background: rgba(95, 168, 232,0.1);
+  border-color: rgba(111, 180, 240,0.4);
+  background: rgba(111, 180, 240,0.1);
   color: var(--text-hi);
 }
 .pv2-gear-lang-btn--active {
   border-color: var(--accent);
-  background: rgba(95, 168, 232,0.18);
+  background: rgba(111, 180, 240,0.18);
   color: var(--accent);
 }
 
 /* ─── Gear menu: danger item ────────────────────────────── */
 .pv2-gear-item--danger .pv2-gear-label {
-  color: rgba(224, 128, 114,0.85);
+  color: rgba(240, 137, 122,0.85);
 }
 .pv2-gear-item--danger:hover {
-  background: rgba(224, 128, 114,0.06) !important;
+  background: rgba(240, 137, 122,0.06) !important;
 }
 
 /* ─── Gear ico: blue variant ────────────────────────────── */
 .pv2-gear-ico--blue {
-  background: rgba(95, 168, 232,0.15);
-  color: #5FA8E8;
+  background: rgba(111, 180, 240,0.15);
+  color: #6FB4F0;
 }
 
 /* ─── Toggle switch ─────────────────────────────────────── */
@@ -167,15 +167,15 @@
   width: 36px;
   height: 20px;
   border-radius: 10px;
-  background: rgba(95, 168, 232,0.15);
-  border: 1px solid rgba(95, 168, 232,0.2);
+  background: rgba(111, 180, 240,0.15);
+  border: 1px solid rgba(111, 180, 240,0.2);
   position: relative;
   transition: background 0.2s, border-color 0.2s;
   margin-left: auto;
 }
 .pv2-toggle--on {
-  background: rgba(95, 168, 232,0.45);
-  border-color: rgba(95, 168, 232,0.6);
+  background: rgba(111, 180, 240,0.45);
+  border-color: rgba(111, 180, 240,0.6);
 }
 .pv2-toggle-thumb {
   position: absolute;
@@ -203,14 +203,14 @@
 .pv2-exam-timer {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(95, 168, 232,0.7);
+  color: rgba(111, 180, 240,0.7);
   letter-spacing: 0.03em;
   display: flex;
   align-items: center;
   gap: 4px;
   transition: color 0.5s;
 }
-.pv2-exam-timer--warning  { color: rgba(232, 180, 48,0.9); }
+.pv2-exam-timer--warning  { color: rgba(240, 194, 78,0.9); }
 .pv2-exam-timer--critical {
   color: rgba(255,120,120,0.95);
   animation: pv2-timer-pulse 1s ease-in-out infinite;
@@ -221,7 +221,7 @@
 }
 
 /* ─── Exam dot: done (neutral, no colour) ───────────────── */
-.pv2-dot--done { background: rgba(95, 168, 232,0.35); }
+.pv2-dot--done { background: rgba(111, 180, 240,0.35); }
 
 /* ─── Exit confirm overlay ──────────────────────────────── */
 .pv2-exit-overlay {
@@ -236,7 +236,7 @@
 }
 .pv2-exit-dialog {
   background: #0f1a2e;
-  border: 1px solid rgba(95, 168, 232,0.22);
+  border: 1px solid rgba(111, 180, 240,0.22);
   border-radius: 16px;
   padding: 28px 24px 24px;
   max-width: 320px;
@@ -246,7 +246,7 @@
 }
 .pv2-exit-icon {
   font-size: 32px;
-  color: rgba(232, 180, 48,0.8);
+  color: rgba(240, 194, 78,0.8);
   margin-bottom: 12px;
 }
 .pv2-exit-title {
@@ -293,7 +293,7 @@
 /* Продолжать — зелёный ghost */
 .pv2-exit-btn-stay {
   border: 1.5px solid rgba(78,200,140,0.65);
-  color: #4CC08D;
+  color: #46CE92;
 }
 .pv2-exit-btn-stay:hover {
   background: rgba(78,200,140,0.10);
@@ -363,7 +363,7 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  border: 2px solid rgba(95, 168, 232,0.3);
+  border: 2px solid rgba(111, 180, 240,0.3);
   background: transparent;
   display: flex;
   align-items: center;

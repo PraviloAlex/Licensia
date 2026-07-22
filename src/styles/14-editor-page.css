@@ -279,7 +279,7 @@
 .editor-risk-chip {
   padding: 7px 10px;
   border-radius: 8px;
-  border: 1px solid rgba(224, 128, 114, 0.28);
+  border: 1px solid rgba(240, 137, 122, 0.28);
   background: rgba(127, 29, 29, 0.22);
   color: #fecaca;
   font-size: 12px;
@@ -381,14 +381,14 @@
 }
 .hd-focus-card:hover { background: var(--s-surface-hi); }
 
-.hd-focus-card--blue   { border-left-color: #5FA8E8; }
+.hd-focus-card--blue   { border-left-color: #6FB4F0; }
 .hd-focus-card--orange { border-left-color: var(--s-accent); }
 
 .hd-focus-icon {
   width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center; font-size: 16px;
 }
-.hd-focus-icon--blue   { background: rgba(95, 168, 232,0.12); color: #5FA8E8; }
+.hd-focus-icon--blue   { background: rgba(111, 180, 240,0.12); color: #6FB4F0; }
 .hd-focus-icon--orange { background: var(--s-accent-soft); color: var(--s-accent); }
 
 .hd-focus-body { flex: 1; min-width: 0; }

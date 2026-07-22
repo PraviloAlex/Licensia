@@ -8,49 +8,50 @@
   /* Fonts */
   font-family: "Manrope", "Inter", "Segoe UI", system-ui, sans-serif;
 
-  /* Base colors */
-  --bg:          #0F161E;
-  --bg-2:        #141D28;
-  --bg-3:        #1A2530;
-  --surface:     #17202B;
-  --surface-2:   #1C2733;
-  --border:      #263340;
-  --border-mid:  #344154;
-  --border-hi:   #46586E;
+  /* Base colors — Dark v2 «Warm Navy» (T24). Deeper base + clearer
+     elevation ladder (bg -> surface -> surface-2), brighter warm accents. */
+  --bg:          #0E1621;
+  --bg-2:        #131E2A;
+  --bg-3:        #1B2735;
+  --surface:     #182533;
+  --surface-2:   #21303F;
+  --border:      #2A3A4B;
+  --border-mid:  #33465A;
+  --border-hi:   #44566C;
 
-  /* Genuine blue */
-  --blue:        #5FA8E8;
-  --blue-dim:    rgba(95, 168, 232, 0.14);
-  --blue-glow:   rgba(95, 168, 232, 0.25);
+  /* Genuine blue / celeste */
+  --blue:        #6FB4F0;
+  --blue-dim:    rgba(111, 180, 240, 0.15);
+  --blue-glow:   rgba(111, 180, 240, 0.28);
 
   /* Brand accent — Bandera celeste (in dark theme it coincides with --blue) */
-  --accent:      #5FA8E8;
-  --accent-dim:  rgba(95, 168, 232, 0.14);
-  --accent-glow: rgba(95, 168, 232, 0.25);
+  --accent:      #6FB4F0;
+  --accent-dim:  rgba(111, 180, 240, 0.15);
+  --accent-glow: rgba(111, 180, 240, 0.28);
 
-  /* Accent: gold (streak / repeat / PRO) */
-  --gold:        #E8B430;
-  --gold-dim:    rgba(232, 180, 48, 0.14);
-  --gold-glow:   rgba(232, 180, 48, 0.30);
+  /* Accent: gold — Sol de Mayo (streak / plan / PRO) */
+  --gold:        #F0C24E;
+  --gold-dim:    rgba(240, 194, 78, 0.15);
+  --gold-glow:   rgba(240, 194, 78, 0.32);
 
   /* Accent: green (success) */
-  --green:       #4CC08D;
-  --green-dim:   rgba(76, 192, 141, 0.14);
-  --green-glow:  rgba(76, 192, 141, 0.28);
+  --green:       #46CE92;
+  --green-dim:   rgba(70, 206, 146, 0.15);
+  --green-glow:  rgba(70, 206, 146, 0.30);
 
   /* Accent: red (error) */
-  --red:         #E08072;
-  --red-dim:     rgba(224, 128, 114, 0.14);
+  --red:         #F0897A;
+  --red-dim:     rgba(240, 137, 122, 0.15);
 
   /* Progress-ring track (conic-gradient remainder) */
-  --ring-track-color: rgba(255, 255, 255, 0.09);
+  --ring-track-color: rgba(255, 255, 255, 0.10);
 
-  /* Text */
-  --text-hi:     #E8EFF6;
-  --text-mid:    #A5B4C4;
-  --text-low:    #7E8DA0;
-  /* WCAG AA on the darkest common ground (--surface #17202B): 4.60:1 */
-  --text-mute:   #7B8999;
+  /* Text — comfortable ramp, all >= 5.3:1 on --surface #182533 */
+  --text-hi:     #EDF3F9;
+  --text-mid:    #B7C4D2;
+  --text-low:    #8A99AB;
+  /* WCAG AA on the darkest common ground (--surface #182533): 5.9:1 */
+  --text-mute:   #93A2B2;
 
   /* Radius */
   --r-sm:  10px;
@@ -76,23 +77,23 @@
   /* ── Semantic design tokens (dark default = graphite) ────
      Used by info/legal/settings/progress screens.
      Map to primitive vars — change here, all screens update. */
-  --s-bg:            #0F161E;
-  --s-surface:       #17202B;
-  --s-surface-hi:    #1C2733;
-  --s-border:        #263340;
-  --s-border-mid:    #344154;
-  --s-text:          #E8EFF6;
-  --s-text-sec:      #A5B4C4;
-  --s-text-muted:    #8091A2;
-  --s-accent:        #5FA8E8;
-  --s-accent-soft:   rgba(95, 168, 232, 0.12);
-  --s-accent-border: rgba(95, 168, 232, 0.45);
-  --s-success:       #4CC08D;
-  --s-success-soft:  rgba(76, 192, 141, 0.10);
-  --s-warn:          #E8B430;
-  --s-warn-soft:     rgba(232, 180, 48, 0.10);
-  --s-danger:        #E08072;
-  --s-danger-soft:   rgba(224, 128, 114, 0.10);
+  --s-bg:            #0E1621;
+  --s-surface:       #182533;
+  --s-surface-hi:    #21303F;
+  --s-border:        #2A3A4B;
+  --s-border-mid:    #33465A;
+  --s-text:          #EDF3F9;
+  --s-text-sec:      #B7C4D2;
+  --s-text-muted:    #93A2B2;
+  --s-accent:        #6FB4F0;
+  --s-accent-soft:   rgba(111, 180, 240, 0.13);
+  --s-accent-border: rgba(111, 180, 240, 0.45);
+  --s-success:       #46CE92;
+  --s-success-soft:  rgba(70, 206, 146, 0.10);
+  --s-warn:          #F0C24E;
+  --s-warn-soft:     rgba(240, 194, 78, 0.10);
+  --s-danger:        #F0897A;
+  --s-danger-soft:   rgba(240, 137, 122, 0.10);
 
   color: var(--text-hi);
   background: var(--bg);
@@ -284,8 +285,8 @@ a { color: inherit; }
   align-items: center;
   gap: 6px;
   color: #dbeafe;
-  background: rgba(95, 168, 232, 0.14);
-  border: 1px solid rgba(95, 168, 232, 0.24);
+  background: rgba(111, 180, 240, 0.14);
+  border: 1px solid rgba(111, 180, 240, 0.24);
 }
 
 .legal-source-pending {
@@ -327,7 +328,7 @@ a { color: inherit; }
   border: none;
 }
 .cta-primary {
-  background: linear-gradient(135deg, #5FA8E8 0%, #82BCEF 100%);
+  background: linear-gradient(135deg, #6FB4F0 0%, #8AC4F5 100%);
   color: #0A1622;
   box-shadow: 0 0 0 0 var(--accent-glow);
 }
@@ -352,12 +353,12 @@ a { color: inherit; }
 .next-btn:hover { border-color: var(--border-hi); }
 
 .cta-quick {
-  border: 1px solid rgba(232, 180, 48, 0.35);
+  border: 1px solid rgba(240, 194, 78, 0.35);
   color: var(--gold);
-  background: rgba(232, 180, 48, 0.06);
+  background: rgba(240, 194, 78, 0.06);
   text-decoration: none;
 }
-.cta-quick:hover { background: rgba(232, 180, 48, 0.12); }
+.cta-quick:hover { background: rgba(240, 194, 78, 0.12); }
 
 /* cta-danger kept for potential reuse */
 .cta-danger {
@@ -405,7 +406,7 @@ a { color: inherit; }
 .progress-track {
   height: 6px;
   border-radius: 999px;
-  background: rgba(95, 168, 232, 0.15);
+  background: rgba(111, 180, 240, 0.15);
   overflow: hidden;
 }
 .progress-track span {
@@ -415,6 +416,6 @@ a { color: inherit; }
   background: linear-gradient(90deg, var(--accent) 0%, #8CCBF2 100%);
   transition: width 0.5s var(--ease);
 }
-.progress-track.thin { height: 3px; margin: 0; background: rgba(95, 168, 232,0.12); }
+.progress-track.thin { height: 3px; margin: 0; background: rgba(111, 180, 240,0.12); }
 .progress-track.glow span { box-shadow: 0 0 10px var(--accent-glow); }
 

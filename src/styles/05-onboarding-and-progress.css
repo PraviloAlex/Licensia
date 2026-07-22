@@ -43,7 +43,7 @@
 }
 .ob-lang-pick-btn:hover {
   border-color: var(--accent);
-  background: rgba(95, 168, 232,0.08);
+  background: rgba(111, 180, 240,0.08);
   transform: translateY(-2px);
 }
 .ob-lang-pick-flag {
@@ -131,8 +131,8 @@
   padding: 9px 10px;
   border-radius: var(--r-md);
   gap: 8px;
-  background: rgba(232, 180, 48,0.07);
-  border: 0.5px solid rgba(232, 180, 48,0.28) !important;
+  background: rgba(240, 194, 78,0.07);
+  border: 0.5px solid rgba(240, 194, 78,0.28) !important;
 }
 .home-word-card-body {
   display: flex;
@@ -160,7 +160,7 @@
   flex-shrink: 0;
   width: 26px; height: 26px;
   border-radius: 50%;
-  border: 1.5px solid rgba(232, 180, 48,0.50);
+  border: 1.5px solid rgba(240, 194, 78,0.50);
   background: transparent;
   color: #BA7517;
   display: flex; align-items: center; justify-content: center;
@@ -169,7 +169,7 @@
   transition: background var(--t-fast), transform var(--t-fast);
 }
 .home-word-card-btn:hover {
-  background: rgba(232, 180, 48,0.15);
+  background: rgba(240, 194, 78,0.15);
   transform: scale(1.1);
 }
 .home-words-panel {
@@ -260,8 +260,8 @@
   display: flex; align-items: center; gap: 10px;
   padding: 8px 12px;
   border-radius: var(--r-sm);
-  border: 1px solid rgba(232, 180, 48, 0.16);
-  background: rgba(232, 180, 48, 0.03);
+  border: 1px solid rgba(240, 194, 78, 0.16);
+  background: rgba(240, 194, 78, 0.03);
 }
 .word-chip-es { font-weight: 700; font-size: 0.86rem; color: var(--text-hi); flex-shrink: 0; }
 .word-chip-ru { font-size: 0.78rem; color: var(--text-low); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

@@ -10,7 +10,7 @@
 
 /* ─── Status colors ────────────────────────────────────────── */
 .status-blue  { color: var(--accent); }
-.status-warm  { color: #E8B430; }
+.status-warm  { color: #F0C24E; }
 .status-green { color: var(--green); }
 .back-link    { color: var(--accent); text-decoration: none; }
 
@@ -57,7 +57,7 @@
   font-size: 0.78rem;
   font-family: inherit;
 }
-.lang-toggle button.active { background: rgba(95, 168, 232, 0.25); color: var(--text-hi); }
+.lang-toggle button.active { background: rgba(111, 180, 240, 0.25); color: var(--text-hi); }
 
 /* ─── BOTTOM NAVIGATION ────────────────────────────────────── */
 .bottom-nav {
@@ -152,7 +152,7 @@
   white-space: nowrap;
   font-family: inherit;
 }
-.toolbar-seg button.active { background: rgba(95, 168, 232, 0.25); color: var(--text-hi); }
+.toolbar-seg button.active { background: rgba(111, 180, 240, 0.25); color: var(--text-hi); }
 .toolbar-pill {
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -162,7 +162,7 @@
   padding: 5px 10px;
   font-family: inherit;
 }
-.toolbar-pill.active { color: var(--text-hi); border-color: rgba(95, 168, 232,0.45); background: rgba(95, 168, 232,0.14); }
+.toolbar-pill.active { color: var(--text-hi); border-color: rgba(111, 180, 240,0.45); background: rgba(111, 180, 240,0.14); }
 
 /* Question */
 .question-es {
@@ -216,8 +216,8 @@
 .result-stack { display: grid; gap: 8px; margin-top: 10px; }
 .result-stack.compact { margin-top: 6px; gap: 6px; }
 .result { border-radius: var(--r-md); padding: 12px; }
-.result.ok    { border: 1px solid rgba(76, 192, 141, 0.35); background: rgba(76, 192, 141, 0.06); }
-.result.error { border: 1px solid rgba(224, 128, 114, 0.35); background: rgba(224, 128, 114, 0.06); }
+.result.ok    { border: 1px solid rgba(70, 206, 146, 0.35); background: rgba(70, 206, 146, 0.06); }
+.result.error { border: 1px solid rgba(240, 137, 122, 0.35); background: rgba(240, 137, 122, 0.06); }
 .result-enter { animation: riseIn var(--t-mid) var(--ease); }
 @keyframes riseIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -368,8 +368,8 @@
 }
 
 .summary-diagnosis--good {
-  border-color: rgba(76, 192, 141, 0.32);
-  background: rgba(76, 192, 141, 0.08);
+  border-color: rgba(70, 206, 146, 0.32);
+  background: rgba(70, 206, 146, 0.08);
 }
 
 .summary-diagnosis strong {

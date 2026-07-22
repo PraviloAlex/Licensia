@@ -3,7 +3,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #5FA8E8, #E8B430);
+  background: linear-gradient(90deg, #6FB4F0, #F0C24E);
 }
 
 .summary-exam-protocol {
@@ -58,13 +58,13 @@
 }
 
 .session-summary--practice .cta-primary {
-  background: linear-gradient(135deg, #5FA8E8, #E8B430);
-  box-shadow: 0 8px 26px rgba(95, 168, 232,0.24);
+  background: linear-gradient(135deg, #6FB4F0, #F0C24E);
+  box-shadow: 0 8px 26px rgba(111, 180, 240,0.24);
 }
 
 .session-summary--exam .cta-primary {
-  background: linear-gradient(135deg, #5FA8E8, #82BCEF);
-  box-shadow: 0 8px 26px rgba(95, 168, 232,0.24);
+  background: linear-gradient(135deg, #6FB4F0, #8AC4F5);
+  box-shadow: 0 8px 26px rgba(111, 180, 240,0.24);
 }
 
 @media (max-width: 699px) {
@@ -133,7 +133,7 @@
   border: 1px solid var(--s-border-mid);
   border-radius: 24px;
   background:
-    radial-gradient(circle at 20% 0%, rgba(95, 168, 232, 0.08), transparent 34%),
+    radial-gradient(circle at 20% 0%, rgba(111, 180, 240, 0.08), transparent 34%),
     linear-gradient(180deg, #17202B 0%, #111923 100%);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
   padding: 20px;
@@ -148,7 +148,7 @@
 }
 
 .sr-ring {
-  --ring-color: #E8B430;
+  --ring-color: #F0C24E;
   width: 128px;
   height: 128px;
   border-radius: 50%;
@@ -159,9 +159,9 @@
     conic-gradient(var(--ring-color) 0 var(--value), #263340 var(--value) 100%);
 }
 
-.sr-ring--success { --ring-color: #4CC08D; }
-.sr-ring--warning { --ring-color: #E8B430; }
-.sr-ring--danger { --ring-color: #E08072; }
+.sr-ring--success { --ring-color: #46CE92; }
+.sr-ring--warning { --ring-color: #F0C24E; }
+.sr-ring--danger { --ring-color: #F0897A; }
 
 .sr-ring-inner {
   width: 86px;
@@ -275,24 +275,24 @@
   display: grid;
   place-items: center;
   border-radius: 10px;
-  color: #E8B430;
-  background: rgba(232, 180, 48, 0.12);
+  color: #F0C24E;
+  background: rgba(240, 194, 78, 0.12);
   font-size: 20px;
 }
 
 .sr-diagnosis--warning {
-  border: 1px solid rgba(232, 180, 48, 0.42);
-  background: rgba(232, 180, 48, 0.09);
+  border: 1px solid rgba(240, 194, 78, 0.42);
+  background: rgba(240, 194, 78, 0.09);
 }
 
 .sr-diagnosis--success {
-  border: 1px solid rgba(76, 192, 141, 0.34);
-  background: rgba(76, 192, 141, 0.08);
+  border: 1px solid rgba(70, 206, 146, 0.34);
+  background: rgba(70, 206, 146, 0.08);
 }
 
 .sr-diagnosis--success > i {
-  color: #4CC08D;
-  background: rgba(76, 192, 141, 0.12);
+  color: #46CE92;
+  background: rgba(70, 206, 146, 0.12);
 }
 
 .sr-diagnosis strong {
@@ -357,7 +357,7 @@
   height: 100%;
   max-width: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #2FA470, #4CC08D);
+  background: linear-gradient(90deg, #2FB57F, #46CE92);
 }
 
 .sr-pass-track i {
@@ -411,7 +411,7 @@
 }
 
 .sr-weak-row b {
-  color: #E08072;
+  color: #F0897A;
   font-size: 13px;
   white-space: nowrap;
 }
