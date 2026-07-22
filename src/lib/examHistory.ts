@@ -22,6 +22,15 @@ function sanitizeAttempt(value: unknown): ExamAttempt | null {
   return { pct, correct, total, date };
 }
 
+/** Number of attempts recorded within the last `days` (rolling window). */
+export function countExamAttemptsSince(days: number, now: Date = new Date()): number {
+  const cutoff = now.getTime() - days * 24 * 60 * 60 * 1000;
+  return getExamAttempts().filter((a) => {
+    const ts = Date.parse(a.date);
+    return Number.isFinite(ts) && ts >= cutoff;
+  }).length;
+}
+
 /** All recorded attempts, oldest → newest, malformed records dropped. */
 export function getExamAttempts(): ExamAttempt[] {
   const raw = readJson<unknown[]>(EXAM_ATTEMPTS_KEY, []);

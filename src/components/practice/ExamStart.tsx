@@ -2,11 +2,14 @@ import { Link } from "react-router-dom";
 import { EXAM_PASS_PERCENT } from "../../constants/exam";
 import { t, type UILang } from "../../lib/i18n";
 import type { ExamHistoryData } from "../../hooks/useExamSession";
+import { ProGate } from "../ProGate";
 
 type ExamStartProps = {
   uiLang: UILang;
   examTotal: number;
   examHistory: ExamHistoryData;
+  /** True when a free user has used their weekly exam — start is replaced by an upsell. */
+  examLocked: boolean;
   onStartExam: () => void;
   onPractice: () => void;
 };
@@ -15,6 +18,7 @@ export function ExamStart({
   uiLang,
   examTotal,
   examHistory,
+  examLocked,
   onStartExam,
   onPractice,
 }: ExamStartProps) {
@@ -50,9 +54,17 @@ export function ExamStart({
           <div className="pv2-esh-item"><span className="pv2-esh-label">{t("pv2.exam.last", uiLang)}</span><span className={examHistory.lastPct >= EXAM_PASS_PERCENT ? "pv2-esh-val pv2-esh-val--pass" : "pv2-esh-val pv2-esh-val--fail"}>{examHistory.lastPct}%</span></div>
         </div>
       )}
-      <button type="button" className="pv2-exam-start-btn" onClick={onStartExam}>
-        {t("pv2.exam.startBtn", uiLang)}
-      </button>
+      {examLocked ? (
+        <ProGate lang={uiLang} label={t("progate.exam.locked", uiLang)} lead={t("progate.exam.lead", uiLang)}>
+          <button type="button" className="pv2-exam-start-btn" onClick={onStartExam}>
+            {t("pv2.exam.startBtn", uiLang)}
+          </button>
+        </ProGate>
+      ) : (
+        <button type="button" className="pv2-exam-start-btn" onClick={onStartExam}>
+          {t("pv2.exam.startBtn", uiLang)}
+        </button>
+      )}
       <button type="button" className="pv2-exam-start-practice" onClick={onPractice}>
         {t("pv2.exam.toPractice", uiLang)}
       </button>

@@ -9,6 +9,8 @@ import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
 import { getFontSizePref, setFontSizePref, type FontSizePref } from "../lib/fontSizePref";
 import { SessionResultScreen } from "../screens/SessionResultScreen";
 import { ProGate } from "../components/ProGate";
+import { getAccessTier, FREE_WEEKLY_EXAM_LIMIT } from "../lib/entitlement";
+import { countExamAttemptsSince } from "../lib/examHistory";
 import type { AnsweredQuestion } from "../utils/buildSessionResult";
 import { useExamSession } from "../hooks/useExamSession";
 import { usePracticeSession } from "../hooks/usePracticeSession";
@@ -244,6 +246,7 @@ export function PracticePage() {
   const showRussian   = !isExam && (languageMode === "both" || languageMode === "ru");
   const resultLang: UILang = isExam || languageMode === "es" ? "es" : languageMode === "ru" ? "ru" : uiLang;
   const practiceTitleKey = mistakesOnly ? "pv2.title.mistakes" : hardestMode ? "pv2.title.hard" : weakMode ? "pv2.title.weak" : topicMode ? "pv2.title.topics" : "pv2.title.practice";
+  const examLocked = getAccessTier() === "free" && countExamAttemptsSince(7) >= FREE_WEEKLY_EXAM_LIMIT;
   const practiceDots  = practiceSession.questionIds.map((qid, i) => {
     if (i < practiceSession.currentIndex) return practiceSession.answers?.[qid]?.isCorrect ? "ok" : "err";
     if (i === practiceSession.currentIndex) return "cur";
@@ -373,6 +376,7 @@ export function PracticePage() {
               uiLang={uiLang}
               examTotal={examTotal}
               examHistory={examHistory}
+              examLocked={examLocked}
               onStartExam={handleStartExam}
               onPractice={handlePracticeFromExamStart}
             />

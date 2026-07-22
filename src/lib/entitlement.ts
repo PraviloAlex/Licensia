@@ -4,6 +4,8 @@ export const TRIAL_STARTED_KEY = "licencia_ar_trial_started";
 export const PRO_OVERRIDE_KEY = "licencia_ar_pro";
 
 export const TRIAL_DAYS = 7;
+/** Free tier: mock exams allowed per rolling 7-day window (trial/pro are unlimited). */
+export const FREE_WEEKLY_EXAM_LIMIT = 1;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 /**
