@@ -97,13 +97,31 @@ function getField(question: unknown, field: EditableField): string {
   return typeof value === "string" ? value : "";
 }
 
+/* Options are enumerated as A/B/C in the data but as А/Б/В in the Russian text,
+   and Cyrillic А/В/С also look identical to Latin A/B/C. Map every form. */
+const LETTER_MAP: Record<string, string> = {
+  "А": "A", "Б": "B", "В": "C",
+  "A": "A", "B": "B", "C": "C",
+};
+
 function normalizeLetter(letter: string) {
-  return letter.toUpperCase().replace("А", "A").replace("В", "B").replace("С", "C");
+  const upper = letter.toUpperCase();
+  return LETTER_MAP[upper] ?? upper;
 }
 
+/* "вариант" is declined (варианта/варианте/варианты), and the text also says
+   "ответ B" / "пункт C" — match the stem, not one fixed form. */
 function mentionedVariants(text: string) {
-  const matches = text.matchAll(/\b[Вв]ариант\s+([ABCАВС])\b/g);
+  const matches = text.matchAll(/(?:вариант\w*|ответ\w*|пункт\w*)\s+[«"]?([ABCabcАБВабв])(?![\wА-Яа-я])/gi);
   return [...new Set([...matches].map((match) => normalizeLetter(match[1])))];
+}
+
+/* True when the correct option is itself "both A and B" — then an explanation
+   that talks about A and B is right, and flagging it would be a false alarm. */
+function correctOptionMeansBoth(question: VerifiedQuestion) {
+  const correct = question.options.find((option) => option.id === question.correctOptionId);
+  if (!correct) return false;
+  return /оба|обе|ambas|ambos|todas/i.test(`${correct.text_ru} ${correct.text_es}`);
 }
 
 /* How many questions share each explanation text. A text used by more than one
@@ -143,12 +161,14 @@ function liveFlags(question: VerifiedQuestion): string[] {
     if (shared > 1) flags.push(`Шаблон: ${field.label} повторяется в ${shared} вопросах`);
   }
 
+  const bothIsCorrect = correctOptionMeansBoth(question);
   for (const key of ["explanation_ru", "whyCorrect_ru"] as const) {
     const text = String((question as unknown as Record<string, unknown>)[key] ?? "");
     const mentioned = mentionedVariants(text);
-    if (mentioned.length > 0 && correct && !mentioned.includes(correct)) {
-      flags.push(`Опасно: ${key === "explanation_ru" ? "объяснение" : "почему верно"} упоминает ${mentioned.join(", ")}, но ключ ${correct}`);
-    }
+    if (mentioned.length === 0 || !correct || mentioned.includes(correct)) continue;
+    // "Оба ответа А и Б верны": discussing A and B is the correct explanation.
+    if (bothIsCorrect && mentioned.every((letter) => letter === "A" || letter === "B")) continue;
+    flags.push(`Опасно: ${key === "explanation_ru" ? "объяснение" : "почему верно"} упоминает ${mentioned.join(", ")}, но ключ ${correct}`);
   }
 
   return flags;
