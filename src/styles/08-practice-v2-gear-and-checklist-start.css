@@ -235,7 +235,7 @@
   padding: 24px;
 }
 .pv2-exit-dialog {
-  background: #0f1a2e;
+  background: var(--surface-2);
   border: 1px solid rgba(111, 180, 240,0.22);
   border-radius: 16px;
   padding: 28px 24px 24px;
@@ -283,7 +283,7 @@
 /* Выйти — красный ghost */
 .pv2-exit-btn-leave {
   border: 1.5px solid rgba(220,70,70,0.65);
-  color: #e07878;
+  color: var(--red);
 }
 .pv2-exit-btn-leave:hover {
   background: rgba(220,70,70,0.10);

@@ -51,7 +51,7 @@
 .pv2-title {
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text-primary, #e8eeff);
+  color: var(--text-hi);
   flex: 1;
   text-align: center;
   white-space: nowrap;
@@ -84,10 +84,10 @@
   transition: background 0.15s, color 0.15s;
 }
 .pv2-lang-btn:last-child { border-right: none; }
-.pv2-lang-btn:hover { background: rgba(111, 180, 240,0.1); color: rgba(180,210,255,0.75); }
+.pv2-lang-btn:hover { background: rgba(111, 180, 240,0.1); color: var(--text-mid); }
 .pv2-lang-btn--active {
   background: rgba(111, 180, 240,0.18);
-  color: #a8ccff;
+  color: var(--accent);
 }
 
 /* Gear button + dropdown */
@@ -113,7 +113,7 @@
 .pv2-gear-btn--open {
   background: rgba(111, 180, 240,0.15);
   border-color: rgba(111, 180, 240,0.4);
-  color: #a8ccff;
+  color: var(--accent);
 }
 @keyframes pv2-gear-drop {
   from { opacity: 0; transform: translateY(-6px) scale(0.97); }
@@ -124,7 +124,7 @@
   top: 42px;
   right: 0;
   width: 248px;
-  background: #0f1a2e;
+  background: var(--surface-2);
   border: 1px solid rgba(111, 180, 240,0.22);
   border-radius: 12px;
   overflow: hidden;
@@ -158,9 +158,9 @@
   font-size: 14px;
   flex-shrink: 0;
 }
-.pv2-gear-ico--teal   { background: rgba(62,207,142,0.15);  color: #3ecf8e; }
-.pv2-gear-ico--amber  { background: rgba(240, 194, 78,0.15);  color: #F0C24E; }
-.pv2-gear-ico--red    { background: rgba(240, 137, 122,0.15); color: #ff8f8f; }
+.pv2-gear-ico--teal   { background: var(--green-dim);  color: var(--green); }
+.pv2-gear-ico--amber  { background: var(--gold-dim);  color: var(--gold); }
+.pv2-gear-ico--red    { background: var(--red-dim); color: var(--red); }
 .pv2-gear-text {
   display: flex;
   flex-direction: column;
@@ -186,8 +186,8 @@
   flex-shrink: 0;
 }
 .pv2-gear-badge--on {
-  background: rgba(59,109,17,0.2);
-  color: #46CE92;
+  background: var(--green-dim);
+  color: var(--green);
 }
 
 /* Exam tag in badge row */
@@ -215,8 +215,8 @@
   border-radius: 3px;
   background: rgba(255,255,255,0.08);
 }
-.pv2-dot--ok   { background: #3B6D11; }
-.pv2-dot--err  { background: #A32D2D; }
+.pv2-dot--ok   { background: var(--green); }
+.pv2-dot--err  { background: var(--red); }
 .pv2-dot--cur  { background: rgba(111, 180, 240,0.5); }
 .pv2-dot--clickable { cursor: pointer; transition: transform 0.1s, filter 0.1s; }
 .pv2-dot--clickable:hover { transform: scaleY(1.8); filter: brightness(1.4); }
@@ -238,7 +238,7 @@
   padding: 0 20px;
   font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
   font-weight: 500;
-  color: var(--color-text-primary, #eef4ff);
+  color: var(--text-hi);
   line-height: 1.38;
   margin-bottom: 6px;
 }
@@ -246,7 +246,7 @@
   padding: 0 20px;
   font-size: clamp(0.9375rem, 1vw, 1rem);
   font-weight: 500;
-  color: rgba(180,210,255,0.72);
+  color: var(--text-mid);
   margin-bottom: 14px;
 }
 
@@ -328,14 +328,14 @@
   flex-shrink: 0;
 }
 .pv2-option-letter--correct {
-  border-color: rgba(59,109,17,0.7);
-  background: rgba(59,109,17,0.25);
-  color: #46CE92;
+  border-color: var(--green);
+  background: var(--green-dim);
+  color: var(--green);
 }
 .pv2-option-letter--wrong {
-  border-color: rgba(163,45,45,0.7);
-  background: rgba(163,45,45,0.2);
-  color: #ff8888;
+  border-color: var(--red);
+  background: var(--red-dim);
+  color: var(--red);
 }
 .pv2-option-content { display: flex; flex-direction: column; flex: 1; }
 .pv2-option-es { font-size: clamp(0.9375rem, 1vw, 1rem); font-weight: 700; color: var(--text-hi); line-height: 1.42; }
@@ -346,11 +346,11 @@
   margin: 0 20px 12px;
   border-radius: 12px;
   border: 1px solid rgba(111, 180, 240,0.12);
-  background: rgba(14,22,42,0.95);
+  background: var(--surface);
   overflow: hidden;
 }
-.pv2-sheet--correct .pv2-sheet-result { border-left: 3px solid #3B6D11; }
-.pv2-sheet--wrong   .pv2-sheet-result { border-left: 3px solid #A32D2D; }
+.pv2-sheet--correct .pv2-sheet-result { border-left: 3px solid var(--green); }
+.pv2-sheet--wrong   .pv2-sheet-result { border-left: 3px solid var(--red); }
 .pv2-sheet-result {
   padding: 14px 16px;
   border-bottom: 1px solid rgba(111, 180, 240,0.08);
@@ -363,12 +363,12 @@
   text-transform: uppercase;
   margin-bottom: 4px;
 }
-.pv2-sheet--correct .pv2-sheet-label { color: #46CE92; }
-.pv2-sheet--wrong   .pv2-sheet-label { color: #ff8080; }
+.pv2-sheet--correct .pv2-sheet-label { color: var(--green); }
+.pv2-sheet--wrong   .pv2-sheet-label { color: var(--red); }
 .pv2-sheet-answer {
   font-size: 14px;
   font-weight: 600;
-  color: var(--color-text-primary, #eef4ff);
+  color: var(--text-hi);
   margin: 0 0 2px;
 }
 .pv2-sheet-sub {
@@ -500,7 +500,7 @@
 .pv2-next--active {
   background: rgba(111, 180, 240,0.2);
   border-color: rgba(111, 180, 240,0.5);
-  color: #a8ccff;
+  color: var(--accent);
 }
 .pv2-next--active:hover {
   background: rgba(111, 180, 240,0.28);
