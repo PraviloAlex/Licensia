@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { questionsData } from "../lib/data";
+import type { VerifiedQuestion } from "../types/question";
 
 const PATCHES_KEY = "licencia_ar_editor_patches";
 const REVIEW_KEY = "licencia_ar_editor_review_status";
@@ -105,6 +106,54 @@ function mentionedVariants(text: string) {
   return [...new Set([...matches].map((match) => normalizeLetter(match[1])))];
 }
 
+/* How many questions share each explanation text. A text used by more than one
+   question is a template, not an explanation — that is the bulk of the backlog. */
+const TEMPLATE_FIELDS = [
+  { key: "keyRule_ru", label: "правило" },
+  { key: "commonMistake_ru", label: "типичная ошибка" },
+  { key: "memoryHint_ru", label: "мнемоника" },
+  { key: "explanation_ru", label: "объяснение" },
+] as const;
+
+const duplicateCounts: Record<string, Map<string, number>> = (() => {
+  const acc: Record<string, Map<string, number>> = {};
+  for (const field of TEMPLATE_FIELDS) {
+    const counter = new Map<string, number>();
+    for (const question of questionsData) {
+      const text = String((question as unknown as Record<string, unknown>)[field.key] ?? "").trim();
+      if (text) counter.set(text, (counter.get(text) ?? 0) + 1);
+    }
+    acc[field.key] = counter;
+  }
+  return acc;
+})();
+
+/** Problems visible in the shipped text of this question (no candidate needed). */
+function liveFlags(question: VerifiedQuestion): string[] {
+  const flags: string[] = [];
+  const correct = (question.correctOptionId ?? "").toUpperCase();
+
+  for (const field of TEMPLATE_FIELDS) {
+    const text = String((question as unknown as Record<string, unknown>)[field.key] ?? "").trim();
+    if (!text) {
+      flags.push(`Пусто: ${field.label}`);
+      continue;
+    }
+    const shared = duplicateCounts[field.key].get(text) ?? 1;
+    if (shared > 1) flags.push(`Шаблон: ${field.label} повторяется в ${shared} вопросах`);
+  }
+
+  for (const key of ["explanation_ru", "whyCorrect_ru"] as const) {
+    const text = String((question as unknown as Record<string, unknown>)[key] ?? "");
+    const mentioned = mentionedVariants(text);
+    if (mentioned.length > 0 && correct && !mentioned.includes(correct)) {
+      flags.push(`Опасно: ${key === "explanation_ru" ? "объяснение" : "почему верно"} упоминает ${mentioned.join(", ")}, но ключ ${correct}`);
+    }
+  }
+
+  return flags;
+}
+
 function riskFlags(
   id: string,
   correctOptionId: string,
@@ -172,7 +221,10 @@ export function EditorPage() {
     const keepOld = Object.values(reviewStatus).filter((status) => status === "keep_old").length;
     const withCandidates = Object.values(candidates).filter(candidateHasData).length;
     const risk = questionsData.filter((question) => {
-      const flags = criticalRiskFlags(question.id, question.correctOptionId, candidates[question.id]);
+      const flags = [
+        ...liveFlags(question),
+        ...criticalRiskFlags(question.id, question.correctOptionId, candidates[question.id]),
+      ];
       return flags.length > 0;
     }).length;
     return { accepted, needsCheck, keepOld, withCandidates, risk };
@@ -182,7 +234,7 @@ export function EditorPage() {
     return questionsData.filter((question) => {
       const status = reviewStatus[question.id] ?? "unreviewed";
       const candidate = candidates[question.id];
-      const flags = criticalRiskFlags(question.id, question.correctOptionId, candidate);
+      const flags = [...liveFlags(question), ...criticalRiskFlags(question.id, question.correctOptionId, candidate)];
 
       if (filter === "risk") return flags.length > 0 && status !== "accepted" && status !== "keep_old";
       if (filter === "manual") return MANUAL_REVIEW_IDS.has(question.id);
@@ -198,7 +250,7 @@ export function EditorPage() {
   const candidate = candidates[q.id];
   const patch = patches[q.id] ?? {};
   const status = reviewStatus[q.id] ?? "unreviewed";
-  const flags = riskFlags(q.id, q.correctOptionId, Boolean(q.image?.src), candidate);
+  const flags = [...liveFlags(q), ...riskFlags(q.id, q.correctOptionId, Boolean(q.image?.src), candidate)];
 
   const showNotice = (message: string) => {
     setNotice(message);
