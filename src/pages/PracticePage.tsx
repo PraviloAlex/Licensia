@@ -221,7 +221,8 @@ export function PracticePage() {
 
   const linkedGlossaryIds = question ? resolveQuestionGlossaryIds(question) : [];
   const isCorrect         = question ? selectedId === question.correctOptionId : false;
-  const visualAnalysisRu  = question ? ((question as unknown as { visualAnalysis_ru?: string }).visualAnalysis_ru ?? "").trim() : "";
+  const visualAnalysisRu  = question ? (question.visualAnalysis_ru ?? "").trim() : "";
+  const keyRuleRu         = question ? (question.keyRule_ru ?? "").trim() : "";
 
   // ── ALL useMemo — before any conditional return ───────────────────────────────────
   const selectedOption = useMemo(
@@ -257,9 +258,9 @@ export function PracticePage() {
   const nextBtnIsConfirm = confirmMode && !showAnswerState && !!pendingOptionId;
   const nextBtnLabel     = nextBtnIsConfirm ? t("pv2.confirm", uiLang) : t("pv2.next", uiLang);
 
-  const hasExplainContent = !!(question && ((question as unknown as { whyCorrect_ru?: string }).whyCorrect_ru || (question.image?.src && visualAnalysisRu)));
+  const hasExplainContent = !!(question && (question.whyCorrect_ru || (question.image?.src && visualAnalysisRu)));
   const hasMemoContent    = !!question?.memoryHint_ru;
-  const hasSheetContent   = hasExplainContent || hasMemoContent || relatedWords.length > 0;
+  const hasSheetContent   = !!keyRuleRu || hasExplainContent || hasMemoContent || relatedWords.length > 0;
 
   // ── ALL useEffect — unconditional ───────────────────────────────────────
   useEffect(() => () => { if (confettiTimer.current) clearTimeout(confettiTimer.current); }, []);
@@ -527,9 +528,18 @@ export function PracticePage() {
                   {showAnswerState && hasSheetContent && (
                     <div className="pv2-sheet result-enter">
                       <div className="pv2-accordion">
+                        {keyRuleRu && (
+                          <div className="pv2-keyrule">
+                            <span className="pv2-keyrule-ico" aria-hidden="true"><i className="ti ti-bookmark" /></span>
+                            <span className="pv2-keyrule-text">
+                              <b className="pv2-keyrule-label">{t("pv2.keyRule", uiLang)}</b>
+                              {keyRuleRu}
+                            </span>
+                          </div>
+                        )}
                         {(hasExplainContent || hasMemoContent) && (
                         <ProGate lang={uiLang}>
-                        {((question as unknown as { whyCorrect_ru?: string }).whyCorrect_ru || (question.image?.src && visualAnalysisRu)) && (
+                        {(question.whyCorrect_ru || (question.image?.src && visualAnalysisRu)) && (
                           <div className="pv2-acc-item">
                             <button type="button" className="pv2-acc-header" onClick={() => toggleAccordion("explain")}>
                               <span className="pv2-acc-icon pv2-acc-icon--teal"><i className="ti ti-book-2" /></span>
@@ -539,7 +549,7 @@ export function PracticePage() {
                             {accordionOpen.explain && (
                               <div className="pv2-acc-body">
                                 {question.image?.src && visualAnalysisRu && <p>{visualAnalysisRu}</p>}
-                                {(question as unknown as { whyCorrect_ru?: string }).whyCorrect_ru && <p>{(question as unknown as { whyCorrect_ru?: string }).whyCorrect_ru}</p>}
+                                {question.whyCorrect_ru && <p>{question.whyCorrect_ru}</p>}
                               </div>
                             )}
                           </div>

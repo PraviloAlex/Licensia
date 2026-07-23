@@ -1,0 +1,105 @@
+/* ── P3: visible trial state ──────────────────────────────────────
+   Token-only module (Bandera). No [data-theme] overrides.
+   The trial used to expire silently; these are the only surfaces that
+   tell a user they have full access and that it is running out. */
+
+/* Countdown while the trial is active — gold, reads as a perk, not a warning.
+   Sits on a neutral surface, not on --gold-dim: gold-on-gold-tint measured
+   4.31:1 in the light theme, under AA. On --s-surface it is 6.4 / 9.0. */
+.hb-trial-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: var(--sp-2);
+  border: 1px solid var(--gold);
+  border-radius: var(--r-md);
+  background: var(--s-surface);
+}
+
+.hb-trial-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--gold);
+  font-size: 1.05rem;
+}
+
+.hb-trial-banner .hb-trial-text {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* One-time notice after the trial lapses — neutral surface, not alarming */
+.hb-trial-ended {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  margin-bottom: var(--sp-2);
+  border: 1px solid var(--s-border-mid);
+  border-radius: var(--r-md);
+  background: var(--s-surface-hi);
+}
+
+.hb-trial-ended .hb-trial-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.hb-trial-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--s-text);
+}
+
+.hb-trial-sub {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--text-mid);
+}
+
+.hb-trial-dismiss {
+  flex-shrink: 0;
+  align-self: center;
+  padding: 7px 12px;
+  border: 1px solid var(--s-border-mid);
+  border-radius: var(--r-sm);
+  background: var(--s-surface);
+  color: var(--text-mid);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--t-fast), color var(--t-fast);
+}
+
+.hb-trial-dismiss:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Access tier row on the More page */
+.more-tier-badge {
+  padding: 4px 10px;
+  border: 1px solid var(--s-border-mid);
+  border-radius: 999px;
+  background: var(--s-surface-hi);
+  color: var(--text-mid);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.more-tier-badge--on {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+  color: var(--gold);
+}
+
+@media (max-width: 380px) {
+  .hb-trial-ended { flex-wrap: wrap; }
+  .hb-trial-dismiss { width: 100%; }
+}

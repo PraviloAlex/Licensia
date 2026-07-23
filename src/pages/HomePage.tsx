@@ -5,6 +5,8 @@ import { PageShell } from "../components/PageShell";
 import { ProCard } from "../components/ProCard";
 import { ReadinessRing } from "../components/ReadinessRing";
 import { getPassProbability } from "../lib/readiness";
+import { hasTrialStarted, isTrialEndNoticeSeen, markTrialEndNoticeSeen } from "../lib/entitlement";
+import { useEntitlement } from "../hooks/useEntitlement";
 import { getDailyPlan } from "../lib/studyPlan";
 import { glossaryData, questionsData } from "../lib/data";
 import { getQuestionProgressMap, getUniqueSeenCount, getTotalWrongAnswersCount, getMistakeQuestionCount, getCorrectedMistakeCount } from "../lib/questionProgress";
@@ -251,6 +253,11 @@ export function HomePage() {
     { key: "exam",     to: "/practice?exam=1",    icon: "ti-clipboard-check", labelKey: "home.mode.exam" as const },
   ];
 
+  const { tier, trialDaysLeft } = useEntitlement();
+  const [trialEndDismissed, setTrialEndDismissed] = useState(isTrialEndNoticeSeen);
+  const showTrialEnded = tier === "free" && hasTrialStarted() && !trialEndDismissed;
+  function handleDismissTrialEnd() { markTrialEndNoticeSeen(); setTrialEndDismissed(true); }
+
   const daysSince = getDaysSinceLastPractice();
   const showReminder = !reminderDismissed && seenCount > 0 && daysSince !== null && daysSince >= 1;
   function handleDismissReminder() { dismissReminderToday(); setReminderDismissed(true); }
@@ -383,6 +390,28 @@ export function HomePage() {
           </span>
           <button type="button" className="home-reminder-dismiss" onClick={handleDismissReminder} aria-label="Cerrar">
             <i className="ti ti-x" />
+          </button>
+        </div>
+      )}
+
+      {tier === "trial" && (
+        <div className="hb-trial-banner">
+          <span className="hb-trial-icon" aria-hidden="true"><i className="ti ti-crown" /></span>
+          <span className="hb-trial-text">
+            {t("trial.active", lang)} · {t("trial.left", lang)} {trialDaysLeft} {t("trial.days", lang)}
+          </span>
+        </div>
+      )}
+
+      {showTrialEnded && (
+        <div className="hb-trial-ended">
+          <span className="hb-trial-icon" aria-hidden="true"><i className="ti ti-lock" /></span>
+          <span className="hb-trial-text">
+            <b className="hb-trial-title">{t("trial.ended.title", lang)}</b>
+            <span className="hb-trial-sub">{t("trial.ended.text", lang)}</span>
+          </span>
+          <button type="button" className="hb-trial-dismiss" onClick={handleDismissTrialEnd}>
+            {t("trial.dismiss", lang)}
           </button>
         </div>
       )}

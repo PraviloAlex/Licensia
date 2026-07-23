@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../components/PageShell";
 import { ProCard } from "../components/ProCard";
 import { getAccessTier, setProOverride } from "../lib/entitlement";
+import { useEntitlement } from "../hooks/useEntitlement";
 import { questionsData } from "../lib/data";
 import { getMistakeQuestionCount } from "../lib/questionProgress";
 import { getUILang, setUILang, t, type UILang } from "../lib/i18n";
@@ -34,6 +35,10 @@ export function MorePage() {
   const [checklistDone] = useState(readChecklistDoneCount);
   const [mistakeCount] = useState(() => getMistakeQuestionCount(questionsData));
   const [proOn, setProOn] = useState(() => getAccessTier() === "pro");
+  const { tier, trialDaysLeft } = useEntitlement();
+  const tierLabel = tier === "pro" ? t("tier.pro", lang)
+    : tier === "trial" ? `${t("tier.trial", lang)} · ${trialDaysLeft} ${t("trial.days", lang)}`
+    : t("tier.free", lang);
   const isDev = typeof window !== "undefined" && ["localhost", "127.0.0.1"].includes(window.location.hostname);
   function toggleProDev() { const next = !proOn; setProOverride(next); setProOn(next); }
 
@@ -119,6 +124,10 @@ export function MorePage() {
                 style={{ fontSize: ["0.72rem", "0.92rem", "1.12rem"][i] }}>A</button>
             ))}
           </div>
+        </div>
+        <div className="more-set-row">
+          <span className="more-set-label">{t("more.access", lang)}</span>
+          <span className={tier === "free" ? "more-tier-badge" : "more-tier-badge more-tier-badge--on"}>{tierLabel}</span>
         </div>
         {isDev && (
           <div className="more-set-row">

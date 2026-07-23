@@ -33,6 +33,12 @@ export type VerifiedQuestion = {
   correctOptionId: string;
   explanation_ru: string;
   memoryHint_ru: string;
+  /* Structured explanation set, authored for every question.
+     keyRule_ru is the free taste; the rest sit behind the depth gate. */
+  keyRule_ru?: string;
+  whyCorrect_ru?: string;
+  commonMistake_ru?: string;
+  visualAnalysis_ru?: string;
   glossaryIds: string[];
   isExactOriginal: boolean;
 };

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../components/PageShell";
 import { ReadinessRing } from "../components/ReadinessRing";
 import { EvolutionChart } from "../components/EvolutionChart";
+import { ProGate } from "../components/ProGate";
 import { getExamAttempts } from "../lib/examHistory";
 import { EXAM_PASS_PERCENT } from "../constants/exam";
 import { questionsData, glossaryData } from "../lib/data";
@@ -287,7 +288,14 @@ export function ProgressPage() {
                   </div>
                   <p className="hard-question-es">{q.question_es}</p>
                   <p className="hard-question-ru">{q.question_ru}</p>
-                  {q.explanation_ru && <p className="hard-question-exp">{q.explanation_ru}</p>}
+                  {q.keyRule_ru && (
+                    <p className="hard-question-exp"><b className="pv2-keyrule-label">{t("pv2.keyRule", lang)}</b>{q.keyRule_ru}</p>
+                  )}
+                  {q.explanation_ru && (
+                    <ProGate lang={lang}>
+                      <p className="hard-question-exp">{q.explanation_ru}</p>
+                    </ProGate>
+                  )}
                 </article>
               );
             })}
