@@ -117,7 +117,7 @@ export function PracticePage() {
   const [imageBrokenForQId,setImageBrokenForQId] = useState<string | null>(null);
   const [imageModalSrc,    setImageModalSrc]     = useState<string | null>(null);
   const [showConfetti,     setShowConfetti]      = useState(false);
-  const [accordionOpen,    setAccordionOpen]     = useState<Record<string, boolean>>({ explain: true, memo: false, words: false });
+  const [accordionOpen,    setAccordionOpen]     = useState<Record<string, boolean>>({ explain: true, mistake: false, memo: false, words: false });
   const [addedWordIds,     setAddedWordIds]      = useState<Set<string>>(new Set());
   const [gearOpen,         setGearOpen]          = useState(false);
   const [selectingOptionId,setSelectingOptionId] = useState<string | null>(null);
@@ -259,8 +259,11 @@ export function PracticePage() {
   const nextBtnLabel     = nextBtnIsConfirm ? t("pv2.confirm", uiLang) : t("pv2.next", uiLang);
 
   const hasExplainContent = !!(question && (question.whyCorrect_ru || (question.image?.src && visualAnalysisRu)));
+  const hasMistakeContent = !!question?.commonMistake_ru;
   const hasMemoContent    = !!question?.memoryHint_ru;
-  const hasSheetContent   = !!keyRuleRu || hasExplainContent || hasMemoContent || relatedWords.length > 0;
+  const hasSheetContent   = !!keyRuleRu || hasExplainContent || hasMistakeContent || hasMemoContent || relatedWords.length > 0;
+  /* Explanation fields are authored in Russian only — mark them in the ES UI. */
+  const isEsUi            = uiLang === "es";
 
   // ── ALL useEffect — unconditional ───────────────────────────────────────
   useEffect(() => () => { if (confettiTimer.current) clearTimeout(confettiTimer.current); }, []);
@@ -534,16 +537,18 @@ export function PracticePage() {
                             <span className="pv2-keyrule-text">
                               <b className="pv2-keyrule-label">{t("pv2.keyRule", uiLang)}</b>
                               {keyRuleRu}
+                              {isEsUi && <span className="pv2-lang-chip" title={t("lang.ruOnly", uiLang)}>RU</span>}
                             </span>
                           </div>
                         )}
-                        {(hasExplainContent || hasMemoContent) && (
+                        {(hasExplainContent || hasMistakeContent || hasMemoContent) && (
                         <ProGate lang={uiLang}>
                         {(question.whyCorrect_ru || (question.image?.src && visualAnalysisRu)) && (
                           <div className="pv2-acc-item">
                             <button type="button" className="pv2-acc-header" onClick={() => toggleAccordion("explain")}>
                               <span className="pv2-acc-icon pv2-acc-icon--teal"><i className="ti ti-book-2" /></span>
                               <span className="pv2-acc-title">{t("pv2.acc.explain", uiLang)}</span>
+                              {isEsUi && <span className="pv2-lang-chip" title={t("lang.ruOnly", uiLang)}>RU</span>}
                               <span className={accordionOpen.explain ? "pv2-acc-chev pv2-acc-chev--open" : "pv2-acc-chev"}><i className="ti ti-chevron-right" /></span>
                             </button>
                             {accordionOpen.explain && (
@@ -554,11 +559,23 @@ export function PracticePage() {
                             )}
                           </div>
                         )}
+                        {question.commonMistake_ru && (
+                          <div className="pv2-acc-item">
+                            <button type="button" className="pv2-acc-header" onClick={() => toggleAccordion("mistake")}>
+                              <span className="pv2-acc-icon pv2-acc-icon--rose"><i className="ti ti-alert-triangle" /></span>
+                              <span className="pv2-acc-title">{t("pv2.acc.mistake", uiLang)}</span>
+                              {isEsUi && <span className="pv2-lang-chip" title={t("lang.ruOnly", uiLang)}>RU</span>}
+                              <span className={accordionOpen.mistake ? "pv2-acc-chev pv2-acc-chev--open" : "pv2-acc-chev"}><i className="ti ti-chevron-right" /></span>
+                            </button>
+                            {accordionOpen.mistake && <div className="pv2-acc-body"><p>{question.commonMistake_ru}</p></div>}
+                          </div>
+                        )}
                         {question.memoryHint_ru && (
                           <div className="pv2-acc-item">
                             <button type="button" className="pv2-acc-header" onClick={() => toggleAccordion("memo")}>
                               <span className="pv2-acc-icon pv2-acc-icon--amber"><i className="ti ti-bulb" /></span>
                               <span className="pv2-acc-title">{t("pv2.acc.memo", uiLang)}</span>
+                              {isEsUi && <span className="pv2-lang-chip" title={t("lang.ruOnly", uiLang)}>RU</span>}
                               <span className={accordionOpen.memo ? "pv2-acc-chev pv2-acc-chev--open" : "pv2-acc-chev"}><i className="ti ti-chevron-right" /></span>
                             </button>
                             {accordionOpen.memo && <div className="pv2-acc-body"><p>{question.memoryHint_ru}</p></div>}

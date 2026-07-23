@@ -113,3 +113,27 @@
   background: var(--accent-dim) !important;
   opacity: 0.85;
 }
+
+/* Accordion icon for the "typical mistake" panel. Token-only, so unlike the
+   older --teal/--amber/--purple variants it needs no [data-theme] twin. */
+.practice-v2 .pv2-acc-icon--rose {
+  background: var(--red-dim);
+  color: var(--red);
+}
+
+/* Marks content that exists only in Russian while the UI is Spanish.
+   The explanation fields are authored as *_ru; labelling them is honest,
+   inventing a translation of driving-law material would not be. */
+.pv2-lang-chip {
+  flex-shrink: 0;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border: 1px solid var(--s-border-mid);
+  border-radius: 999px;
+  background: var(--s-surface-hi);
+  color: var(--text-low);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  line-height: 1.5;
+}
